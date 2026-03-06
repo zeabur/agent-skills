@@ -2,7 +2,7 @@
 
 Claude Code plugin for Zeabur CLI operations, deployment, and troubleshooting.
 
-**Current version: 1.1.0**
+**Current version: 1.2.0**
 
 ## Installation
 
@@ -36,7 +36,7 @@ claude --plugin-dir /path/to/zeabur-claude-plugin
 | `zeabur-port-mismatch` | Fix proxy connection issues from port mismatches | Proxy shows dial tcp timeout or connection refused |
 | `zeabur-project-create` | Create new Zeabur projects | Creating a new project or deploying templates |
 | `zeabur-restart` | Restart individual services | Restarting services or --env-id required error |
-| `zeabur-server-list` | List, get, and reboot dedicated servers | Checking server status, IP, or rebooting |
+| `zeabur-server-list` | List, get, reboot, and SSH into dedicated servers | Checking server status, IP, rebooting, or SSH access |
 | `zeabur-server-catalog` | Browse available server providers/regions/plans | User asks what servers are available to rent |
 | `zeabur-server-rent` | Rent a new dedicated server | User wants to buy or provision a server |
 | `zeabur-service-list` | List all services and get service IDs | Needing service IDs or checking existing services |
@@ -48,6 +48,10 @@ claude --plugin-dir /path/to/zeabur-claude-plugin
 | `zeabur-variables` | Manage environment variables via CLI | Managing env vars or handling empty variable issues |
 
 ## Changelog
+
+### 1.2.0
+
+- Updated `zeabur-server-list` — added SSH into servers with automatic password authentication
 
 ### 1.1.0
 

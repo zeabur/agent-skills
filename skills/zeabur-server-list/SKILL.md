@@ -36,3 +36,11 @@ npx zeabur@latest server reboot <server-id> -y
 ```
 
 **`-y` skips confirmation prompt** — required for non-interactive use.
+
+## SSH into a Server
+
+```bash
+npx zeabur@latest server ssh <server-id>
+```
+
+For managed servers, the password is fetched automatically. If `sshpass` is installed, login is fully automatic; otherwise the password is printed for manual entry.
