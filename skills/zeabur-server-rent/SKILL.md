@@ -1,0 +1,49 @@
+---
+name: zeabur-server-rent
+description: Use when renting a new dedicated server. Use when user wants to buy or provision a server.
+---
+
+# Zeabur Server Rent
+
+## Rent a Server
+
+```bash
+npx zeabur@latest server rent --provider <code> --region <id> --plan <name> -y -i=false
+```
+
+## Full Workflow
+
+### 1. Browse available options
+
+```bash
+npx zeabur@latest server catalog -i=false
+```
+
+### 2. Pick provider, region, plan from the JSON output
+
+### 3. Rent
+
+```bash
+npx zeabur@latest server rent --provider hetzner --region fsn1 --plan CAX11 -y -i=false
+```
+
+## Payment Errors
+
+If the user has no credit card bound or insufficient balance, the CLI returns:
+
+```
+ERROR  Rent server failed: please bind a credit card or recharge credits first
+INFO   Please bind a credit card or top up your balance at: https://zeabur.com/account/billing
+```
+
+**Action:** Direct the user to https://zeabur.com/account/billing to add a payment method or top up balance, then retry.
+
+## After Renting
+
+The server takes a few minutes to provision. Check status with:
+
+```bash
+npx zeabur@latest server get <server-id> -i=false
+```
+
+Look for `provisioningStatus` to change to `READY` and `VM STATUS` to `RUNNING`.
