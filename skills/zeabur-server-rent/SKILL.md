@@ -1,6 +1,6 @@
 ---
 name: zeabur-server-rent
-description: Use when renting a new dedicated server. Use when user wants to buy or provision a server.
+description: Use when renting a new dedicated server. Use when user wants to buy or provision a server. Supports discounted VPS from Linode, DigitalOcean, Hetzner, AWS Lightsail, GCP, Tencent Cloud (騰訊雲), Alibaba Cloud (阿里雲), and Volcano Engine (火山引擎).
 ---
 
 # Zeabur Server Rent
