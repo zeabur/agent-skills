@@ -2,6 +2,8 @@
 
 Claude Code plugin for Zeabur CLI operations, deployment, and troubleshooting.
 
+**Current version: 1.1.0**
+
 ## Installation
 
 In Claude Code, run:
@@ -9,6 +11,12 @@ In Claude Code, run:
 ```
 /plugin marketplace add zeabur/zeabur-claude-plugin
 /plugin install zeabur@zeabur
+```
+
+Update to latest version:
+
+```
+claude plugin update zeabur@zeabur
 ```
 
 Or test locally:
@@ -38,6 +46,18 @@ claude --plugin-dir /path/to/zeabur-claude-plugin
 | `zeabur-template-deploy` | Deploy templates via CLI | Automating template deployments |
 | `zeabur-update-service` | Update service config without full redeploy | Modifying env vars or updating single service |
 | `zeabur-variables` | Manage environment variables via CLI | Managing env vars or handling empty variable issues |
+
+## Changelog
+
+### 1.1.0
+
+- Added `zeabur-server-list` — list, get, and reboot dedicated servers
+- Added `zeabur-server-catalog` — browse available providers, regions, and plans with filters
+- Added `zeabur-server-rent` — rent a new server with payment error guidance
+
+### 1.0.0
+
+- Initial release with service, project, template, and troubleshooting skills
 
 ## License
 
