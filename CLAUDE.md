@@ -28,3 +28,11 @@ Zeabur Claude Plugin — a Claude Code plugin providing CLI-based skills for man
 - **Skill file naming**: `SKILL.md` inside a kebab-case directory prefixed with `zeabur-`
 - **CLI commands**: All skills use `npx zeabur@latest` as the CLI entry point
 - **Skill structure**: YAML frontmatter → symptom/problem → root cause → solution with bash commands → examples/tips
+
+## Releasing
+
+After making changes:
+
+1. Bump `version` in `.claude-plugin/plugin.json` (semver)
+2. Update the changelog in `README.md`
+3. Push to `main` — users can then run `claude plugin update zeabur@zeabur` to get the latest
