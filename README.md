@@ -2,7 +2,7 @@
 
 Claude Code plugin for Zeabur CLI operations, deployment, and troubleshooting.
 
-**Current version: 1.2.0**
+**Current version: 1.2.1**
 
 ## Installation
 
