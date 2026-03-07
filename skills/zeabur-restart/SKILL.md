@@ -1,36 +1,26 @@
 ---
 name: zeabur-restart
-description: Use when restarting Zeabur service. Use when you see error --env-id is required.
+description: Use when restarting a Zeabur service.
 ---
 
 # Zeabur Service Restart
 
-## Restart Requires env-id
+> **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method. If `npx` is not available, install Node.js first.
+
+## Restart a Service
 
 ```bash
-# ❌ FAILS
-npx zeabur@latest service restart --name live -y
-# ERROR: --env-id is required
-
-# ✅ CORRECT
-npx zeabur@latest service restart --id <service-id> --env-id <env-id> -y
+npx zeabur@latest service restart --id <service-id> -y -i=false
 ```
 
-## Extract env-id from Logs
-
-```bash
-npx zeabur@latest deployment log --service-id <id> -i=false 2>/dev/null | \
-  grep -o "environment-[a-f0-9]*" | head -1
-# Returns: environment-696f996ecc2bf23f5a3d7aaa
-# Use: 696f996ecc2bf23f5a3d7aaa as env-id
-```
+**Always use `--id` (service ID), not `--name`** — name lookup is unreliable.
 
 ## Full Workflow
 
 ```bash
-# Get env-id
-ENV_ID=$(npx zeabur@latest deployment log --service-id <service-id> -i=false 2>/dev/null | grep -o "environment-[a-f0-9]*" | head -1 | cut -d'-' -f2)
+# 1. Get service ID
+npx zeabur@latest service list --project-id <project-id> -i=false
 
-# Restart
-npx zeabur@latest service restart --id <service-id> --env-id $ENV_ID -y
+# 2. Restart
+npx zeabur@latest service restart --id <service-id> -y -i=false
 ```

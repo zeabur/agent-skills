@@ -5,6 +5,8 @@ description: Use when deploying Zeabur templates via CLI. Use when automating te
 
 # Zeabur Template Deploy
 
+> **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method. If `npx` is not available, install Node.js first.
+
 Deploy Zeabur templates via CLI. **Always use non-interactive mode (`-i=false`) in CLI automation.**
 
 ## Basic Usage

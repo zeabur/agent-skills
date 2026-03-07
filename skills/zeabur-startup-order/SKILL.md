@@ -5,6 +5,8 @@ description: Use when service fails with Connection refused to database or redis
 
 # Zeabur Startup Order Issues
 
+> **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method. If `npx` is not available, install Node.js first.
+
 ## Symptom
 
 ```
@@ -47,5 +49,5 @@ spec:
 
 If DB is now ready, just restart the failed service:
 ```bash
-npx zeabur@latest service restart --id <id> --env-id <env-id> -y
+npx zeabur@latest service restart --id <service-id> -y -i=false
 ```

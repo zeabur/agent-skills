@@ -5,6 +5,8 @@ description: Use when services need public URL for redirects or CORS. Use when W
 
 # Zeabur Domain URL Configuration
 
+> **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method. If `npx` is not available, install Node.js first.
+
 ## Symptom
 
 - Redirects go to wrong URL (missing domain suffix, or has trailing slash)

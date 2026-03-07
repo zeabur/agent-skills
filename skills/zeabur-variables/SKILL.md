@@ -5,6 +5,8 @@ description: Use when managing Zeabur environment variables via CLI. Use when va
 
 # Zeabur Variables Management
 
+> **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method. If `npx` is not available, install Node.js first.
+
 ## Known Issues
 
 1. **Use `--id` not `--name`** - name lookup unreliable
