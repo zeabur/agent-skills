@@ -22,11 +22,8 @@ npx zeabur@latest variable create --id <service-id> \
   --key "KEY2=value2" \
   -i=false -y
 
-# 4. Get env-id (from step 2 output or deployment list)
-# Look for: "Only one environment... select <production>"
-
-# 5. Restart service
-npx zeabur@latest service restart --id <service-id> --env-id <env-id> -i=false -y
+# 4. Restart service
+npx zeabur@latest service restart --id <service-id> -y -i=false
 ```
 
 ## Caveats
@@ -35,7 +32,6 @@ npx zeabur@latest service restart --id <service-id> --env-id <env-id> -i=false -
 |-------|----------|
 | `${VAR}` references | Set in Dashboard, not CLI (shell expands to empty) |
 | `variable update` clears vars | Use `variable create` instead |
-| Need env-id | Get from `variable list` output or Dashboard URL |
 
 ## When to Use
 

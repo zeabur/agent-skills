@@ -49,5 +49,5 @@ spec:
 
 If DB is now ready, just restart the failed service:
 ```bash
-npx zeabur@latest service restart --id <id> --env-id <env-id> -y
+npx zeabur@latest service restart --id <service-id> -y -i=false
 ```

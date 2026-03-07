@@ -28,7 +28,7 @@ npx zeabur@latest service list --project-id <project-id> -i=false
 | Need | Command |
 |------|---------|
 | Check variables | `variable list --id <service-id>` |
-| View logs | `deployment log --service-id <id> --env-id <env-id>` |
-| Restart service | `service restart --id <id> --env-id <env-id>` |
+| View logs | `deployment log --service-id <id> -t runtime` |
+| Restart service | `service restart --id <id> -y` |
 
 **Always use `--id` not `--name`** — name lookup is unreliable.
