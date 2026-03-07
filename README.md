@@ -2,7 +2,7 @@
 
 Claude Code plugin for Zeabur CLI operations, deployment, and troubleshooting.
 
-**Current version: 1.3.0**
+**Current version: 1.4.0**
 
 ## Installation
 
@@ -43,9 +43,15 @@ claude --plugin-dir /path/to/zeabur-claude-plugin
 | `zeabur-template-backup` | Backup templates to git repository | Saving a template locally with standardized format |
 | `zeabur-template-deploy` | Deploy templates via CLI | Automating template deployments |
 | `zeabur-update-service` | Update service config without full redeploy | Modifying env vars or updating single service |
+| `zeabur-deploy` | Deploy local projects or from GitHub | User says "deploy this" or wants Git-based CI/CD deployment |
 | `zeabur-variables` | Manage environment variables via CLI | Managing env vars or handling empty variable issues |
 
 ## Changelog
+
+### 1.4.0
+
+- Added `zeabur-deploy` — deploy local projects directly (`zeabur deploy`) or from GitHub (`service deploy --template GIT`)
+- Supports both direct upload and Git-based deployment with auto-redeploy on push
 
 ### 1.3.0
 
