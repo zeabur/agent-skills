@@ -5,6 +5,8 @@ description: Use when backing up a Zeabur template to git. Use when user provide
 
 # Zeabur Template Backup
 
+> **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method.
+
 Backup an online Zeabur template to the local git repository with standardized naming.
 
 ## When to Use

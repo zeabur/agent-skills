@@ -5,6 +5,8 @@ description: Use when restarting Zeabur service. Use when you see error --env-id
 
 # Zeabur Service Restart
 
+> **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method.
+
 ## Restart Requires env-id
 
 ```bash

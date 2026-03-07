@@ -5,6 +5,8 @@ description: Use when renting a new dedicated server. Use when user wants to buy
 
 # Zeabur Server Rent
 
+> **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method.
+
 ## Rent a Server
 
 ```bash

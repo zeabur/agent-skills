@@ -5,6 +5,8 @@ description: Use when browsing available dedicated server options. Use when user
 
 # Zeabur Server Catalog
 
+> **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method.
+
 ## Get All Available Options (JSON)
 
 ```bash

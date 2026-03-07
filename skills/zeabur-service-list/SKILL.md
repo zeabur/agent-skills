@@ -5,6 +5,8 @@ description: Use when needing service IDs for other commands. Use when checking 
 
 # Zeabur Service List
 
+> **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method.
+
 ## Get Service IDs
 
 ```bash

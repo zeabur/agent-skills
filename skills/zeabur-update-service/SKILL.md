@@ -5,6 +5,8 @@ description: Use when modifying service config without full redeploy. Use when u
 
 # Zeabur Update Service Without Redeploy
 
+> **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method.
+
 ## Workflow
 
 ```bash

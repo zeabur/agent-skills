@@ -5,6 +5,8 @@ description: Use when service fails with Connection refused to database or redis
 
 # Zeabur Startup Order Issues
 
+> **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method.
+
 ## Symptom
 
 ```

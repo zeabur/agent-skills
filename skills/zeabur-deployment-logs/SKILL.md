@@ -5,6 +5,8 @@ description: Use when viewing service logs fails with env-id required error. Use
 
 # Zeabur Deployment Logs
 
+> **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method.
+
 ## Important: Always Use --env-id
 
 `deployment log` often requires `--env-id` even for single-environment projects (unlike `variable list` which auto-selects). **Always get the env-id first and pass it explicitly.**

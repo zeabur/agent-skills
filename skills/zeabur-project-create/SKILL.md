@@ -5,6 +5,8 @@ description: Use when creating a new Zeabur project. Use when deploying template
 
 # Zeabur Project Create
 
+> **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method.
+
 ## Create Project
 
 ```bash
@@ -32,29 +34,34 @@ PROJECT_ID=$(npx zeabur@latest project list -i=false 2>/dev/null | grep "<projec
 npx zeabur@latest context set project --id <project-id> -i=false -y
 ```
 
-## Available Regions
+## Choosing a Region (Dedicated Server)
 
-| Region | Code |
-|--------|------|
-| Tokyo (Haneda) | `hnd1` |
-| Hong Kong | `hkg1` |
-| Singapore | `sin1` |
-| San Francisco | `sfo1` |
-| Frankfurt | `fra1` |
-| São Paulo | `gru1` |
+**Do NOT hardcode or guess region options.** Always check the user's available servers first:
 
-## Dedicated Server
+```bash
+# 1. List the user's existing dedicated servers
+npx zeabur@latest server list -i=false
+```
 
-To create a project on a dedicated server, pass the server ID as the region:
+- If the user has servers, let them pick one and use `server-<server-id>` as the region:
 
 ```bash
 npx zeabur@latest project create -n "my-app" -r "server-<server-id>" -i=false
-
-# Example
-npx zeabur@latest project create -n "my-app" -r "server-6981ecae2a96ae7705ff2537" -i=false
 ```
 
-> Some templates (e.g. with `REQUIRE_DEDICATED_SERVER`) can only be deployed on dedicated servers. If you get `Unsupported template (code: REQUIRE_DEDICATED_SERVER)`, recreate the project with a dedicated server region.
+- If the user has **no servers**, guide them to rent one first:
+
+```bash
+# Browse available server options
+npx zeabur@latest server catalog -i=false
+
+# Rent a server (user picks provider/region/plan from catalog)
+npx zeabur@latest server rent --provider <code> --region <id> --plan <name> -y -i=false
+```
+
+Then use the new server's ID to create the project.
+
+> Some templates (e.g. with `REQUIRE_DEDICATED_SERVER`) can only be deployed on dedicated servers. If you get `Unsupported template (code: REQUIRE_DEDICATED_SERVER)`, rent a dedicated server and recreate the project with its region.
 
 ## Deploy Template to Project
 

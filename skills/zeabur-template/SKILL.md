@@ -5,6 +5,8 @@ description: Use when creating, editing, validating, or troubleshooting a Zeabur
 
 # Zeabur Template Knowledge Base
 
+> **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method.
+
 This skill provides comprehensive knowledge for creating, debugging, and publishing Zeabur templates. It combines reference documentation with battle-tested patterns from real template development.
 
 ## External Documentation

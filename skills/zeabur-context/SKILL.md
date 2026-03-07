@@ -5,6 +5,8 @@ description: Use when setting up Zeabur CLI context for a project. Use when comm
 
 # Zeabur Context Setup
 
+> **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method.
+
 ## The Pattern
 
 ```bash
