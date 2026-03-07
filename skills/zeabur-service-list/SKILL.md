@@ -10,11 +10,7 @@ description: Use when needing service IDs for other commands. Use when checking 
 ## Get Service IDs
 
 ```bash
-# Set project context first
-npx zeabur@latest context set project --id=<project-id> -i=false -y
-
-# List all services
-npx zeabur@latest service list -i=false
+npx zeabur@latest service list --project-id <project-id> -i=false
 ```
 
 ## Output Example

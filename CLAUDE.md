@@ -15,7 +15,6 @@ Zeabur Claude Plugin — a Claude Code plugin providing CLI-based skills for man
 
 | Category | Skills |
 |----------|--------|
-| Context & Setup | `zeabur-context` |
 | Deployment & Logs | `zeabur-deployment-logs`, `zeabur-template-deploy`, `zeabur-template-backup` |
 | Service Management | `zeabur-service-list`, `zeabur-restart`, `zeabur-update-service`, `zeabur-variables` |
 | Server Management | `zeabur-server-list`, `zeabur-server-catalog`, `zeabur-server-rent` |

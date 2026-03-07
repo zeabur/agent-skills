@@ -21,15 +21,12 @@ ERROR: environment is required
 ## Workflow
 
 ```bash
-# 1. Set project context
-npx zeabur@latest context set project --id <project-id> -i=false -y
+# 1. Get service ID
+npx zeabur@latest service list --project-id <project-id> -i=false
 
-# 2. Get service ID
-npx zeabur@latest service list -i=false
+# 2. Get env-id (see methods below)
 
-# 3. Get env-id (see methods below)
-
-# 4. View logs with env-id
+# 3. View logs with env-id
 npx zeabur@latest deployment log --service-id <service-id> --env-id <env-id> -t runtime -i=false 2>&1 | tail -50
 ```
 

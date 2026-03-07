@@ -27,13 +27,6 @@ npx zeabur@latest project list -i=false 2>/dev/null | grep "<project-name>"
 PROJECT_ID=$(npx zeabur@latest project list -i=false 2>/dev/null | grep "<project-name>" | awk '{print $1}' | sed 's/\x1b\[[0-9;]*m//g')
 ```
 
-## Set Context
-
-```bash
-# Set project context for subsequent commands
-npx zeabur@latest context set project --id <project-id> -i=false -y
-```
-
 ## Choosing a Region (Dedicated Server)
 
 **Do NOT hardcode or guess region options.** Always check the user's available servers first:
@@ -87,7 +80,4 @@ echo "Dashboard: https://zeabur.com/projects/$PROJECT_ID"
 
 # 3. Deploy template (non-interactive)
 npx zeabur@latest template deploy -i=false -f template.yml --project-id $PROJECT_ID --var PUBLIC_DOMAIN=myapp
-
-# 4. Set context for subsequent commands
-npx zeabur@latest context set project --id $PROJECT_ID -i=false -y
 ```
