@@ -2,7 +2,7 @@
 
 Claude Code plugin for Zeabur CLI operations, deployment, and troubleshooting.
 
-**Current version: 1.2.1**
+**Current version: 1.3.0**
 
 ## Installation
 
@@ -29,7 +29,6 @@ claude --plugin-dir /path/to/zeabur-claude-plugin
 
 | Skill | Description | Use When |
 |-------|-------------|----------|
-| `zeabur-context` | Configure Zeabur CLI project context | Commands return wrong project's services or context errors |
 | `zeabur-deployment-logs` | View and filter service logs | Checking logs or seeing env-id required errors |
 | `zeabur-domain-url` | Handle service domain and URL configuration | Services need public URLs or trailing slash issues |
 | `zeabur-migration` | Resolve database migration blocking issues | Service stuck "Waiting for migrations" |
@@ -48,6 +47,13 @@ claude --plugin-dir /path/to/zeabur-claude-plugin
 | `zeabur-variables` | Manage environment variables via CLI | Managing env vars or handling empty variable issues |
 
 ## Changelog
+
+### 1.3.0
+
+- Removed `zeabur-context` skill — use direct `--project-id` instead
+- Removed `--env-id` from all skills (now auto-resolved by CLI)
+- Added Node.js install guidance to npx notice in all skills
+- Dynamic server selection for project create & enforce `npx zeabur@latest`
 
 ### 1.2.0
 
