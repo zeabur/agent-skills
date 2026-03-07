@@ -9,14 +9,13 @@ Claude Code plugin for Zeabur CLI operations, deployment, and troubleshooting.
 In Claude Code, run:
 
 ```
-/plugin marketplace add zeabur/zeabur-claude-plugin
-/plugin install zeabur@zeabur
+claude plugin marketplace add zeabur/zeabur-claude-plugin && claude plugin install zeabur@zeabur
 ```
 
 Update to latest version:
 
 ```
-claude plugin update zeabur@zeabur
+claude plugin marketplace update zeabur && claude plugin update zeabur@zeabur
 ```
 
 Or test locally:
