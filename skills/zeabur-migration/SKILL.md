@@ -5,7 +5,7 @@ description: Use when services stuck on Waiting for database migrations to compl
 
 # Zeabur Migration Issues
 
-> **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method. If `npx` is not available, install Node.js first (e.g. `brew install node` on macOS, `apt install nodejs npm` on Linux).
+> **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method. If `npx` is not available, install Node.js first.
 
 ## Symptom
 

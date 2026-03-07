@@ -5,7 +5,7 @@ description: Use when backing up a Zeabur template to git. Use when user provide
 
 # Zeabur Template Backup
 
-> **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method. If `npx` is not available, install Node.js first (e.g. `brew install node` on macOS, `apt install nodejs npm` on Linux).
+> **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method. If `npx` is not available, install Node.js first.
 
 Backup an online Zeabur template to the local git repository with standardized naming.
 

@@ -5,7 +5,7 @@ description: Use when restarting a Zeabur service.
 
 # Zeabur Service Restart
 
-> **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method. If `npx` is not available, install Node.js first (e.g. `brew install node` on macOS, `apt install nodejs npm` on Linux).
+> **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method. If `npx` is not available, install Node.js first.
 
 ## Restart a Service
 
