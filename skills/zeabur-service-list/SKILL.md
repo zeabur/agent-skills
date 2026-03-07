@@ -5,7 +5,7 @@ description: Use when needing service IDs for other commands. Use when checking 
 
 # Zeabur Service List
 
-> **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method.
+> **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method. If `npx` is not available, install Node.js first (e.g. `brew install node` on macOS, `apt install nodejs npm` on Linux).
 
 ## Get Service IDs
 

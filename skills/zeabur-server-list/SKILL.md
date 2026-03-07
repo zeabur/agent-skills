@@ -5,7 +5,7 @@ description: Use when listing dedicated servers. Use when checking server status
 
 # Zeabur Server List & Get
 
-> **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method.
+> **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method. If `npx` is not available, install Node.js first (e.g. `brew install node` on macOS, `apt install nodejs npm` on Linux).
 
 ## List All Servers
 

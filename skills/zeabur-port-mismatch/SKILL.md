@@ -5,7 +5,7 @@ description: Use when proxy shows dial tcp timeout or i/o timeout. Use when serv
 
 # Zeabur Port Mismatch
 
-> **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method.
+> **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method. If `npx` is not available, install Node.js first (e.g. `brew install node` on macOS, `apt install nodejs npm` on Linux).
 
 ## Symptom
 
