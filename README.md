@@ -2,7 +2,7 @@
 
 Claude Code plugin for Zeabur CLI operations, deployment, and troubleshooting.
 
-**Current version: 1.4.0**
+**Current version: 1.5.0**
 
 ## Installation
 
@@ -47,6 +47,13 @@ claude --plugin-dir /path/to/zeabur-claude-plugin
 | `zeabur-variables` | Manage environment variables via CLI | Managing env vars or handling empty variable issues |
 
 ## Changelog
+
+### 1.5.0
+
+- Added cross-references ("See also") to all 17 skills for better discoverability
+- Refactored `zeabur-template` with progressive disclosure — moved database configs, complexity levels, and hard-won lessons to `references/`
+- Standardized workflow section naming across all skills
+- Fixed `zeabur-template-deploy` filename casing (`skill.md` → `SKILL.md`)
 
 ### 1.4.0
 
