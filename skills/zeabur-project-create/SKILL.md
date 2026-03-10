@@ -1,6 +1,6 @@
 ---
 name: zeabur-project-create
-description: Use when creating a new Zeabur project. Use when deploying templates to a new project.
+description: Use when creating a new Zeabur project. Use when deploying templates to a new project. Use when user says "create project", "new project", or "set up a new environment".
 ---
 
 # Zeabur Project Create

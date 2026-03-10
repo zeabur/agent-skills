@@ -1,6 +1,6 @@
 ---
 name: zeabur-template
-description: Use when creating, editing, validating, or troubleshooting a Zeabur template YAML. Use when converting docker-compose to Zeabur template.
+description: Use when creating, editing, validating, or troubleshooting a Zeabur template YAML. Use when converting docker-compose to Zeabur template. Do NOT use for deploying templates (use zeabur-template-deploy instead).
 ---
 
 # Zeabur Template Knowledge Base

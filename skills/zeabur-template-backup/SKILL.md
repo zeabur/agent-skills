@@ -1,6 +1,6 @@
 ---
 name: zeabur-template-backup
-description: Use when backing up a Zeabur template to git. Use when user provides a Zeabur template URL like zeabur.com/templates/XXXXXX.
+description: Use when backing up a Zeabur template to git. Use when user provides a Zeabur template URL like zeabur.com/templates/XXXXXX. Use when user says "save this template", "backup template", or "download template YAML".
 ---
 
 # Zeabur Template Backup
