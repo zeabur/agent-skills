@@ -38,3 +38,8 @@ npx zeabur@latest deployment log --service-id <id> -w -i=false
 | Use `grep` to filter | `... 2>&1 \| grep -i "error\|started\|ready"` |
 | Note singular | `deployment log` not `deployment logs` |
 | Check service status | Look for `SERVER STARTED`, `Ready`, `listening` |
+
+## See Also
+
+- `zeabur-service-list` — get service IDs needed for log commands
+- `zeabur-restart` — restart a service after diagnosing issues

@@ -15,7 +15,7 @@ npx zeabur@latest service restart --id <service-id> -y -i=false
 
 **Always use `--id` (service ID), not `--name`** — name lookup is unreliable.
 
-## Full Workflow
+## Workflow
 
 ```bash
 # 1. Get service ID
@@ -24,3 +24,8 @@ npx zeabur@latest service list --project-id <project-id> -i=false
 # 2. Restart
 npx zeabur@latest service restart --id <service-id> -y -i=false
 ```
+
+## See Also
+
+- `zeabur-service-list` — get service IDs needed for restart
+- `zeabur-deployment-logs` — check logs to diagnose why a restart was needed

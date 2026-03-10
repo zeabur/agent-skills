@@ -39,3 +39,8 @@ npx zeabur@latest variable list --id <service-id> -i=false
 ```
 
 **For `${VAR}` references → Use Zeabur Dashboard, not CLI.**
+
+## See Also
+
+- `zeabur-service-list` — get service IDs needed for variable commands
+- `zeabur-update-service` — update variables and restart in one workflow

@@ -119,3 +119,7 @@ git push
 | curl returns HTML instead of YAML | Verify the template code is correct |
 | Template name has special chars | Use simple kebab-case for directory |
 | Already exists | Compare with existing file, update if needed |
+
+## See Also
+
+- `zeabur-template` — template YAML reference and editing guide

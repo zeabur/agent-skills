@@ -32,3 +32,10 @@ npx zeabur@latest service list --project-id <project-id> -i=false
 | Restart service | `service restart --id <id> -y` |
 
 **Always use `--id` not `--name`** — name lookup is unreliable.
+
+## See Also
+
+- `zeabur-update-service` — update env vars on a specific service
+- `zeabur-variables` — manage environment variables
+- `zeabur-restart` — restart a service
+- `zeabur-deployment-logs` — view service logs

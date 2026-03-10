@@ -46,3 +46,8 @@ npx zeabur@latest server ssh <server-id>
 ```
 
 For managed servers, the password is fetched automatically. If `sshpass` is installed, login is fully automatic; otherwise the password is printed for manual entry.
+
+## See Also
+
+- `zeabur-server-catalog` — browse available servers to rent
+- `zeabur-server-rent` — rent a new dedicated server

@@ -39,3 +39,9 @@ npx zeabur@latest service restart --id <service-id> -y -i=false
 - Add missing config
 - Change ports, URLs, credentials
 - **No need to redeploy entire template**
+
+## See Also
+
+- `zeabur-service-list` — get service IDs needed for updates
+- `zeabur-variables` — detailed guide on variable management
+- `zeabur-restart` — restart service after config changes

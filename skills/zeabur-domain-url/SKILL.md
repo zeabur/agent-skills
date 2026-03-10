@@ -41,3 +41,7 @@ Expose URL from entry service to others:
 ```
 
 **Use `https://${ZEABUR_WEB_DOMAIN}` not `${ZEABUR_WEB_URL}` to avoid trailing slash.**
+
+## See Also
+
+- `zeabur-template` — template YAML reference for domain binding and env vars

@@ -136,3 +136,8 @@ Only guide the user through this flow when they specifically ask for Git-based d
 - Direct deploy uploads code directly from the local machine — no Git history or GitHub account required.
 - For static sites, Zeabur auto-detects and serves them correctly.
 - If the user has not created a project yet, `npx zeabur@latest deploy` in interactive mode will guide them through project creation.
+
+## See Also
+
+- `zeabur-project-create` — create a project before deploying
+- `zeabur-deployment-logs` — check logs after deployment

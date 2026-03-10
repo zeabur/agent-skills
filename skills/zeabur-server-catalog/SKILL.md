@@ -68,3 +68,8 @@ Parse the catalog JSON to extract `provider`, `region`, and `plan` values, then:
 ```bash
 npx zeabur@latest server rent --provider <code> --region <id> --plan <name> -y -i=false
 ```
+
+## See Also
+
+- `zeabur-server-rent` — rent a server after browsing the catalog
+- `zeabur-server-list` — list your existing servers

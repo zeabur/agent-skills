@@ -88,3 +88,8 @@ spec:
 | Missing variables error | Add all required `--var` flags |
 | Variable with `${REF}` | Use literal value or set in Dashboard after deploy |
 | DOMAIN type validation | Domain availability checked automatically |
+
+## See Also
+
+- `zeabur-template` — create and edit template YAML files
+- `zeabur-project-create` — create a project before deploying a template
