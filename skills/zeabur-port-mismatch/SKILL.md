@@ -72,3 +72,8 @@ HTTPServer(('0.0.0.0', 8080), H).serve_forever()
 " &
 exec my-headless-app
 ```
+
+## See Also
+
+- `zeabur-template` — template YAML reference for port configuration
+- `zeabur-deployment-logs` — check logs to confirm port binding

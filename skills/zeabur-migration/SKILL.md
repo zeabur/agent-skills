@@ -48,3 +48,8 @@ spec:
 ```
 
 **Option A is simpler** - migrations run on API startup and are idempotent (safe to repeat).
+
+## See Also
+
+- `zeabur-template` — template YAML reference for command placement
+- `zeabur-deployment-logs` — check migration logs for errors

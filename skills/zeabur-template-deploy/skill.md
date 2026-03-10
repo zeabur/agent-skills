@@ -1,6 +1,6 @@
 ---
 name: zeabur-template-deploy
-description: Use when deploying Zeabur templates via CLI. Use when automating template deployments in non-interactive mode.
+description: Use when deploying Zeabur templates via CLI. Use when automating template deployments in non-interactive mode. Use when user says "deploy template", "install template", or provides a template YAML file to deploy.
 ---
 
 # Zeabur Template Deploy
@@ -88,3 +88,8 @@ spec:
 | Missing variables error | Add all required `--var` flags |
 | Variable with `${REF}` | Use literal value or set in Dashboard after deploy |
 | DOMAIN type validation | Domain availability checked automatically |
+
+## See Also
+
+- `zeabur-template` — create and edit template YAML files
+- `zeabur-project-create` — create a project before deploying a template
