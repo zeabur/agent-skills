@@ -1,6 +1,6 @@
 ---
 name: zeabur-deployment-logs
-description: Use when viewing service runtime or build logs.
+description: Use when viewing service runtime or build logs. Use when user says "show logs", "why did deploy fail", "check build output", or "debug runtime error".
 ---
 
 # Zeabur Deployment Logs
@@ -35,7 +35,7 @@ npx zeabur@latest deployment log --service-id <id> -w -i=false
 | Tip | Details |
 |-----|---------|
 | Use `tail -50` | Logs can be verbose, pipe to tail for recent entries |
-| Use `grep` to filter | `... 2>&1 \| grep -i "error\|started\|ready"` |
+| Use `grep` to filter | `... 2>&1 | grep -i "error\|started\|ready"` |
 | Note singular | `deployment log` not `deployment logs` |
 | Check service status | Look for `SERVER STARTED`, `Ready`, `listening` |
 

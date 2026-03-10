@@ -1,6 +1,6 @@
 ---
 name: zeabur-service-list
-description: Use when needing service IDs for other commands. Use when checking what services exist in a project.
+description: Use when needing service IDs for other commands. Use when checking what services exist in a project. Use when user says "list services", "what's running", or "show my services".
 ---
 
 # Zeabur Service List

@@ -1,6 +1,6 @@
 ---
 name: zeabur-server-list
-description: Use when listing dedicated servers. Use when checking server status, IP, or provider info. Use when SSH into a server.
+description: Use when listing dedicated servers. Use when checking server status, IP, or provider info. Use when user says "show my servers", "SSH into server", or "check server status". Do NOT use for browsing purchasable servers (use zeabur-server-catalog instead).
 ---
 
 # Zeabur Server List & Get

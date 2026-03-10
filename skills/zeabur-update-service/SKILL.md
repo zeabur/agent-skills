@@ -1,6 +1,6 @@
 ---
 name: zeabur-update-service
-description: Use when modifying service config without full redeploy. Use when updating env vars and restarting single service.
+description: Use when modifying service config without full redeploy. Use when updating env vars and restarting single service. Use when user says "change env var", "update config", or "fix variable without redeploying".
 ---
 
 # Zeabur Update Service Without Redeploy

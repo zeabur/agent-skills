@@ -1,6 +1,6 @@
 ---
 name: zeabur-server-catalog
-description: Use when browsing available dedicated server options. Use when user asks what servers are available to rent.
+description: Use when browsing available dedicated server options. Use when user asks "what servers are available", "show server prices", or "compare server plans". Do NOT use for listing owned servers (use zeabur-server-list instead).
 ---
 
 # Zeabur Server Catalog

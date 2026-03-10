@@ -1,6 +1,6 @@
 ---
 name: zeabur-template-deploy
-description: Use when deploying Zeabur templates via CLI. Use when automating template deployments in non-interactive mode.
+description: Use when deploying Zeabur templates via CLI. Use when automating template deployments in non-interactive mode. Use when user says "deploy template", "install template", or provides a template YAML file to deploy.
 ---
 
 # Zeabur Template Deploy

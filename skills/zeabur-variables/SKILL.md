@@ -1,6 +1,6 @@
 ---
 name: zeabur-variables
-description: Use when managing Zeabur environment variables via CLI. Use when variables are empty or SERVICE_NOT_FOUND errors.
+description: Use when managing Zeabur environment variables via CLI. Use when variables are empty or SERVICE_NOT_FOUND errors. Use when user says "set env var", "add variable", or "why is my variable empty".
 ---
 
 # Zeabur Variables Management
