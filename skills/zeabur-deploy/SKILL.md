@@ -134,6 +134,7 @@ Only guide the user through this flow when they specifically ask for Git-based d
 
 - Direct deploy only requires `--project-id` — a new service is created automatically. No Git history or GitHub account required.
 - For static sites, Zeabur auto-detects and serves them correctly.
+- When binding a domain with `--domain`, if the user did not specify an exact domain name, you MUST append a random suffix (e.g. `myapp-a3x7.zeabur.app` instead of `myapp.zeabur.app`) to avoid conflicts with existing domains. Only use the exact name when the user explicitly provides it.
 - After a successful deployment, offer to save the Project ID and Service ID to the current project's `CLAUDE.md` (preferred) or `README.md`. This way future conversations can skip the "which project?" step and deploy directly.
 ## See Also
 
