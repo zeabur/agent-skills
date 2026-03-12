@@ -37,28 +37,24 @@ Deploy the current local directory to Zeabur with one command:
 
 ```bash
 # Deploy current directory (interactive — will prompt for project/service)
-npx zeabur@latest deploy
-
-# Deploy and create a new service
-npx zeabur@latest deploy --create --name "<service-name>"
+npx zeabur@latest deploy --json
 
 # Deploy to an existing service
-npx zeabur@latest deploy --service-id <service-id> --environment-id <environment-id>
-
-# Deploy and bind a domain
-npx zeabur@latest deploy --create --name "<service-name>" --domain "<subdomain>.zeabur.app"
+npx zeabur@latest deploy --json --service-id <service-id> --environment-id <environment-id>
 ```
 
 ### Flags
 
 | Flag | Description |
 |------|-------------|
-| `--create` | Create a new service for this deployment |
 | `--name` | Service name |
 | `--service-id` | Service ID to redeploy on (for updating existing service) |
 | `--environment-id` | Environment ID to redeploy on |
 | `--domain` | Bind a domain (e.g. `myapp.zeabur.app`) |
+| `--json` | Output in JSON format (always use this) |
 | `-i=false` | Non-interactive mode |
+
+> **Note:** Do NOT use `--create`, `-r`, or `--region` flags with deploy commands. If the user needs to create a new project or select a region, use the `zeabur-project-create` skill first.
 
 ### Example Workflow
 
@@ -67,10 +63,10 @@ npx zeabur@latest deploy --create --name "<service-name>" --domain "<subdomain>.
 cd /path/to/project
 
 # 2. Deploy directly
-npx zeabur@latest deploy --create --name "my-website"
+npx zeabur@latest deploy --json
 ```
 
-No Git repository, no GitHub, no extra steps needed.
+No Git repository, no GitHub, no extra steps needed. If no project exists yet, use the `zeabur-project-create` skill to create one first.
 
 ## Git Deploy (On User Request)
 
@@ -81,17 +77,17 @@ If the user explicitly wants Git-based deployment (e.g. for CI/CD, auto-redeploy
 
 ```bash
 # Interactive mode — prompts for project, repo, and branch selection
-npx zeabur@latest service deploy --template GIT
+npx zeabur@latest service deploy --json --template GIT
 
 # Non-interactive mode — required parameters only
-npx zeabur@latest service deploy -i=false \
+npx zeabur@latest service deploy --json -i=false \
   --project-id <project-id> \
   --template GIT \
   --repo-id <repo-id> \
   --branch-name <branch>
 
 # With optional service name
-npx zeabur@latest service deploy -i=false \
+npx zeabur@latest service deploy --json -i=false \
   --project-id <project-id> \
   --template GIT \
   --repo-id <repo-id> \
@@ -123,7 +119,7 @@ gh repo create my-app --public --source=. --push
 REPO_ID=$(gh api repos/OWNER/my-app --jq .id)
 
 # 3. Deploy from GitHub (PROJECT_ID must be known beforehand — see Prerequisites)
-npx zeabur@latest service deploy -i=false \
+npx zeabur@latest service deploy --json -i=false \
   --project-id $PROJECT_ID \
   --template GIT \
   --repo-id $REPO_ID \
@@ -133,7 +129,7 @@ npx zeabur@latest service deploy -i=false \
 **Interactive (simpler, will prompt for repo and branch):**
 
 ```bash
-npx zeabur@latest service deploy --template GIT
+npx zeabur@latest service deploy --json --template GIT
 ```
 
 After deployment, Zeabur will auto-redeploy on every push to the selected branch.
