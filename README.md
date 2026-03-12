@@ -2,7 +2,7 @@
 
 Claude Code plugin for Zeabur CLI operations, deployment, and troubleshooting.
 
-**Current version: 1.8.1**
+**Current version: 1.9.0**
 
 ## Installation
 
@@ -47,6 +47,12 @@ claude --plugin-dir /path/to/zeabur-claude-plugin
 | `zeabur-variables` | Manage environment variables via CLI | Managing env vars or handling empty variable issues |
 
 ## Changelog
+
+### 1.9.0
+
+- Require asking user to pick server when creating project, not auto-selecting
+- Removed `--domain` flag from deploy skill docs
+- Strengthened project-create skill invocation: must invoke skill, not CLI directly
 
 ### 1.8.1
 

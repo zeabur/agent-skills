@@ -1,7 +1,7 @@
 {
   "name": "zeabur",
   "description": "Zeabur CLI skills for deployment, template management, and troubleshooting",
-  "version": "1.8.1",
+  "version": "1.9.0",
   "author": {
     "name": "Can"
   },
