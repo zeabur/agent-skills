@@ -2,7 +2,7 @@
 
 Claude Code plugin for Zeabur CLI operations, deployment, and troubleshooting.
 
-**Current version: 1.7.0**
+**Current version: 1.8.0**
 
 ## Installation
 
@@ -47,6 +47,11 @@ claude --plugin-dir /path/to/zeabur-claude-plugin
 | `zeabur-variables` | Manage environment variables via CLI | Managing env vars or handling empty variable issues |
 
 ## Changelog
+
+### 1.8.0
+
+- Deploy now only requires `--project-id` for non-interactive mode — `--service-id` is optional (omit to auto-create a new service)
+- Removed `-i=false` from deploy examples — `--json` mode handles non-interactive automatically
 
 ### 1.7.0
 
