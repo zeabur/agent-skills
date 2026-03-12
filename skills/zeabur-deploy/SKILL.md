@@ -55,7 +55,6 @@ npx zeabur@latest deploy --project-id <project-id> --service-id <service-id> --j
 | `--name` | No | Service name (defaults to directory name) |
 | `--service-id` | No | Service ID to redeploy on (omit to create new service) |
 | `--environment-id` | No | Environment ID (defaults to first environment) |
-| `--domain` | No | Bind a domain (e.g. `myapp.zeabur.app`) |
 
 > **Note:** Do NOT use `--create`, `-r`, or `--region` flags with deploy commands. If the user needs to create a new project or select a region, use the `zeabur-project-create` skill first.
 
@@ -134,7 +133,6 @@ Only guide the user through this flow when they specifically ask for Git-based d
 
 - Direct deploy only requires `--project-id` — a new service is created automatically. No Git history or GitHub account required.
 - For static sites, Zeabur auto-detects and serves them correctly.
-- When binding a domain with `--domain`, if the user did not specify an exact domain name, you MUST append a random suffix (e.g. `myapp-a3x7.zeabur.app` instead of `myapp.zeabur.app`) to avoid conflicts with existing domains. Only use the exact name when the user explicitly provides it.
 - After a successful deployment, offer to save the Project ID and Service ID to the current project's `CLAUDE.md` (preferred) or `README.md`. This way future conversations can skip the "which project?" step and deploy directly.
 ## See Also
 
