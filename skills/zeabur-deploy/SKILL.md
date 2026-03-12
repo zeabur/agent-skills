@@ -16,7 +16,7 @@ npx zeabur@latest project list -i=false --json
 ```
 
 - When projects exist, ask the user which one to use.
-- For an empty list, **you MUST invoke the `zeabur-project-create` skill** to create a project first. Do NOT run `project create` CLI commands directly — the skill handles region selection via server list, which is required.
+- If the user wants to create a new project (whether the list is empty or not), **you MUST invoke the `zeabur-project-create` skill**. Do NOT run `project create` CLI commands directly — the skill handles region selection via server list, which is required.
 
 **Do not proceed with deployment until the target project is confirmed.**
 
