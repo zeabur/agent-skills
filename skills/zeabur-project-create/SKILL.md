@@ -17,11 +17,15 @@ description: Use when creating a new Zeabur project. Use when deploying template
 npx zeabur@latest server list -i=false --json
 ```
 
-**Step 2 — Use the server ID with `server-` prefix as the region:**
+**Step 2 — Ask the user which server to use:**
 
-The region code format is `server-<server-id>`, where `<server-id>` comes from the server list output.
+Present the server list to the user (show name, provider, and region for each) and **ask them to pick one**. Do NOT choose a server on the user's behalf. Also offer the option to rent a new server if none of the existing ones are suitable.
 
 - If the user has **no servers**, guide them to rent one first using the `zeabur-server-rent` skill (or `zeabur-server-catalog` to browse options).
+
+**Step 3 — Use the selected server ID with `server-` prefix as the region:**
+
+The region code format is `server-<server-id>`, where `<server-id>` comes from the server list output.
 
 > Some templates (e.g. with `REQUIRE_DEDICATED_SERVER`) can only be deployed on dedicated servers. If you get `Unsupported template (code: REQUIRE_DEDICATED_SERVER)`, rent a dedicated server and recreate the project with its region.
 
