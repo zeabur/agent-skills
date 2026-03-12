@@ -2,7 +2,7 @@
 
 Claude Code plugin for Zeabur CLI operations, deployment, and troubleshooting.
 
-**Current version: 1.5.0**
+**Current version: 1.6.0**
 
 ## Installation
 
@@ -47,6 +47,12 @@ claude --plugin-dir /path/to/zeabur-claude-plugin
 | `zeabur-variables` | Manage environment variables via CLI | Managing env vars or handling empty variable issues |
 
 ## Changelog
+
+### 1.6.0
+
+- Added CLI domain management guide (list, create, delete) with non-interactive flags
+- Documented `-g` (generated) vs custom domain behavior and region-based suffixes
+- Added deploy prerequisite: require project identification before deploy
 
 ### 1.5.0
 
