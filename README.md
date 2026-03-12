@@ -2,7 +2,7 @@
 
 Claude Code plugin for Zeabur CLI operations, deployment, and troubleshooting.
 
-**Current version: 1.6.0**
+**Current version: 1.7.0**
 
 ## Installation
 
@@ -47,6 +47,12 @@ claude --plugin-dir /path/to/zeabur-claude-plugin
 | `zeabur-variables` | Manage environment variables via CLI | Managing env vars or handling empty variable issues |
 
 ## Changelog
+
+### 1.7.0
+
+- Removed `--create` and `--region` flags from deploy skill — redirect to `zeabur-project-create` instead
+- Deprecated old region codes (`hnd1`, `tpe1`) — regions must now use `server-<server-id>` from server list
+- Added `--json` flag to all CLI command examples across deploy and project-create skills
 
 ### 1.6.0
 
