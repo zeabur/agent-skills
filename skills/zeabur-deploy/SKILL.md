@@ -36,11 +36,11 @@ Zeabur supports two ways to deploy a project:
 Deploy the current local directory to Zeabur with one command:
 
 ```bash
-# Deploy current directory (interactive — will prompt for project/service)
-npx zeabur@latest deploy --json
+# Deploy current directory
+npx zeabur@latest deploy --json -i=false
 
 # Deploy to an existing service
-npx zeabur@latest deploy --json --service-id <service-id> --environment-id <environment-id>
+npx zeabur@latest deploy --json -i=false --service-id <service-id> --environment-id <environment-id>
 ```
 
 ### Flags
@@ -63,7 +63,7 @@ npx zeabur@latest deploy --json --service-id <service-id> --environment-id <envi
 cd /path/to/project
 
 # 2. Deploy directly
-npx zeabur@latest deploy --json
+npx zeabur@latest deploy --json -i=false
 ```
 
 No Git repository, no GitHub, no extra steps needed. If no project exists yet, use the `zeabur-project-create` skill to create one first.
@@ -76,9 +76,6 @@ If the user explicitly wants Git-based deployment (e.g. for CI/CD, auto-redeploy
 2. Deploy via CLI:
 
 ```bash
-# Interactive mode — prompts for project, repo, and branch selection
-npx zeabur@latest service deploy --json --template GIT
-
 # Non-interactive mode — required parameters only
 npx zeabur@latest service deploy --json -i=false \
   --project-id <project-id> \
@@ -124,12 +121,6 @@ npx zeabur@latest service deploy --json -i=false \
   --template GIT \
   --repo-id $REPO_ID \
   --branch-name main
-```
-
-**Interactive (simpler, will prompt for repo and branch):**
-
-```bash
-npx zeabur@latest service deploy --json --template GIT
 ```
 
 After deployment, Zeabur will auto-redeploy on every push to the selected branch.
