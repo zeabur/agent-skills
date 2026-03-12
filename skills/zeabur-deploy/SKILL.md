@@ -16,7 +16,7 @@ npx zeabur@latest project list -i=false --json
 ```
 
 - When projects exist, ask the user which one to use.
-- For an empty list, use the `zeabur-project-create` skill to create a project first.
+- For an empty list, **you MUST invoke the `zeabur-project-create` skill** to create a project first. Do NOT run `project create` CLI commands directly — the skill handles region selection via server list, which is required.
 
 **Do not proceed with deployment until the target project is confirmed.**
 
@@ -69,7 +69,7 @@ cd /path/to/project
 npx zeabur@latest deploy --project-id <project-id> --json
 ```
 
-No Git repository, no GitHub, no extra steps needed. If no project exists yet, use the `zeabur-project-create` skill to create one first.
+No Git repository, no GitHub, no extra steps needed. If no project exists yet, **invoke the `zeabur-project-create` skill** (do not run CLI commands directly).
 
 ## Git Deploy (On User Request)
 
