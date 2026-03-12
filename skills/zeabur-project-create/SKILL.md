@@ -1,6 +1,6 @@
 ---
 name: zeabur-project-create
-description: Use when creating a new Zeabur project. Use when deploying templates to a new project.
+description: Use when creating a new Zeabur project. Use when deploying templates to a new project. Use when user says "create project", "new project", or "set up a new environment".
 ---
 
 # Zeabur Project Create
@@ -67,7 +67,7 @@ npx zeabur@latest template deploy -i=false \
   --var KEY=value
 ```
 
-## Full Workflow Example
+## Workflow
 
 ```bash
 # 1. Create project
@@ -81,3 +81,8 @@ echo "Dashboard: https://zeabur.com/projects/$PROJECT_ID"
 # 3. Deploy template (non-interactive)
 npx zeabur@latest template deploy -i=false -f template.yml --project-id $PROJECT_ID --var PUBLIC_DOMAIN=myapp
 ```
+
+## See Also
+
+- `zeabur-template-deploy` — detailed template deployment flags and troubleshooting
+- `zeabur-server-rent` — rent a dedicated server before creating a project on it

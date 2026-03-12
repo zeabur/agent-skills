@@ -13,7 +13,7 @@ description: Use when renting a new dedicated server. Use when user wants to buy
 npx zeabur@latest server rent --provider <code> --region <id> --plan <name> -y -i=false
 ```
 
-## Full Workflow
+## Workflow
 
 ### 1. Browse available options
 
@@ -49,3 +49,9 @@ npx zeabur@latest server get <server-id> -i=false
 ```
 
 Look for `provisioningStatus` to change to `READY` and `VM STATUS` to `RUNNING`.
+
+## See Also
+
+- `zeabur-server-catalog` — browse available server options before renting
+- `zeabur-server-list` — check server status after provisioning
+- `zeabur-project-create` — create a project on the new server

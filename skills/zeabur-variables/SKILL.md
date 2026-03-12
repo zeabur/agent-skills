@@ -1,6 +1,6 @@
 ---
 name: zeabur-variables
-description: Use when managing Zeabur environment variables via CLI. Use when variables are empty or SERVICE_NOT_FOUND errors.
+description: Use when managing Zeabur environment variables via CLI. Use when variables are empty or SERVICE_NOT_FOUND errors. Use when user says "set env var", "add variable", or "why is my variable empty".
 ---
 
 # Zeabur Variables Management
@@ -39,3 +39,8 @@ npx zeabur@latest variable list --id <service-id> -i=false
 ```
 
 **For `${VAR}` references → Use Zeabur Dashboard, not CLI.**
+
+## See Also
+
+- `zeabur-service-list` — get service IDs needed for variable commands
+- `zeabur-update-service` — update variables and restart in one workflow

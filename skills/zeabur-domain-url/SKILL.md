@@ -1,6 +1,6 @@
 ---
 name: zeabur-domain-url
-description: Use when services need public URL for redirects or CORS. Use when WEB_URL or similar has trailing slash issues.
+description: Use when services need public URL for redirects or CORS. Use when WEB_URL or similar has trailing slash issues. Use when user reports "redirect goes to wrong URL", "CORS error", or "trailing slash problem".
 ---
 
 # Zeabur Domain URL Configuration
@@ -91,3 +91,7 @@ npx zeabur@latest domain delete --id <service-id> --domain <domain> -y -i=false
 - `--domain` is always required in non-interactive mode. Without it the CLI returns `INVALID_DOMAIN_NAME`.
 - With `-g`, provide only the prefix (e.g., `myapp`), **not** the full `myapp.zeabur.app`.
 - Without `-g`, provide the complete domain (e.g., `example.com`).
+
+## See Also
+
+- `zeabur-template` — template YAML reference for domain binding and env vars
