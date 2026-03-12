@@ -7,6 +7,19 @@ description: Use when deploying a local project or codebase to Zeabur. Use when 
 
 > **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method. If `npx` is not available, install Node.js first.
 
+## Prerequisites — Identify the Target Project
+
+Before using this skill, you must first determine which Zeabur project to deploy to. If neither the conversation history nor project files mention a project, run:
+
+```bash
+npx zeabur@latest project list -i=false --json
+```
+
+- When projects exist, ask the user which one to use.
+- For an empty list, use the `zeabur-project-create` skill to create a project first.
+
+**Do not proceed with deployment until the target project is confirmed.**
+
 ## Choosing a Deploy Method
 
 Zeabur supports two ways to deploy a project:
@@ -109,11 +122,7 @@ gh repo create my-app --public --source=. --push
 # 2. Get GitHub repo ID (Zeabur uses GitHub's numeric repo ID)
 REPO_ID=$(gh api repos/OWNER/my-app --jq .id)
 
-# 3. Create a Zeabur project
-npx zeabur@latest project create -n "my-app" -r "hnd1" -i=false
-PROJECT_ID=$(npx zeabur@latest project list -i=false 2>/dev/null | grep "my-app" | awk '{print $1}' | sed 's/\x1b\[[0-9;]*m//g')
-
-# 4. Deploy from GitHub
+# 3. Deploy from GitHub (PROJECT_ID must be known beforehand — see Prerequisites)
 npx zeabur@latest service deploy -i=false \
   --project-id $PROJECT_ID \
   --template GIT \
@@ -135,9 +144,8 @@ Only guide the user through this flow when they specifically ask for Git-based d
 
 - Direct deploy uploads code directly from the local machine — no Git history or GitHub account required.
 - For static sites, Zeabur auto-detects and serves them correctly.
-- If the user has not created a project yet, `npx zeabur@latest deploy` in interactive mode will guide them through project creation.
-
+- After a successful deployment, offer to save the Project ID and Service ID to the current project's `CLAUDE.md` (preferred) or `README.md`. This way future conversations can skip the "which project?" step and deploy directly.
 ## See Also
 
-- `zeabur-project-create` — create a project before deploying
+- `zeabur-project-create` — create a project if none exists
 - `zeabur-deployment-logs` — check logs after deployment
