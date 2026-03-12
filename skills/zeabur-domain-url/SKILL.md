@@ -42,6 +42,56 @@ Expose URL from entry service to others:
 
 **Use `https://${ZEABUR_WEB_DOMAIN}` not `${ZEABUR_WEB_URL}` to avoid trailing slash.**
 
+## CLI Domain Management
+
+### List domains
+
+```bash
+npx zeabur@latest domain list --id <service-id> -i=false
+```
+
+### Create a generated domain (*.zeabur.app)
+
+Use `-g` to create a Zeabur-managed subdomain. With `-g`, `--domain` takes only the **prefix** (not the full domain):
+
+```bash
+npx zeabur@latest domain create --id <service-id> -g --domain myapp -y -i=false
+# Suffix is auto-appended by backend based on region:
+#   Default:           myapp.zeabur.app
+#   Aliyun (China):    myapp.preview.aliyun-zeabur.cn
+#   Tencent (China):   myapp.preview.tencent-zeabur.cn
+#   Huawei (China):    myapp.preview.huawei-zeabur.cn
+# China suffixes require completed identity verification on Zeabur.
+```
+
+Validation rules for generated domain prefix:
+- At least 3 characters
+- No dots allowed — only alphanumeric and hyphens
+- Error `DOMAIN_NAME_TOO_SHORT` if less than 3 chars
+- Error `UNSUPPORTED_DOMAIN_NAME` if prefix contains dots
+
+### Create a custom domain
+
+Without `-g`, `--domain` takes a **full domain name**:
+
+```bash
+npx zeabur@latest domain create --id <service-id> --domain example.com -y -i=false
+```
+
+You must configure DNS records manually after creating a custom domain.
+
+### Delete domain
+
+```bash
+npx zeabur@latest domain delete --id <service-id> --domain <domain> -y -i=false
+```
+
+### Caution
+
+- `--domain` is always required in non-interactive mode. Without it the CLI returns `INVALID_DOMAIN_NAME`.
+- With `-g`, provide only the prefix (e.g., `myapp`), **not** the full `myapp.zeabur.app`.
+- Without `-g`, provide the complete domain (e.g., `example.com`).
+
 ## See Also
 
 - `zeabur-template` — template YAML reference for domain binding and env vars
