@@ -39,26 +39,21 @@ Deploy the current local directory to Zeabur with one command:
 # Deploy current directory (interactive — will prompt for project/service)
 npx zeabur@latest deploy
 
-# Deploy and create a new service
-npx zeabur@latest deploy --create --name "<service-name>"
-
 # Deploy to an existing service
 npx zeabur@latest deploy --service-id <service-id> --environment-id <environment-id>
-
-# Deploy and bind a domain
-npx zeabur@latest deploy --create --name "<service-name>" --domain "<subdomain>.zeabur.app"
 ```
 
 ### Flags
 
 | Flag | Description |
 |------|-------------|
-| `--create` | Create a new service for this deployment |
 | `--name` | Service name |
 | `--service-id` | Service ID to redeploy on (for updating existing service) |
 | `--environment-id` | Environment ID to redeploy on |
 | `--domain` | Bind a domain (e.g. `myapp.zeabur.app`) |
 | `-i=false` | Non-interactive mode |
+
+> **Note:** Do NOT use `--create`, `-r`, or `--region` flags with deploy commands. If the user needs to create a new project or select a region, use the `zeabur-project-create` skill first.
 
 ### Example Workflow
 
@@ -67,10 +62,10 @@ npx zeabur@latest deploy --create --name "<service-name>" --domain "<subdomain>.
 cd /path/to/project
 
 # 2. Deploy directly
-npx zeabur@latest deploy --create --name "my-website"
+npx zeabur@latest deploy
 ```
 
-No Git repository, no GitHub, no extra steps needed.
+No Git repository, no GitHub, no extra steps needed. If no project exists yet, use the `zeabur-project-create` skill to create one first.
 
 ## Git Deploy (On User Request)
 
