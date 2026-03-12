@@ -15,8 +15,8 @@ Before using this skill, you must first determine which Zeabur project to deploy
 npx zeabur@latest project list -i=false --json
 ```
 
-- If projects exist, ask the user which one to use.
-- If the list is empty, use the `zeabur-project-create` skill to create a project first.
+- When projects exist, ask the user which one to use.
+- For an empty list, use the `zeabur-project-create` skill to create a project first.
 
 **Do not proceed with deployment until the target project is confirmed.**
 
