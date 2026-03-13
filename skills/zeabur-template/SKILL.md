@@ -186,6 +186,9 @@ spec:
           - id: web
             port: 8080
             type: HTTP
+        healthCheck:              # ensures port is ready before dependents start
+          type: TCP
+          port: web               # references the port ID above
         volumes:
           - id: data
             dir: /path/to/data
@@ -298,6 +301,12 @@ If a service does NOT listen on any HTTP port (502 Bad Gateway), see `zeabur-por
 ## Quick Reference: Critical Rules
 
 ```yaml
+# WRONG -- using :latest tag (may serve cached/stale image)
+image: rajnandan1/kener:latest
+
+# CORRECT -- pin to specific version
+image: rajnandan1/kener:4.0.16
+
 # WRONG -- hardcoded password
 POSTGRES_PASSWORD:
   default: mypassword123
