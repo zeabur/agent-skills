@@ -16,7 +16,7 @@ description: Use when managing Zeabur environment variables via CLI. Use when va
 ## Create Variables
 
 ```bash
-# ✅ Use service ID
+# Always use service ID (name lookup is unreliable)
 npx zeabur@latest variable create --id <service-id> \
   --key "KEY1=value1" \
   --key "KEY2=value2" \
@@ -26,10 +26,13 @@ npx zeabur@latest variable create --id <service-id> \
 ## Variable References
 
 ```bash
-# ❌ FAILS - shell expands ${VAR} to empty
+# WRONG - shell expands ${VAR} to empty
 --key "REDIS_URL=${REDIS_URI_INTERNAL}"
 
-# ✅ Set references in Dashboard instead
+# Use single quotes to prevent shell expansion
+--key 'REDIS_URL=${REDIS_URI_INTERNAL}'
+
+# Or set references in Zeabur Dashboard instead
 ```
 
 ## List Variables
@@ -38,7 +41,13 @@ npx zeabur@latest variable create --id <service-id> \
 npx zeabur@latest variable list --id <service-id> -i=false
 ```
 
-**For `${VAR}` references → Use Zeabur Dashboard, not CLI.**
+**For `${VAR}` references → use single quotes or set via Zeabur Dashboard.**
+
+## Delete Variables
+
+```bash
+npx zeabur@latest variable delete --id <service-id> --delete-keys "KEY_NAME" -y -i=false
+```
 
 ## See Also
 

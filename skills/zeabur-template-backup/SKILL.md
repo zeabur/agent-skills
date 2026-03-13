@@ -17,8 +17,10 @@ Backup an online Zeabur template to the local git repository with standardized n
 
 ## Repository Location
 
+The backup repository path depends on your setup. Look for a `zeabur-template` directory in the user's workspace, or ask the user where to save templates. A common default:
+
 ```
-/Users/can/Documents/zeabur/zeabur-template/
+~/Documents/zeabur/zeabur-template/
 ```
 
 ## Naming Convention
@@ -77,7 +79,7 @@ grep -A1 'metadata:' /tmp/template.yaml | grep 'name:' | head -1
 ### 4. Create Directory and Save
 
 ```bash
-REPO=/Users/can/Documents/zeabur/zeabur-template
+REPO=~/Documents/zeabur/zeabur-template  # adjust to your actual path
 
 # Create directory
 mkdir -p $REPO/{service-name}

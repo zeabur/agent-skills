@@ -56,3 +56,4 @@ npx zeabur@latest service restart --id <service-id> -y -i=false
 
 - `zeabur-template` — template YAML reference for startup commands and dependencies
 - `zeabur-restart` — restart services after fixing startup order
+- `zeabur-migration` — similar issue specific to database migration waiting loops

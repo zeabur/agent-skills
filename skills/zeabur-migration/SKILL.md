@@ -53,3 +53,4 @@ spec:
 
 - `zeabur-template` — template YAML reference for command placement
 - `zeabur-deployment-logs` — check migration logs for errors
+- `zeabur-startup-order` — similar issue where services start before dependencies are ready
