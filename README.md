@@ -2,7 +2,7 @@
 
 Claude Code plugin for Zeabur CLI operations, deployment, and troubleshooting.
 
-**Current version: 1.11.1**
+**Current version: 1.11.2**
 
 ## Installation
 
@@ -49,6 +49,10 @@ claude --plugin-dir /path/to/zeabur-claude-plugin
 | `zeabur-email` | Manage Zeabur Email (ZSend) service | Email domains, API keys, webhooks, ZSend |
 
 ## Changelog
+
+### 1.11.2
+
+- Updated `zeabur-port-mismatch` skill with CLI diagnostic commands (`service network`, `service port-forward`)
 
 ### 1.11.1
 
