@@ -2,7 +2,7 @@
 
 Claude Code plugin for Zeabur CLI operations, deployment, and troubleshooting.
 
-**Current version: 1.10.0**
+**Current version: 1.11.0**
 
 ## Installation
 
@@ -45,8 +45,15 @@ claude --plugin-dir /path/to/zeabur-claude-plugin
 | `zeabur-update-service` | Update service config without full redeploy | Modifying env vars or updating single service |
 | `zeabur-deploy` | Deploy local projects or from GitHub | User says "deploy this" or wants Git-based CI/CD deployment |
 | `zeabur-variables` | Manage environment variables via CLI | Managing env vars or handling empty variable issues |
+| `zeabur-ai-hub` | Manage AI Hub account, keys, balance, and usage | AI Hub status, API keys, add balance, usage, auto-recharge |
+| `zeabur-email` | Manage Zeabur Email (ZSend) service | Email domains, API keys, webhooks, ZSend |
 
 ## Changelog
+
+### 1.11.0
+
+- Added `zeabur-ai-hub` — manage AI Hub tenant status, API keys, balance top-up, auto-recharge, and monthly usage
+- Added `zeabur-email` — manage Zeabur Email (ZSend) domains, API keys, webhooks, and service status
 
 ### 1.10.0
 
