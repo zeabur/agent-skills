@@ -1,6 +1,6 @@
 ---
 name: zeabur-template-deploy
-description: Use when deploying Zeabur templates or common services/databases via CLI. Use when user says "deploy template", "install template", "deploy MongoDB", "deploy PostgreSQL", "deploy MySQL", "deploy Redis", "deploy RabbitMQ", "deploy Kafka", "deploy Elasticsearch", "deploy Meilisearch", "deploy MinIO", "deploy n8n", "deploy WordPress", "deploy Ghost", or any other well-known open-source service, database, or self-hosted app to Zeabur.
+description: Use when deploying Zeabur templates or common services/databases via CLI. Use when user says "deploy template", "install template", or asks to deploy any well-known service, database, or self-hosted app. Common triggers include MongoDB, PostgreSQL, MySQL, Redis, MinIO, SurrealDB, PocketBase, WordPress, Ghost, Halo, n8n, Logto, Umami, Uptime Kuma, Vaultwarden, Prometheus, RSSHub, Miniflux, TTRSS, Memos, AFFiNE, Linkding, Slash, Bytebase, SQL Chat, ApiCat, and any other open-source service the user wants to deploy to Zeabur.
 ---
 
 # Zeabur Template Deploy
