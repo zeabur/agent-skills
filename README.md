@@ -2,7 +2,7 @@
 
 Claude Code plugin for Zeabur CLI operations, deployment, and troubleshooting.
 
-**Current version: 1.9.0**
+**Current version: 1.10.0**
 
 ## Installation
 
@@ -47,6 +47,12 @@ claude --plugin-dir /path/to/zeabur-claude-plugin
 | `zeabur-variables` | Manage environment variables via CLI | Managing env vars or handling empty variable issues |
 
 ## Changelog
+
+### 1.10.0
+
+- Add TCP service guide to `zeabur-template` skill: `portForwarding`, TCP port type, and when NOT to use HTTP/domainKey
+- Add `portForwarding` field to template skeleton
+- Add TCP vs HTTP rule to Critical Rules section
 
 ### 1.9.0
 

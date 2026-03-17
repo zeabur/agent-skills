@@ -186,6 +186,8 @@ spec:
           - id: web
             port: 8080
             type: HTTP
+        portForwarding:
+          enabled: true        # Auto-expose TCP/UDP ports externally (default: true)
         volumes:
           - id: data
             dir: /path/to/data
@@ -291,6 +293,43 @@ description: Telegram bot token from BotFather
 
 If using an image with ENTRYPOINT, switch to a plain base image (e.g. `python:3.12-slim-bookworm`) or one without ENTRYPOINT.
 
+## Quick Reference: TCP Services (proxy, database, game server, etc.)
+
+Services that are NOT web apps — such as HTTP proxies (Tinyproxy, Squid), databases, game servers, VPN servers, or any service that clients connect to directly via TCP/UDP — should **NOT** use HTTP port type or `domainKey`. Instead:
+
+1. **Use `type: TCP` (or `UDP`)** — this prevents Zeabur's reverse proxy (Ingress) from intercepting traffic
+2. **Set `portForwarding: enabled: true`** — this auto-exposes the port externally so clients can connect directly
+3. **Do NOT use `domainKey`** — TCP services don't need a domain; users connect via the forwarded hostname:port
+
+```yaml
+# CORRECT -- TCP service (e.g. HTTP proxy, database, game server)
+spec:
+  source:
+    image: some/tcp-service:latest
+  ports:
+    - id: proxy
+      port: 8888
+      type: TCP          # NOT HTTP — clients connect directly
+  portForwarding:
+    enabled: true        # Auto-expose this port externally
+  env:
+    # ...
+
+# WRONG -- using HTTP type for a TCP proxy
+spec:
+  ports:
+    - id: proxy
+      port: 8888
+      type: HTTP         # Zeabur's Ingress will intercept CONNECT requests
+  # Missing portForwarding — users must manually enable in Dashboard
+```
+
+**Why not HTTP?** Zeabur's HTTP port type routes traffic through a reverse proxy (Ingress/Envoy) that terminates TLS and performs Host-based routing. This breaks protocols like HTTP CONNECT (used by proxies), raw TCP streams (databases), and custom binary protocols (game servers).
+
+**Port Forwarding variables** (for use in `instructions` or readme):
+- `${PORT_FORWARDED_HOSTNAME}` — the external hostname
+- `${PROXY_PORT_FORWARDED_PORT}` — the external port (pattern: `${[PORTID]_PORT_FORWARDED_PORT}`)
+
 ## Quick Reference: Headless Services (no HTTP)
 
 If a service does NOT listen on any HTTP port (502 Bad Gateway), see `zeabur-port-mismatch` skill for the fix.
@@ -339,6 +378,20 @@ POSTGRES_HOST:
   spec:
     env:
       DB: ${POSTGRES_HOST}
+
+# WRONG -- HTTP type for a TCP proxy/database/game server
+ports:
+  - id: proxy
+    port: 8888
+    type: HTTP
+
+# CORRECT -- TCP type + portForwarding for non-web services
+ports:
+  - id: proxy
+    port: 8888
+    type: TCP
+portForwarding:
+  enabled: true
 ```
 
 ---
