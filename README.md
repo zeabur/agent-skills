@@ -2,7 +2,7 @@
 
 Claude Code plugin for Zeabur CLI operations, deployment, and troubleshooting.
 
-**Current version: 1.11.0**
+**Current version: 1.11.1**
 
 ## Installation
 
@@ -49,6 +49,11 @@ claude --plugin-dir /path/to/zeabur-claude-plugin
 | `zeabur-email` | Manage Zeabur Email (ZSend) service | Email domains, API keys, webhooks, ZSend |
 
 ## Changelog
+
+### 1.11.1
+
+- Added post-deployment testing guide for TCP services in `zeabur-template` skill
+- Clarified `PORT_FORWARDED_HOSTNAME` and `PORT_FORWARDED_PORT` variable descriptions
 
 ### 1.11.0
 

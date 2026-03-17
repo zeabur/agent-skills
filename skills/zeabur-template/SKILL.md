@@ -242,8 +242,8 @@ localization:
 | `${ZEABUR_WEB_DOMAIN}` | Domain only (e.g. `app.zeabur.app`) |
 | `${CONTAINER_HOSTNAME}` | Internal hostname for inter-service communication |
 | `${[PORTID]_PORT}` | Port value by port ID (e.g. `${DATABASE_PORT}`) |
-| `${PORT_FORWARDED_HOSTNAME}` | External hostname (for `instructions`) |
-| `${[PORTID]_PORT_FORWARDED_PORT}` | External forwarded port (for `instructions`) |
+| `${PORT_FORWARDED_HOSTNAME}` | External hostname for port forwarding (auto-set when enabled, usable in env vars and `instructions`) |
+| `${[PORTID]_PORT_FORWARDED_PORT}` | External forwarded port number (auto-set when enabled, usable in env vars and `instructions`) |
 
 The `ZEABUR_<PORT_ID>_URL` pattern: for a port named `web`, it becomes `${ZEABUR_WEB_URL}`; for `console`, it becomes `${ZEABUR_CONSOLE_URL}`.
 
@@ -332,6 +332,30 @@ spec:
 **Port Forwarding variables** (for use in `instructions` or readme):
 - `${PORT_FORWARDED_HOSTNAME}` — the external hostname
 - `${PROXY_PORT_FORWARDED_PORT}` — the external port (pattern: `${[PORTID]_PORT_FORWARDED_PORT}`)
+
+**Post-deployment testing for TCP services:**
+
+After deploying a TCP service, verify port forwarding is working:
+
+1. Check internal connectivity first (from inside the container):
+   ```bash
+   npx zeabur@latest service exec --id SERVICE_ID -- curl -x http://127.0.0.1:8888 https://ifconfig.co
+   ```
+
+2. Get the forwarded host:port from the Dashboard's **Networking** tab, or use:
+   ```bash
+   npx zeabur@latest service network --id SERVICE_ID
+   ```
+
+3. Test external connectivity:
+   ```bash
+   curl -x http://FORWARDED_HOST:FORWARDED_PORT https://ifconfig.co
+   ```
+
+If port forwarding shows as DISABLED, enable it:
+```bash
+npx zeabur@latest service port-forward --id SERVICE_ID --enable
+```
 
 ## Quick Reference: Headless Services (no HTTP)
 
