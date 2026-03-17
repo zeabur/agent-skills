@@ -1,7 +1,23 @@
 # Hard-Won Lessons (from real template challenges)
 
 ##Wait for database readiness
-Zeabur's `dependencies` field only ensures services are **deployed**, not that they're **ready to accept connections**. A database container can take 5-15 seconds to initialize. Always add a wait loop before running migrations or init:
+Zeabur's `dependencies` field only ensures services are **deployed**, not that they're **ready to accept connections**. A database container can take 5-15 seconds to initialize.
+
+**Preferred approach: `healthCheck`** — add a health check to the dependency service so Zeabur waits until the port is ready before starting dependent services:
+```yaml
+- name: postgresql
+  spec:
+    ports:
+      - id: database
+        port: 5432
+        type: TCP
+    healthCheck:
+      type: TCP
+      port: database    # references the port ID
+```
+This is cleaner than wait loops and requires no changes to the app's startup command.
+
+**Fallback: wait loop** — if you can't modify the template, add a wait loop to the app's command:
 ```yaml
 args:
     - -c
@@ -9,12 +25,17 @@ args:
         echo "Waiting for PostgreSQL..."
         while ! nc -z ${POSTGRES_HOST} ${POSTGRES_PORT} 2>/dev/null; do sleep 2; done
         echo "PostgreSQL is ready!"
-        echo "Waiting for Redis..."
-        while ! nc -z ${REDIS_HOST} ${REDIS_PORT} 2>/dev/null; do sleep 2; done
-        echo "Redis is ready!"
         # ... then run migrations/init
 ```
 Note: `nc` (netcat) is available on most Alpine-based images. If not, use `wget --spider` or a node one-liner.
+
+##Pin image tags — never use `latest`
+Always pin Docker images to a specific version tag (e.g., `rajnandan1/kener:4.0.16`). Never use `:latest` in templates because:
+- Zeabur's registry may cache an old version of `latest`, causing users to deploy stale or broken images
+- Upstream breaking changes silently affect all new deployments
+- Debugging becomes harder when you don't know which version is running
+
+When the upstream releases a new version, update the template with the new pinned tag and test before publishing.
 
 ##Study the project's own Dockerfile and docker-compose
 **Never guess startup commands.** Instead:

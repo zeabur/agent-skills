@@ -1,6 +1,6 @@
 ---
 name: zeabur-domain-url
-description: Use when services need public URL for redirects or CORS. Use when WEB_URL or similar has trailing slash issues. Use when user reports "redirect goes to wrong URL", "CORS error", or "trailing slash problem".
+description: Use when services need public URL for redirects or CORS. Use when WEB_URL or similar has trailing slash issues. Use when user reports "redirect goes to wrong URL", "CORS error", or "trailing slash problem". Also use when user says "add domain", "set up domain", "bind domain", "create domain", or "manage domains" for a Zeabur service.
 ---
 
 # Zeabur Domain URL Configuration

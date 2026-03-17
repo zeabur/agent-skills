@@ -17,24 +17,40 @@ OperationalError: connection failed
 
 ## Cause
 
-Service starts before dependency (DB/Redis) is ready.
+Service starts before dependency (DB/Redis) is ready. `dependencies` only ensures container start order, NOT that the service is accepting connections.
 
-## Fix
+## Fix (Recommended): healthCheck on dependency services
 
-Add wait logic to service command (command MUST be inside `source`):
+Add `healthCheck` to database/Redis services so Zeabur waits until the port is accepting connections before starting dependent services — no need to modify the app's command:
 
 ```yaml
-# Python example
-spec:
-  source:
-    image: myapp:latest
-    command:
-      - /bin/sh
-      - -c
-      - "python manage.py wait_for_db && exec ./entrypoint.sh"
+- name: postgresql
+  spec:
+    ports:
+      - id: database
+        port: 5432
+        type: TCP
+    healthCheck:
+      type: TCP
+      port: database    # references the port ID above
 ```
 
-Or for Node.js:
+```yaml
+- name: redis
+  spec:
+    ports:
+      - id: database
+        port: 6379
+        type: TCP
+    healthCheck:
+      type: TCP
+      port: database
+```
+
+## Fix (Alternative): Wait loop in command
+
+If you can't modify the template, add wait logic to the app's command (command MUST be inside `source`):
+
 ```yaml
 spec:
   source:
@@ -56,3 +72,4 @@ npx zeabur@latest service restart --id <service-id> -y -i=false
 
 - `zeabur-template` — template YAML reference for startup commands and dependencies
 - `zeabur-restart` — restart services after fixing startup order
+- `zeabur-migration` — similar issue specific to database migration waiting loops
