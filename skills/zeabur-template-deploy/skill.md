@@ -1,6 +1,6 @@
 ---
 name: zeabur-template-deploy
-description: Use when deploying Zeabur templates via CLI. Use when automating template deployments in non-interactive mode. Use when user says "deploy template", "install template", or provides a template YAML file to deploy.
+description: Use when deploying Zeabur templates or common services/databases via CLI. Use when user says "deploy template", "install template", "deploy MongoDB", "deploy PostgreSQL", "deploy MySQL", "deploy Redis", "deploy RabbitMQ", "deploy Kafka", "deploy Elasticsearch", "deploy Meilisearch", "deploy MinIO", "deploy n8n", "deploy WordPress", "deploy Ghost", or any other well-known open-source service, database, or self-hosted app to Zeabur.
 ---
 
 # Zeabur Template Deploy
