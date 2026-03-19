@@ -47,6 +47,30 @@ npx zeabur@latest server ssh <server-id>
 
 For managed servers, the password is fetched automatically. If `sshpass` is installed, login is fully automatic; otherwise the password is printed for manual entry.
 
+### Non-Interactive SSH (Running Remote Commands)
+
+In non-interactive environments (e.g. Claude Code, CI/CD), you cannot use an interactive SSH session. Instead, **pipe commands via stdin** with `-i=false`:
+
+```bash
+echo 'kubectl get pods -A' | npx zeabur@latest server ssh <server-id> -i=false
+```
+
+For multiple commands, separate them with `;` or `&&`:
+
+```bash
+echo 'kubectl get pods -A; kubectl get svc -A' | npx zeabur@latest server ssh <server-id> -i=false
+```
+
+**Important notes:**
+
+- The output includes the server's MOTD (Message of the Day) banner. Filter it out when parsing results:
+  ```bash
+  echo 'kubectl get pods -A' | npx zeabur@latest server ssh <server-id> -i=false 2>&1 \
+    | grep -v "Welcome\|Documentation\|Management\|Support\|System load\|Usage of /\|Memory usage\|Swap usage\|Strictly\|just raised\|https://ubuntu\|Expanded\|updates can\|To see these\|Enable ESM\|See https://ubuntu\|New release\|Run 'do-release\|restart required\|INFO.*Connecting\|Pseudo-terminal\|^ \*"
+  ```
+- If the remote command has a non-zero exit code (e.g. `grep` with no matches), the CLI will print `ERROR exit status 1`. This does not necessarily mean the SSH connection failed.
+- Heredoc syntax (`<<'EOF'`) does **not** work reliably with this command. Always use `echo '...' |` instead.
+
 ## See Also
 
 - `zeabur-server-catalog` — browse available servers to rent
