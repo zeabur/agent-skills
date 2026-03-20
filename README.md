@@ -2,7 +2,7 @@
 
 Claude Code plugin for Zeabur CLI operations, deployment, and troubleshooting.
 
-**Current version: 1.11.2**
+**Current version: 1.12.0**
 
 ## Installation
 
@@ -47,8 +47,17 @@ claude --plugin-dir /path/to/zeabur-claude-plugin
 | `zeabur-variables` | Manage environment variables via CLI | Managing env vars or handling empty variable issues |
 | `zeabur-ai-hub` | Manage AI Hub account, keys, balance, and usage | AI Hub status, API keys, add balance, usage, auto-recharge |
 | `zeabur-email` | Manage Zeabur Email (ZSend) service | Email domains, API keys, webhooks, ZSend |
+| `zeabur-domain-register` | Search, purchase, renew, and manage registered domains | Buying domains, checking availability, renewal |
+| `zeabur-domain-dns` | Manage DNS records for registered domains | Adding/updating/deleting DNS records |
+| `zeabur-domain-registrant` | Manage registrant profiles for domain registration | Creating/updating contact info for domains |
 
 ## Changelog
+
+### 1.12.0
+
+- Added `zeabur-domain-register` — search, purchase, renew, and manage registered domains (.com, .net, .org, .io, .dev, .app, .co, .me, .xyz)
+- Added `zeabur-domain-dns` — full DNS record CRUD (list, create, update, delete) with domain-name-based lookup
+- Added `zeabur-domain-registrant` — manage registrant profiles (contact info required for domain purchases)
 
 ### 1.11.2
 
