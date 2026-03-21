@@ -1,9 +1,9 @@
 ---
 name: zeabur-domain-registrant
-description: Use when managing domain registrant profiles (contact info for domain registration). Use when user says "create registrant", "update registrant", "registrant profile", or when purchasing a domain requires a registrant profile.
+description: Use when managing domain registrant profiles (contact info for domain registration) or ICANN registrant verification. Use when user says "create registrant", "update registrant", "registrant profile", "verification email", "resend verification", or when purchasing a domain requires a registrant profile.
 ---
 
-# Zeabur Domain Registrant Profiles
+# Zeabur Domain Registrant Profiles & Verification
 
 > **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method. If `npx` is not available, install Node.js first.
 
@@ -64,6 +64,64 @@ All fields are optional for updates — only provided fields are changed.
 ```bash
 npx zeabur@latest domain registrant delete --id <profile-id> -y -i=false
 ```
+
+## ICANN Registrant Verification
+
+After purchasing a domain, ICANN requires the registrant to verify their email address. If not verified, the domain may be suspended.
+
+### Resend Verification Email
+
+If the registrant hasn't received or has lost the verification email:
+
+```bash
+npx zeabur@latest domain verification resend --id <registered-domain-id> -i=false
+```
+
+In interactive mode, omit `--id` to select from a list:
+
+```bash
+npx zeabur@latest domain verification resend
+```
+
+### Update Registrant Contact (Admin Only)
+
+If the registrant email was entered incorrectly and cannot receive verification emails, an admin can update the contact info via the GraphQL API:
+
+```graphql
+mutation {
+  updateRegistrantContact(
+    registeredDomainID: "<id>"
+    input: {
+      firstName: "John"
+      lastName: "Doe"
+      email: "correct@example.com"
+      phone: "+1.5551234567"
+      address1: "123 Main St"
+      city: "San Francisco"
+      state: "CA"
+      country: "US"
+      postalCode: "94105"
+    }
+  )
+}
+```
+
+**Note:** Changing the registrant email triggers a new ICANN verification flow and may impose a 60-day transfer lock.
+
+### Check Verification Status
+
+The verification status can be queried via GraphQL:
+
+```graphql
+{
+  registeredDomain(id: "<id>") {
+    domain
+    registrantVerificationStatus
+  }
+}
+```
+
+Possible values: `verified`, `pending`, `suspended`, `unknown`.
 
 ## See Also
 
