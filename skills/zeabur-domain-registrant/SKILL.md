@@ -83,9 +83,9 @@ In interactive mode, omit `--id` to select from a list:
 npx zeabur@latest domain verification resend
 ```
 
-### Update Registrant Contact (Admin Only)
+### Update Registrant Contact
 
-If the registrant email was entered incorrectly and cannot receive verification emails, an admin can update the contact info via the GraphQL API:
+If the registrant email was entered incorrectly and cannot receive verification emails, the domain owner can update the contact info via the GraphQL API:
 
 ```graphql
 mutation {
