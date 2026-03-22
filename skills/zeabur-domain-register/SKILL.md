@@ -185,7 +185,7 @@ In interactive mode, the command pre-fills current values so the user only chang
 ### Troubleshooting: domain suspended
 
 1. Check status: `npx zeabur@latest domain verification status --id <id> -i=false`
-2. Update email if needed: `npx zeabur@latest domain verification update-contact --id <id> -i=false`
+2. Update email if needed: `npx zeabur@latest domain verification update-contact --id <id>`
 3. Resend verification: `npx zeabur@latest domain verification resend --id <id> -i=false`
 4. User clicks the link in the email
 5. Re-check status after a few minutes
@@ -195,7 +195,7 @@ In interactive mode, the command pre-fills current values so the user only chang
 - Check spam/junk folder
 - Email provider may block OpenSRS/Tucows emails
 - Try resending: `npx zeabur@latest domain verification resend --id <domain-id> -i=false`
-- If still not received, update to a different email: `npx zeabur@latest domain verification update-contact --id <domain-id> -i=false`
+- If still not received, update to a different email: `npx zeabur@latest domain verification update-contact --id <domain-id>`
 
 ---
 
