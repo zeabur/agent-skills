@@ -27,15 +27,18 @@ npx zeabur@latest service list --project-id <project-id> -i=false
 
 | Need | Command |
 |------|---------|
-| Check variables | `variable list --id <service-id>` |
-| View logs | `deployment log --service-id <id> -t runtime` |
-| Restart service | `service restart --id <id> -y` |
+| Check variables | `npx zeabur@latest variable list --id <service-id> -i=false` |
+| Set variables | `npx zeabur@latest variable create --id <service-id> --key "KEY=value" -y -i=false` |
+| View logs | `npx zeabur@latest deployment log --service-id <id> -t runtime` |
+| Restart service | `npx zeabur@latest service restart --id <id> -y` |
 
 **Always use `--id` not `--name`** — name lookup is unreliable.
 
+> **Setting or updating variables?** Load the `zeabur-variables` skill first for full syntax, known issues, and shell escaping rules. Do not guess CLI syntax — subcommands like `set` do not exist and will silently fail.
+
 ## See Also
 
+- `zeabur-variables` — **load this skill before creating/updating variables**
 - `zeabur-update-service` — update env vars on a specific service
-- `zeabur-variables` — manage environment variables
 - `zeabur-restart` — restart a service
 - `zeabur-deployment-logs` — view service logs
