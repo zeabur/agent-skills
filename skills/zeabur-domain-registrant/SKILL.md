@@ -91,7 +91,9 @@ npx zeabur@latest domain verification resend --id <registered-domain-id> -i=fals
 
 ### Update Registrant Contact
 
-If the registrant email was entered incorrectly and cannot receive verification emails, update the contact info:
+If the registrant email was entered incorrectly and cannot receive verification emails, update the contact info.
+
+> **Prerequisite:** This operation requires the domain owner's account permissions.
 
 ```bash
 npx zeabur@latest domain verification update-contact \
