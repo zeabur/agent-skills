@@ -24,11 +24,11 @@ npx zeabur@latest service exec --id <service-id> -- <command> [args...]
 npx zeabur@latest service exec --id <mongodb-service-id> -- mongosh --eval 'db.users.find({})'
 npx zeabur@latest service exec --id <mongodb-service-id> -- mongosh --eval 'db.sessions.deleteMany({title: /test/i})'
 
-# PostgreSQL - run SQL queries
+# PostgreSQL - run SQL queries (PGPASSWORD is set automatically in Zeabur containers)
 npx zeabur@latest service exec --id <pg-service-id> -- psql -U postgres -c 'SELECT * FROM users LIMIT 10;'
 
-# MySQL - run SQL queries
-npx zeabur@latest service exec --id <mysql-service-id> -- mysql -u root -p -e 'SHOW DATABASES;'
+# MySQL - run SQL queries (use env var to avoid interactive password prompt)
+npx zeabur@latest service exec --id <mysql-service-id> -- sh -c 'mysql -u root -p"$MYSQL_ROOT_PASSWORD" -e "SHOW DATABASES;"'
 
 # Redis - run commands
 npx zeabur@latest service exec --id <redis-service-id> -- redis-cli KEYS '*'

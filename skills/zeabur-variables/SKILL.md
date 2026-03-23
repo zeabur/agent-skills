@@ -6,7 +6,7 @@ description: Use for ALL Zeabur environment variable operations — create, list
 # Zeabur Variables Management
 
 > **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method. If `npx` is not available, install Node.js first.
-
+>
 > **Do not guess CLI syntax.** Only `create`, `update`, `delete`, `env`, and `list` are valid subcommands. Subcommands like `set` or `add` do not exist and will silently fail with no error output.
 
 ## Known Issues
