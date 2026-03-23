@@ -1,6 +1,6 @@
 ---
 name: zeabur-ai-hub
-description: Use when managing AI Hub account, API keys, balance, usage, or API endpoints. Use when user says "AI Hub", "add AI credits", "create API key", "check AI usage", "auto-recharge", "AI Hub endpoint", "AI Hub base URL", or "how to use AI Hub API".
+description: Use when managing AI Hub account, API keys, balance, usage, or API endpoints. Use when user says "AI Hub", "add AI credits", "create API key", "check AI usage", "auto-recharge", "AI Hub endpoint", "AI Hub base URL", "how to use AI Hub API", "LLM API", "AI API", "OpenAI compatible", "Anthropic API", "GPT", "Claude", "Gemini", "DeepSeek", or "Grok" in the context of Zeabur.
 ---
 
 # Zeabur AI Hub Management
