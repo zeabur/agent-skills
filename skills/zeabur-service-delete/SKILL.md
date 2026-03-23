@@ -23,21 +23,11 @@ Before deleting:
 npx zeabur@latest service delete -i=false --id <service-id> -y
 ```
 
-## Delete by Name
-
-```bash
-npx zeabur@latest service delete -i=false -n "<service-name>" -y
-```
-
-Name lookup can be unreliable — prefer `--id` when possible.
-
 ## Flags
 
 | Flag | Description |
 |------|-------------|
 | `--id` | Service ID to delete |
-| `-n, --name` | Service name to delete |
-| `--env-id` | Environment ID (if service has multiple environments) |
 | `-y, --yes` | Skip confirmation prompt |
 | `-i=false` | Non-interactive mode (always use this) |
 
@@ -45,7 +35,7 @@ Name lookup can be unreliable — prefer `--id` when possible.
 
 ```bash
 # 1. List services to find the target
-npx zeabur@latest service list --id <project-id> -i=false
+npx zeabur@latest service list --project-id <project-id> -i=false --json
 
 # 2. Confirm with user: "Delete <service-name> (<service-id>)?"
 
