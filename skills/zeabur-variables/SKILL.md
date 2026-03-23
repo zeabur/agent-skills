@@ -68,10 +68,10 @@ After running `env`, you must restart the service manually to apply changes.
 
 ```bash
 # WRONG — shell expands ${VAR} to empty
--k "REDIS_URL=${REDIS_URI_INTERNAL}"
+npx zeabur@latest variable create --id <service-id> -k "REDIS_URL=${REDIS_URI_INTERNAL}" -y -i=false
 
 # CORRECT — single quotes prevent shell expansion
--k 'REDIS_URL=${REDIS_URI_INTERNAL}'
+npx zeabur@latest variable create --id <service-id> -k 'REDIS_URL=${REDIS_URI_INTERNAL}' -y -i=false
 
 # Or set references in Zeabur Dashboard instead
 ```
@@ -80,11 +80,11 @@ After running `env`, you must restart the service manually to apply changes.
 
 | Need | Command | Behavior |
 |------|---------|----------|
-| Add new vars | `variable create -k "K=V"` | Errors if key exists |
-| Change existing vars | `variable update -k "K=V"` | Only updates specified keys |
-| Remove specific vars | `variable delete --delete-keys "K"` | Only removes specified keys |
-| Overwrite all vars from file | `variable env -f .env` | **Replaces entire variable set** |
-| View vars | `variable list` | Read-only |
+| Add new vars | `npx zeabur@latest variable create --id <service-id> -k "K=V" -y -i=false` | Errors if key exists |
+| Change existing vars | `npx zeabur@latest variable update --id <service-id> -k "K=V" -y -i=false` | Only updates specified keys |
+| Remove specific vars | `npx zeabur@latest variable delete --id <service-id> --delete-keys "K" -y -i=false` | Only removes specified keys |
+| Overwrite all vars from file | `npx zeabur@latest variable env --id <service-id> -f .env` | **Replaces entire variable set** |
+| View vars | `npx zeabur@latest variable list --id <service-id> -i=false` | Read-only |
 
 ## See Also
 
