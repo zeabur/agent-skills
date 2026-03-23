@@ -24,7 +24,7 @@ AI Hub is OpenAI-compatible. Users can pick the region closest to them:
 import OpenAI from "openai";
 
 const client = new OpenAI({
-    baseURL: "https://hnd1.aihub.zeabur.ai/",  // or sfo1
+    baseURL: "https://hnd1.aihub.zeabur.ai/v1",  // or sfo1
     apiKey: "sk-xxxxxxxxxxxxxxxx",              // from AI Hub dashboard
 });
 
@@ -41,7 +41,7 @@ const stream = await client.chat.completions.create({
 from openai import OpenAI
 
 client = OpenAI(
-    base_url="https://hnd1.aihub.zeabur.ai/",  # or sfo1
+    base_url="https://hnd1.aihub.zeabur.ai/v1",  # or sfo1
     api_key="sk-xxxxxxxxxxxxxxxx",              # from AI Hub dashboard
 )
 
@@ -65,7 +65,6 @@ curl https://hnd1.aihub.zeabur.ai/v1/chat/completions \
 
 - **Anthropic SDK**: set `baseURL` / `base_url` to the endpoint above
 - **Vercel AI SDK (`@ai-sdk/openai`)**: set `baseURL` to the endpoint above
-- **Google Generative AI SDK**: set `baseUrl` to `https://<region>.aihub.zeabur.ai/gemini`
 
 ### Environment Variables
 
