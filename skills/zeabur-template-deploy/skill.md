@@ -7,12 +7,44 @@ description: Use when deploying Zeabur templates or common services/databases vi
 
 > **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method. If `npx` is not available, install Node.js first.
 
-Deploy Zeabur templates via CLI. **Always use non-interactive mode (`-i=false`) in CLI automation.**
+Deploy Zeabur templates and marketplace prebuilt services via CLI. **Always use non-interactive mode (`-i=false`) in CLI automation.**
 
-## Basic Usage
+## Marketplace Prebuilt Services
+
+For common databases and services (MongoDB, PostgreSQL, MySQL, Redis, etc.), use `--marketplace-code` instead of writing a template YAML file. This is the **preferred method** for deploying well-known services.
 
 ```bash
-# Non-interactive mode (required for CLI automation)
+npx zeabur@latest service deploy --json -i=false \
+  --project-id <project-id> \
+  --marketplace-code <code>
+```
+
+### Common Marketplace Codes
+
+| Service | Code |
+|---------|------|
+| MongoDB | `mongodb` |
+| PostgreSQL | `postgresql` |
+| MySQL | `mysql` |
+| Redis | `redis` |
+| MinIO | `minio` |
+
+### Example
+
+```bash
+# Deploy MongoDB to a project
+npx zeabur@latest service deploy --json -i=false \
+  --project-id abc123 \
+  --marketplace-code mongodb
+```
+
+**Do NOT write custom template YAML files for services that have a marketplace code.** Use `--marketplace-code` directly.
+
+## Custom Template Deploy
+
+For custom or multi-service templates, use a template YAML file:
+
+```bash
 npx zeabur@latest template deploy -i=false \
   -f template.yaml \
   --project-id <project-id> \
