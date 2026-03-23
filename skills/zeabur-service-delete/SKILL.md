@@ -29,7 +29,7 @@ npx zeabur@latest service delete -i=false --id <service-id> -y
 npx zeabur@latest service delete -i=false -n "<service-name>" -y
 ```
 
-**Warning:** Name lookup requires a project context set in the CLI config (via `zeabur context set`). Without project context, the CLI cannot resolve the service name and will return a `PROJECT_NOT_FOUND` error. Prefer `--id` when possible.
+**Warning:** Name lookup requires a project context set in the CLI config (via `npx zeabur@latest context set`). Without project context, the CLI cannot resolve the service name and will return a `PROJECT_NOT_FOUND` error. Prefer `--id` when possible.
 
 ## Flags
 
