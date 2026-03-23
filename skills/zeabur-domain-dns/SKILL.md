@@ -81,6 +81,5 @@ dig @<nameserver> <name>.<domain> <type> +short
 
 ## See Also
 
-- `zeabur-domain-register` — search, purchase, and renew domains
-- `zeabur-domain-registrant` — manage registrant profiles
+- `zeabur-domain-register` — search, purchase, renew domains, manage registrant profiles, ICANN verification
 - `zeabur-domain-url` — bind domains to Zeabur services

@@ -19,7 +19,7 @@ Zeabur Claude Plugin — a Claude Code plugin providing CLI-based skills for man
 | Service Management | `zeabur-service-list`, `zeabur-restart`, `zeabur-update-service`, `zeabur-variables` |
 | Server Management | `zeabur-server-list`, `zeabur-server-catalog`, `zeabur-server-rent` |
 | Project Management | `zeabur-project-create` |
-| Domain Registration | `zeabur-domain-register`, `zeabur-domain-dns`, `zeabur-domain-registrant` |
+| Domain Registration | `zeabur-domain-register`, `zeabur-domain-dns` |
 | Troubleshooting | `zeabur-domain-url`, `zeabur-migration`, `zeabur-port-mismatch`, `zeabur-startup-order` |
 
 ## Conventions
