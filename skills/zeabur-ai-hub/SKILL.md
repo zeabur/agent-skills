@@ -1,11 +1,81 @@
 ---
 name: zeabur-ai-hub
-description: Use when managing AI Hub account, API keys, balance, or usage. Use when user says "AI Hub", "add AI credits", "create API key", "check AI usage", or "auto-recharge".
+description: Use when managing AI Hub account, API keys, balance, usage, or API endpoints. Use when user says "AI Hub", "add AI credits", "create API key", "check AI usage", "auto-recharge", "AI Hub endpoint", "AI Hub base URL", "how to use AI Hub API", "LLM API", "AI API", "OpenAI compatible", "Anthropic API", "GPT", "Claude", "Gemini", "DeepSeek", or "Grok" in the context of Zeabur.
 ---
 
 # Zeabur AI Hub Management
 
 > **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method. If `npx` is not available, install Node.js first.
+
+## API Endpoints
+
+AI Hub is OpenAI-compatible. Users can pick the region closest to them:
+
+| Region | Endpoint |
+|--------|----------|
+| Tokyo, Japan (HND1) | `https://hnd1.aihub.zeabur.ai/` |
+| San Francisco, USA (SFO1) | `https://sfo1.aihub.zeabur.ai/` |
+
+### Quick Start (OpenAI SDK)
+
+**JavaScript / TypeScript:**
+
+```javascript
+import OpenAI from "openai";
+
+const client = new OpenAI({
+    baseURL: "https://hnd1.aihub.zeabur.ai/v1",  // or sfo1
+    apiKey: "sk-xxxxxxxxxxxxxxxx",              // from AI Hub dashboard
+});
+
+const stream = await client.chat.completions.create({
+    model: "claude-sonnet-4-5",  // any model available on AI Hub
+    messages: [{ role: "user", content: "Hello!" }],
+    stream: true,
+});
+```
+
+**Python:**
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="https://hnd1.aihub.zeabur.ai/v1",  # or sfo1
+    api_key="sk-xxxxxxxxxxxxxxxx",              # from AI Hub dashboard
+)
+
+stream = client.chat.completions.create(
+    model="claude-sonnet-4-5",
+    messages=[{"role": "user", "content": "Hello!"}],
+    stream=True,
+)
+```
+
+**curl:**
+
+```bash
+curl https://hnd1.aihub.zeabur.ai/v1/chat/completions \
+  -H "Authorization: Bearer sk-xxxxxxxxxxxxxxxx" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"claude-sonnet-4-5","messages":[{"role":"user","content":"Hello!"}]}'
+```
+
+### Other SDK Compatibility
+
+- **Anthropic SDK**: set `baseURL` / `base_url` to the endpoint above
+- **Vercel AI SDK (`@ai-sdk/openai`)**: set `baseURL` to the endpoint above
+
+### Environment Variables
+
+When users deploy apps on Zeabur, suggest setting:
+
+```bash
+OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxx
+OPENAI_BASE_URL=https://hnd1.aihub.zeabur.ai/v1
+```
+
+Most OpenAI-compatible libraries will pick these up automatically.
 
 ## Check AI Hub Status
 
