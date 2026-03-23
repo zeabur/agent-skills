@@ -1,11 +1,13 @@
 ---
 name: zeabur-variables
-description: Use when managing Zeabur environment variables via CLI. Use when variables are empty or SERVICE_NOT_FOUND errors. Use when user says "set env var", "add variable", or "why is my variable empty".
+description: Use for ALL Zeabur environment variable operations — create, list, delete, or troubleshoot. Use when user says "set env var", "add variable", "create variable", "update variable", "delete variable", or "why is my variable empty". Also use when variables are empty or SERVICE_NOT_FOUND errors.
 ---
 
 # Zeabur Variables Management
 
 > **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method. If `npx` is not available, install Node.js first.
+
+> **Do not guess CLI syntax.** Only `create`, `delete`, `env`, `list`, and `update` are valid subcommands. Subcommands like `set` or `add` do not exist and will silently fail with no error output.
 
 ## Known Issues
 
