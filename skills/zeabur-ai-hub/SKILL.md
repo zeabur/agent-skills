@@ -71,7 +71,7 @@ curl https://hnd1.aihub.zeabur.ai/v1/chat/completions \
 
 When users deploy apps on Zeabur, suggest setting:
 
-```
+```bash
 OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxx
 OPENAI_BASE_URL=https://hnd1.aihub.zeabur.ai/v1
 ```
