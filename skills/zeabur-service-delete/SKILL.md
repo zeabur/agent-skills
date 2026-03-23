@@ -17,7 +17,7 @@ Before deleting:
 2. **Show the service name and ID** and ask for explicit confirmation
 3. Only then run the delete command
 
-## Delete by ID
+## Delete by ID (Recommended)
 
 ```bash
 npx zeabur@latest service delete -i=false --id <service-id> -y
@@ -29,15 +29,14 @@ npx zeabur@latest service delete -i=false --id <service-id> -y
 npx zeabur@latest service delete -i=false -n "<service-name>" -y
 ```
 
-Name lookup can be unreliable — prefer `--id` when possible.
+**Warning:** Name lookup requires a project context set in the CLI config (via `zeabur context set`). Without project context, the CLI cannot resolve the service name and will return a `PROJECT_NOT_FOUND` error. Prefer `--id` when possible.
 
 ## Flags
 
 | Flag | Description |
 |------|-------------|
-| `--id` | Service ID to delete |
-| `-n, --name` | Service name to delete |
-| `--env-id` | Environment ID (if service has multiple environments) |
+| `--id` | Service ID to delete (preferred) |
+| `-n, --name` | Service name to delete (requires project context) |
 | `-y, --yes` | Skip confirmation prompt |
 | `-i=false` | Non-interactive mode (always use this) |
 
@@ -45,7 +44,7 @@ Name lookup can be unreliable — prefer `--id` when possible.
 
 ```bash
 # 1. List services to find the target
-npx zeabur@latest service list --id <project-id> -i=false
+npx zeabur@latest service list --project-id <project-id> -i=false --json
 
 # 2. Confirm with user: "Delete <service-name> (<service-id>)?"
 
