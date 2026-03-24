@@ -78,7 +78,21 @@ Without `-g`, `--domain` takes a **full domain name**:
 npx zeabur@latest domain create --id <service-id> --domain example.com -y -i=false
 ```
 
-You must configure DNS records manually after creating a custom domain.
+After creating a custom domain, configure an **A record** at your DNS provider pointing to the server IP. Find the IP with:
+
+```bash
+npx zeabur@latest server list -i=false
+# Note the IP address of the server running your service
+```
+
+Then at your DNS provider:
+```
+Type: A
+Name: <your subdomain or @>
+Value: <server IP from above>
+```
+
+> **Do not guess DNS values.** Always retrieve the actual server IP from `server list` output before configuring DNS.
 
 ### Delete domain
 
@@ -95,3 +109,5 @@ npx zeabur@latest domain delete --id <service-id> --domain <domain> -y -i=false
 ## See Also
 
 - `zeabur-template` — template YAML reference for domain binding and env vars
+- `zeabur-domain-dns` — manage DNS records for Zeabur-registered domains
+- `zeabur-server-list` — find server IPs for A record configuration
