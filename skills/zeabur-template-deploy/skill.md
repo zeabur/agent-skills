@@ -9,36 +9,35 @@ description: Use when deploying Zeabur templates or common services/databases vi
 
 Deploy Zeabur templates and marketplace prebuilt services via CLI. **Always use non-interactive mode (`-i=false`) in CLI automation.**
 
-## Marketplace Prebuilt Services
+## Deploying Prebuilt Services (MongoDB, PostgreSQL, Redis, etc.)
 
-For common databases and services (MongoDB, PostgreSQL, MySQL, Redis, etc.), use `--marketplace-code` instead of writing a template YAML file. This is the **preferred method** for deploying well-known services.
-
-```bash
-npx zeabur@latest service deploy --json -i=false \
-  --project-id <project-id> \
-  --marketplace-code <code>
-```
-
-### Common Marketplace Codes
-
-| Service | Code |
-|---------|------|
-| MongoDB | `mongodb` |
-| PostgreSQL | `postgresql` |
-| MySQL | `mysql` |
-| Redis | `redis` |
-| MinIO | `minio` |
-
-### Example
+For well-known services available in the Zeabur template marketplace, **do NOT write custom template YAML files**. Instead, search for the template code and deploy it directly:
 
 ```bash
-# Deploy MongoDB to a project
-npx zeabur@latest service deploy --json -i=false \
-  --project-id abc123 \
-  --marketplace-code mongodb
+# 1. Search for the template by keyword
+npx zeabur@latest template search mongodb -i=false --json
+
+# 2. Get the raw YAML using the template code from search results
+npx zeabur@latest template get -c <TEMPLATE_CODE> --raw > /tmp/template.yaml
+
+# 3. Deploy the template
+npx zeabur@latest template deploy -i=false \
+  -f /tmp/template.yaml \
+  --project-id <project-id>
 ```
 
-**Do NOT write custom template YAML files for services that have a marketplace code.** Use `--marketplace-code` directly.
+### Example: Deploy MongoDB
+
+```bash
+# Search returns code "KXL04P" for MongoDB
+npx zeabur@latest template search mongodb -i=false --json
+
+# Fetch and deploy
+npx zeabur@latest template get -c KXL04P --raw > /tmp/mongodb.yaml
+npx zeabur@latest template deploy -i=false \
+  -f /tmp/mongodb.yaml \
+  --project-id abc123
+```
 
 ## Custom Template Deploy
 
