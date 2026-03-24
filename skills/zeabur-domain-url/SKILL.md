@@ -78,16 +78,9 @@ Without `-g`, `--domain` takes a **full domain name**:
 npx zeabur@latest domain create --id <service-id> --domain example.com -y -i=false
 ```
 
-After creating a custom domain, you must configure DNS records at your DNS provider. Run `domain list` to find the required DNS record type and target:
+After creating a custom domain, you must configure DNS records at your DNS provider. The required DNS record type and target value are shown on the Zeabur Dashboard under the domain settings for the service.
 
-```bash
-npx zeabur@latest domain list --id <service-id> -i=false
-# The output shows the DNS record type (CNAME or A) and the target value for each domain.
-```
-
-Then configure the DNS record at your DNS provider using the values from the output.
-
-> **Do not guess DNS values.** Always retrieve the actual target from `domain list` output before configuring DNS.
+> **Do not guess DNS values.** Always direct the user to check the Zeabur Dashboard for the exact DNS record to configure. The CLI `domain list` command does not display DNS configuration details.
 
 ### Delete domain
 
