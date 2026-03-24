@@ -78,41 +78,16 @@ Without `-g`, `--domain` takes a **full domain name**:
 npx zeabur@latest domain create --id <service-id> --domain example.com -y -i=false
 ```
 
-After creating a custom domain, you must configure DNS records at your DNS provider. The required DNS configuration depends on your deployment environment:
-
-#### Shared environment (Serverless / Shared Cluster)
-
-Set a **CNAME** record pointing to the domain shown in the `domain list` output's **redirect** or **cname** field. Run `domain list` after creating the domain to find the exact target:
+After creating a custom domain, you must configure DNS records at your DNS provider. Run `domain list` to find the required DNS record type and target:
 
 ```bash
 npx zeabur@latest domain list --id <service-id> -i=false
-# Look for the CNAME target in the output (e.g., xxx.cname.zeabur-dns.com)
+# The output shows the DNS record type (CNAME or A) and the target value for each domain.
 ```
 
-Then at your DNS provider:
-```
-Type: CNAME
-Name: <your subdomain or @>
-Value: <cname target from domain list output>
-```
+Then configure the DNS record at your DNS provider using the values from the output.
 
-#### Dedicated server
-
-Set an **A** record pointing to the dedicated server's IP address. Find the server IP with:
-
-```bash
-npx zeabur@latest server list -i=false
-# Note the IP address of the server running your service
-```
-
-Then at your DNS provider:
-```
-Type: A
-Name: <your subdomain or @>
-Value: <dedicated server IP>
-```
-
-> **Do not guess DNS values.** Always retrieve the actual CNAME target or server IP from CLI output before configuring DNS. If `domain list` does not show DNS configuration info, check the Zeabur dashboard for the expected DNS records.
+> **Do not guess DNS values.** Always retrieve the actual target from `domain list` output before configuring DNS.
 
 ### Delete domain
 
@@ -130,4 +105,3 @@ npx zeabur@latest domain delete --id <service-id> --domain <domain> -y -i=false
 
 - `zeabur-template` — template YAML reference for domain binding and env vars
 - `zeabur-domain-dns` — manage DNS records for Zeabur-registered domains
-- `zeabur-server-list` — find dedicated server IPs for A record configuration
