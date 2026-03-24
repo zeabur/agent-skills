@@ -78,7 +78,41 @@ Without `-g`, `--domain` takes a **full domain name**:
 npx zeabur@latest domain create --id <service-id> --domain example.com -y -i=false
 ```
 
-You must configure DNS records manually after creating a custom domain.
+After creating a custom domain, you must configure DNS records at your DNS provider. The required DNS configuration depends on your deployment environment:
+
+#### Shared environment (Serverless / Shared Cluster)
+
+Set a **CNAME** record pointing to the domain shown in the `domain list` output's **redirect** or **cname** field. Run `domain list` after creating the domain to find the exact target:
+
+```bash
+npx zeabur@latest domain list --id <service-id> -i=false
+# Look for the CNAME target in the output (e.g., xxx.cname.zeabur-dns.com)
+```
+
+Then at your DNS provider:
+```
+Type: CNAME
+Name: <your subdomain or @>
+Value: <cname target from domain list output>
+```
+
+#### Dedicated server
+
+Set an **A** record pointing to the dedicated server's IP address. Find the server IP with:
+
+```bash
+npx zeabur@latest server list -i=false
+# Note the IP address of the server running your service
+```
+
+Then at your DNS provider:
+```
+Type: A
+Name: <your subdomain or @>
+Value: <dedicated server IP>
+```
+
+> **Do not guess DNS values.** Always retrieve the actual CNAME target or server IP from CLI output before configuring DNS. If `domain list` does not show DNS configuration info, check the Zeabur dashboard for the expected DNS records.
 
 ### Delete domain
 
@@ -95,3 +129,5 @@ npx zeabur@latest domain delete --id <service-id> --domain <domain> -y -i=false
 ## See Also
 
 - `zeabur-template` — template YAML reference for domain binding and env vars
+- `zeabur-domain-dns` — manage DNS records for Zeabur-registered domains
+- `zeabur-server-list` — find dedicated server IPs for A record configuration
