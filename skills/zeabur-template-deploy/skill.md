@@ -11,18 +11,15 @@ Deploy Zeabur templates and marketplace prebuilt services via CLI. **Always use 
 
 ## Deploying Prebuilt Services (MongoDB, PostgreSQL, Redis, etc.)
 
-For well-known services available in the Zeabur template marketplace, **do NOT write custom template YAML files**. Instead, search for the template code and deploy it directly:
+For well-known services available in the Zeabur template marketplace, **do NOT write custom template YAML files**. Search for the template code and deploy it directly with `-c`:
 
 ```bash
 # 1. Search for the template by keyword
 npx zeabur@latest template search mongodb -i=false --json
 
-# 2. Get the raw YAML using the template code from search results
-npx zeabur@latest template get -c <TEMPLATE_CODE> --raw > /tmp/template.yaml
-
-# 3. Deploy the template
+# 2. Deploy by template code (from the "Code" field in search results)
 npx zeabur@latest template deploy -i=false \
-  -f /tmp/template.yaml \
+  -c <TEMPLATE_CODE> \
   --project-id <project-id>
 ```
 
@@ -32,10 +29,9 @@ npx zeabur@latest template deploy -i=false \
 # Search returns code "KXL04P" for MongoDB
 npx zeabur@latest template search mongodb -i=false --json
 
-# Fetch and deploy
-npx zeabur@latest template get -c KXL04P --raw > /tmp/mongodb.yaml
+# Deploy directly by code
 npx zeabur@latest template deploy -i=false \
-  -f /tmp/mongodb.yaml \
+  -c KXL04P \
   --project-id abc123
 ```
 
@@ -56,6 +52,7 @@ npx zeabur@latest template deploy -i=false \
 | Flag | Description |
 |------|-------------|
 | `-f, --file` | Template file (local path or URL) |
+| `-c, --code` | Template code (deploy marketplace template directly, mutually exclusive with `-f`) |
 | `--project-id` | Project ID to deploy on |
 | `--var` | Template variables (repeatable, e.g. `--var KEY=value`) |
 | `--skip-validation` | Skip template validation |
