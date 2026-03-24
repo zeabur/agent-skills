@@ -35,9 +35,25 @@ npx zeabur@latest template deploy -i=false \
   --project-id abc123
 ```
 
+## Advanced: Fetch and Customize Before Deploy
+
+If you need to modify the template YAML before deploying (e.g. adjust env vars, change image tags, add services), fetch it first with `template get --raw`, edit it, then deploy with `-f`:
+
+```bash
+# 1. Fetch the raw YAML
+npx zeabur@latest template get -c KXL04P --raw > template.yaml
+
+# 2. Edit template.yaml as needed
+
+# 3. Deploy the customized template
+npx zeabur@latest template deploy -i=false \
+  -f template.yaml \
+  --project-id <project-id>
+```
+
 ## Custom Template Deploy
 
-For custom or multi-service templates, use a template YAML file:
+For fully custom or multi-service templates, use a template YAML file:
 
 ```bash
 npx zeabur@latest template deploy -i=false \
