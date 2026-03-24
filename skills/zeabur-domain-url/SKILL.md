@@ -86,7 +86,7 @@ npx zeabur@latest server list -i=false
 ```
 
 Then at your DNS provider:
-```
+```text
 Type: A
 Name: <your subdomain or @>
 Value: <server IP from above>
