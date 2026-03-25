@@ -67,8 +67,7 @@ npx zeabur@latest domain create --id <service-id> -g --domain myapp -y -i=false
 Validation rules for generated domain prefix:
 - At least 3 characters
 - No dots allowed — only alphanumeric and hyphens
-- Error `DOMAIN_NAME_TOO_SHORT` if less than 3 chars
-- Error `UNSUPPORTED_DOMAIN_NAME` if prefix contains dots
+- Invalid prefixes (too short, contains dots, etc.) return `DOMAIN_UNAVAILABLE` or `INVALID_DOMAIN_NAME`
 
 ### Create a custom domain
 
