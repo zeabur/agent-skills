@@ -124,6 +124,46 @@ spec:
       description: Database name
 ```
 
+## Known Limitations
+
+### Custom PREBUILT template YAML: internal DNS may not register
+
+Services deployed via custom template YAML files (`-f template.yaml`) with `template: PREBUILT` may not get registered in Zeabur's internal DNS (`*.zeabur.internal`). This means other services in the same project cannot connect to them by hostname. See [zeabur/cli#204](https://github.com/zeabur/cli/issues/204).
+
+**Workaround**: For database services (PostgreSQL, MySQL, Redis), use the marketplace template code (`-c <CODE>`) instead of custom YAML files. Marketplace templates are properly registered in internal DNS.
+
+```bash
+# RECOMMENDED — deploy via marketplace code (has internal DNS)
+npx zeabur@latest template search postgresql -i=false --json
+npx zeabur@latest template deploy -i=false -c <CODE> --project-id <id>
+
+# NOT RECOMMENDED — custom YAML may lack internal DNS
+npx zeabur@latest template deploy -i=false -f my-pg.yaml --project-id <id>
+```
+
+### Custom template YAML schema: `spec` nesting
+
+Template YAML requires `spec.services[].spec.source`, not `spec.services[].source`:
+
+```yaml
+# CORRECT
+spec:
+  services:
+    - name: my-service
+      template: PREBUILT
+      spec:                    # <-- required nesting
+        source:
+          image: postgres:17
+
+# WRONG — will fail with "missing property 'spec'"
+spec:
+  services:
+    - name: my-service
+      template: PREBUILT
+      source:                  # <-- missing spec wrapper
+        image: postgres:17
+```
+
 ## Common Issues
 
 | Issue | Solution |
@@ -132,6 +172,8 @@ spec:
 | Missing variables error | Add all required `--var` flags |
 | Variable with `${REF}` | Use literal value or set in Dashboard after deploy |
 | DOMAIN type validation | Domain availability checked automatically |
+| `missing property 'spec'` | Wrap `source`/`ports`/`env` under `spec:` (double-nested) |
+| Other services can't connect to DB | Use marketplace code (`-c`) not custom YAML (`-f`) for databases |
 
 ## See Also
 
