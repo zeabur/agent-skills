@@ -18,8 +18,8 @@ npx zeabur@latest variable list --id <service-id> -i=false
 
 # 3. Add/update variables
 npx zeabur@latest variable create --id <service-id> \
-  --key "KEY1=value1" \
-  --key "KEY2=value2" \
+  -k "KEY1=value1" \
+  -k "KEY2=value2" \
   -i=false -y
 
 # 4. Restart service
@@ -31,7 +31,6 @@ npx zeabur@latest service restart --id <service-id> -y -i=false
 | Issue | Solution |
 |-------|----------|
 | `${VAR}` references | Set in Dashboard, not CLI (shell expands to empty) |
-| `variable update` clears vars | Use `variable create` instead |
 
 ## When to Use
 

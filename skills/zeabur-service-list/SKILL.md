@@ -28,7 +28,7 @@ npx zeabur@latest service list --project-id <project-id> -i=false
 | Need | Command |
 |------|---------|
 | Check variables | `npx zeabur@latest variable list --id <service-id> -i=false` |
-| Set variables | `npx zeabur@latest variable create --id <service-id> --key "KEY=value" -y -i=false` |
+| Set variables | `npx zeabur@latest variable create --id <service-id> -k "KEY=value" -y -i=false` |
 | View logs | `npx zeabur@latest deployment log --service-id <id> -t runtime` |
 | Restart service | `npx zeabur@latest service restart --id <id> -y` |
 
