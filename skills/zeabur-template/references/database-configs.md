@@ -13,6 +13,9 @@
       - id: database
         port: 5432
         type: TCP
+    healthCheck:
+      type: TCP
+      port: database
     volumes:
       - id: data
         dir: /var/lib/postgresql/data
@@ -53,6 +56,9 @@
       - id: database
         port: 3306
         type: TCP
+    healthCheck:
+      type: TCP
+      port: database
     volumes:
       - id: data
         dir: /var/lib/mysql
@@ -86,6 +92,9 @@
       - id: database
         port: 6379
         type: TCP
+    healthCheck:
+      type: TCP
+      port: database
     volumes:
       - id: data
         dir: /data

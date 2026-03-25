@@ -19,7 +19,8 @@ This is cleaner than wait loops and requires no changes to the app's startup com
 
 **Fallback: wait loop** — if you can't modify the template, add a wait loop to the app's command:
 ```yaml
-args:
+command:
+    - /bin/sh
     - -c
     - |
         echo "Waiting for PostgreSQL..."
@@ -57,7 +58,8 @@ Solutions:
 ##First-run init with persistent marker
 For apps that need first-time initialization (DB schema, seed data, admin users), use a marker file in a persistent volume:
 ```yaml
-args:
+command:
+    - /bin/sh
     - -c
     - |
         if [ ! -f /app/storage/.initialized ]; then
@@ -78,7 +80,8 @@ Key points:
 ##Working directory matters
 When overriding `command`/`args`, be aware of the Dockerfile's `WORKDIR`. In monorepo apps, different commands need to run from different directories:
 ```yaml
-args:
+command:
+    - /bin/sh
     - -c
     - |
         cd /app              # root workspace for yarn workspace commands

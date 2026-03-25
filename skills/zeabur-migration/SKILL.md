@@ -25,6 +25,7 @@ App expects migrations to run separately, but no migrator service exists.
 
 ```yaml
 # In api service — command MUST be inside source
+template: PREBUILT_V2
 spec:
   source:
     image: myapp:latest
@@ -38,6 +39,7 @@ spec:
 
 ```yaml
 - name: migrator
+  template: PREBUILT_V2
   spec:
     source:
       image: same-backend-image
