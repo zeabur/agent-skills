@@ -109,5 +109,6 @@ npx zeabur@latest domain delete --id <service-id> --domain <domain> -y -i=false
 ## See Also
 
 - `zeabur-template` — template YAML reference for domain binding and env vars
+- `zeabur-domain-register` — search, purchase, and manage registered domains
 - `zeabur-domain-dns` — manage DNS records for Zeabur-registered domains
 - `zeabur-server-list` — find server IPs for A record configuration

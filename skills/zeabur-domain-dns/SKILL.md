@@ -10,7 +10,7 @@ description: Use when managing DNS records for Zeabur-registered domains. Use wh
 ## List DNS Records
 
 ```bash
-npx zeabur@latest domain dns list --domain example.com -i=false
+npx zeabur@latest domain dns list --domain example.com -i=false --json
 ```
 
 ## Create a DNS Record

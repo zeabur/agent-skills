@@ -34,7 +34,7 @@ Shows detailed info: CPU/memory/disk usage, provider, location, managed status, 
 ## Reboot a Server
 
 ```bash
-npx zeabur@latest server reboot <server-id> -y
+npx zeabur@latest server reboot <server-id> -y -i=false
 ```
 
 **`-y` skips confirmation prompt** — required for non-interactive use.
