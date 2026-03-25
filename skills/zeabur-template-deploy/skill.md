@@ -7,12 +7,55 @@ description: Use when deploying Zeabur templates or common services/databases vi
 
 > **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method. If `npx` is not available, install Node.js first.
 
-Deploy Zeabur templates via CLI. **Always use non-interactive mode (`-i=false`) in CLI automation.**
+Deploy Zeabur templates and marketplace prebuilt services via CLI. **Always use non-interactive mode (`-i=false`) in CLI automation.**
 
-## Basic Usage
+## Deploying Prebuilt Services (MongoDB, PostgreSQL, Redis, etc.)
+
+For well-known services available in the Zeabur template marketplace, **do NOT write custom template YAML files**. Search for the template code and deploy it directly with `-c`:
 
 ```bash
-# Non-interactive mode (required for CLI automation)
+# 1. Search for the template by keyword
+npx zeabur@latest template search mongodb -i=false --json
+
+# 2. Deploy by template code (from the "Code" field in search results)
+npx zeabur@latest template deploy -i=false \
+  -c <TEMPLATE_CODE> \
+  --project-id <project-id>
+```
+
+### Example: Deploy MongoDB
+
+```bash
+# Search returns code "KXL04P" for MongoDB
+npx zeabur@latest template search mongodb -i=false --json
+
+# Deploy directly by code
+npx zeabur@latest template deploy -i=false \
+  -c KXL04P \
+  --project-id abc123
+```
+
+## Advanced: Fetch and Customize Before Deploy
+
+If you need to modify the template YAML before deploying (e.g. adjust env vars, change image tags, add services), fetch it first with `template get --raw`, edit it, then deploy with `-f`:
+
+```bash
+# 1. Fetch the raw YAML
+npx zeabur@latest template get -c KXL04P --raw > template.yaml
+
+# 2. Edit template.yaml as needed
+
+# 3. Deploy the customized template
+npx zeabur@latest template deploy -i=false \
+  -f template.yaml \
+  --project-id <project-id>
+```
+
+## Custom Template Deploy
+
+For fully custom or multi-service templates, use a template YAML file:
+
+```bash
 npx zeabur@latest template deploy -i=false \
   -f template.yaml \
   --project-id <project-id> \
@@ -25,6 +68,7 @@ npx zeabur@latest template deploy -i=false \
 | Flag | Description |
 |------|-------------|
 | `-f, --file` | Template file (local path or URL) |
+| `-c, --code` | Template code (deploy marketplace template directly, mutually exclusive with `-f`) |
 | `--project-id` | Project ID to deploy on |
 | `--var` | Template variables (repeatable, e.g. `--var KEY=value`) |
 | `--skip-validation` | Skip template validation |

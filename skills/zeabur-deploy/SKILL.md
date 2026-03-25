@@ -33,18 +33,7 @@ Zeabur supports two ways to deploy a project:
 
 ## Direct Deploy (Default)
 
-Deploy the current local directory to Zeabur with one command. Only `--project-id` is required — a new service is created automatically when `--service-id` is omitted.
-
-```bash
-# Deploy current directory (creates a new service automatically)
-npx zeabur@latest deploy --project-id <project-id> --json
-
-# Deploy with a custom service name
-npx zeabur@latest deploy --project-id <project-id> --name my-app --json
-
-# Redeploy to an existing service
-npx zeabur@latest deploy --project-id <project-id> --service-id <service-id> --json
-```
+Deploy the current local directory to Zeabur with one command.
 
 ### Flags
 
@@ -58,17 +47,31 @@ npx zeabur@latest deploy --project-id <project-id> --service-id <service-id> --j
 
 > **Note:** Do NOT use `--create`, `-r`, or `--region` flags with deploy commands. If the user needs to create a new project or select a region, use the `zeabur-project-create` skill first.
 
-### Example Workflow
+### First Deploy
+
+When deploying for the first time, omit `--service-id` — a new service is created automatically:
 
 ```bash
-# 1. Navigate to the project directory
-cd /path/to/project
-
-# 2. Deploy directly (new service created automatically)
 npx zeabur@latest deploy --project-id <project-id> --json
 ```
 
-No Git repository, no GitHub, no extra steps needed. If no project exists yet, **invoke the `zeabur-project-create` skill** (do not run CLI commands directly).
+The response includes a `service_id`. **You MUST save this `service_id` for all subsequent deploys.** Write it to the current project's `CLAUDE.md` immediately:
+
+```markdown
+## Zeabur Deployment
+- Project ID: <project-id>
+- Service ID: <service-id>
+```
+
+### Redeploy (Update Existing Service)
+
+**IMPORTANT: When redeploying code changes, you MUST pass `--service-id` to update the existing service. Omitting `--service-id` creates a NEW duplicate service every time.**
+
+```bash
+npx zeabur@latest deploy --project-id <project-id> --service-id <service-id> --json
+```
+
+If no project exists yet, **invoke the `zeabur-project-create` skill** (do not run CLI commands directly).
 
 ## Git Deploy (On User Request)
 
@@ -133,7 +136,7 @@ Only guide the user through this flow when they specifically ask for Git-based d
 
 - Direct deploy only requires `--project-id` — a new service is created automatically. No Git history or GitHub account required.
 - For static sites, Zeabur auto-detects and serves them correctly.
-- After a successful deployment, offer to save the Project ID and Service ID to the current project's `CLAUDE.md` (preferred) or `README.md`. This way future conversations can skip the "which project?" step and deploy directly.
+- **Always save both Project ID and Service ID** after first deploy. This prevents duplicate services on redeploy.
 ## See Also
 
 - `zeabur-project-create` — create a project if none exists
