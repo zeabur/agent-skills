@@ -97,4 +97,5 @@ npx zeabur@latest email webhooks delete --id <webhook-id> -i=false
 ## See Also
 
 - `zeabur-domain-url` — configure public domains and URLs for services
+- `zeabur-domain-dns` — manage DNS records needed for email domain verification
 - `zeabur-variables` — set environment variables (e.g., email API keys as env vars)
