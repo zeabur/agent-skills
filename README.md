@@ -2,7 +2,7 @@
 
 Claude Code plugin for Zeabur CLI operations, deployment, and troubleshooting.
 
-**Current version: 1.12.0**
+**Current version: 1.14.0**
 
 ## Installation
 
@@ -52,6 +52,12 @@ claude --plugin-dir /path/to/zeabur-claude-plugin
 | `zeabur-domain-registrant` | Manage registrant profiles for domain registration | Creating/updating contact info for domains |
 
 ## Changelog
+
+### 1.14.0
+
+- Improved `zeabur-deploy` — emphasize saving service ID after first deploy to prevent duplicate services on redeploy
+- Improved `zeabur-template-deploy` — added marketplace deploy via `-c` template code (no custom YAML needed)
+- Fixed `zeabur-server-catalog` — corrected JSON example (uppercase provider codes, USD pricing, GB memory, egress field)
 
 ### 1.12.0
 
