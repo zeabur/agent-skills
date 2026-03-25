@@ -22,11 +22,11 @@ Proxy expects service on port X, but service listens on port Y.
 
 1. Check port forwarding status and actual forwarded ports:
    ```bash
-   npx zeabur@latest service network --id SERVICE_ID
+   npx zeabur@latest service network --id <service-id> -i=false
    ```
 2. Check what port the container is actually listening on:
    ```bash
-   npx zeabur@latest service exec --id SERVICE_ID -- netstat -tlnp
+   npx zeabur@latest service exec --id <service-id> -- netstat -tlnp
    ```
 3. Check what port proxy expects (from Caddyfile/nginx.conf)
 4. Check what port container exposes (Dockerfile `EXPOSE`)
@@ -87,19 +87,20 @@ If a TCP service is deployed but not reachable externally:
 
 1. Check if port forwarding is enabled:
    ```bash
-   npx zeabur@latest service port-forward --id SERVICE_ID
+   npx zeabur@latest service port-forward --id <service-id> -i=false
    ```
 2. Enable it if disabled:
    ```bash
-   npx zeabur@latest service port-forward --id SERVICE_ID --enable
+   npx zeabur@latest service port-forward --id <service-id> --enable -i=false
    ```
 3. Verify the forwarded endpoint:
    ```bash
-   npx zeabur@latest service network --id SERVICE_ID
+   npx zeabur@latest service network --id <service-id> -i=false
    # Output: proxy (TCP 8888) → 34.x.x.x:20143
    ```
 
 ## See Also
 
 - `zeabur-template` — template YAML reference for port configuration (including TCP services and `portForwarding`)
+- `zeabur-service-exec` — run commands inside the container for debugging (e.g., `netstat -tlnp`)
 - `zeabur-deployment-logs` — check logs to confirm port binding
