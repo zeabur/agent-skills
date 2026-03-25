@@ -140,3 +140,4 @@ Both `--threshold` and `--amount` are in whole dollars.
 ## See Also
 
 - `zeabur-service-list` — get service IDs for other operations
+- `zeabur-variables` — set API keys as environment variables on services

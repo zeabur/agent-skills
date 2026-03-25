@@ -125,3 +125,4 @@ git push
 ## See Also
 
 - `zeabur-template` — template YAML reference and editing guide
+- `zeabur-template-publish` — publish modified templates back to the marketplace
