@@ -13,11 +13,12 @@ description: Use for ALL Zeabur environment variable operations — create, list
 
 1. **Use `--id` not `--name`** — name lookup is unreliable
 2. **`${VAR}` gets empty** — shell expands before CLI receives; use single quotes
-3. **`variable env` replaces ALL variables** — it overwrites the entire variable set with the .env file contents; existing variables not in the file will be removed
+3. **`variable update` replaces ALL variables** — it overwrites the entire variable set with only the specified keys; all existing variables not included in the command will be **deleted**
+4. **`variable env` replaces ALL variables** — it overwrites the entire variable set with the .env file contents; existing variables not in the file will be removed
 
 ## Create Variables
 
-Creates new variables. **Errors if a key already exists** — use `update` to change existing keys.
+Creates new variables. **Errors if a key already exists** — to change an existing key, delete it first then create with the new value (see safe alternative under Update Variables).
 
 ```bash
 npx zeabur@latest variable create --id <service-id> \
@@ -28,13 +29,20 @@ npx zeabur@latest variable create --id <service-id> \
 
 ## Update Variables
 
-Updates only the specified keys. **Does NOT clear other variables.**
+> **⚠️ WARNING: `variable update` replaces the ENTIRE variable set** with only the keys you specify. All existing variables not included in the command will be **deleted**. To safely change a single variable without affecting others, use the Zeabur Dashboard or delete + recreate the specific key.
 
 ```bash
 npx zeabur@latest variable update --id <service-id> \
   -k "KEY1=new_value1" \
   -k "KEY2=new_value2" \
   -y -i=false
+```
+
+**Safe alternative — delete then create the specific key:**
+
+```bash
+npx zeabur@latest variable delete --id <service-id> --delete-keys "KEY1" -y -i=false
+npx zeabur@latest variable create --id <service-id> -k "KEY1=new_value1" -y -i=false
 ```
 
 ## Delete Variables
@@ -81,7 +89,7 @@ npx zeabur@latest variable create --id <service-id> -k 'REDIS_URL=${REDIS_URI_IN
 | Need | Command | Behavior |
 |------|---------|----------|
 | Add new vars | `npx zeabur@latest variable create --id <service-id> -k "K=V" -y -i=false` | Errors if key exists |
-| Change existing vars | `npx zeabur@latest variable update --id <service-id> -k "K=V" -y -i=false` | Only updates specified keys |
+| Change existing vars | `npx zeabur@latest variable update --id <service-id> -k "K=V" -y -i=false` | **⚠️ Replaces ALL vars** — use delete+create instead |
 | Remove specific vars | `npx zeabur@latest variable delete --id <service-id> --delete-keys "K" -y -i=false` | Only removes specified keys |
 | Overwrite all vars from file | `npx zeabur@latest variable env --id <service-id> -f .env` | **Replaces entire variable set** |
 | View vars | `npx zeabur@latest variable list --id <service-id> -i=false` | Read-only |
