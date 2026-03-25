@@ -62,6 +62,7 @@ claude --plugin-dir /path/to/zeabur-claude-plugin
 - Added `zeabur-project-delete` — delete projects with safety confirmation
 - Added `zeabur-service-delete` — delete individual services with safety confirmation
 - Added `zeabur-template-publish` — publish and update templates on the Zeabur marketplace
+- Removed `zeabur-domain-registrant` — registrant management is now part of `zeabur-domain-register`
 
 ### 1.13.0
 
@@ -72,7 +73,7 @@ claude --plugin-dir /path/to/zeabur-claude-plugin
 
 - Added `zeabur-domain-register` — search, purchase, renew, and manage registered domains (.com, .net, .org, .io, .dev, .app, .co, .me, .xyz)
 - Added `zeabur-domain-dns` — full DNS record CRUD (list, create, update, delete) with domain-name-based lookup
-- Added `zeabur-domain-registrant` — manage registrant profiles (contact info required for domain purchases)
+- Added `zeabur-domain-registrant` — manage registrant profiles (later merged into `zeabur-domain-register`)
 
 ### 1.11.2
 
