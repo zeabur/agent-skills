@@ -19,21 +19,24 @@ Returns JSON with all providers, regions, and plans:
 {
   "providers": [
     {
-      "code": "hetzner",
+      "code": "HETZNER",
       "name": "Hetzner",
       "regions": [
         {
-          "id": "fsn1",
-          "name": "Falkenstein",
-          "city": "Falkenstein",
+          "id": "nbg1",
+          "name": "Nuremberg",
+          "city": "",
           "country": "DE",
+          "continent": "",
           "plans": [
             {
-              "name": "CAX11",
+              "name": "cpx22",
               "cpu": 2,
-              "memory": 4096,
-              "disk": 40,
-              "price": 399,
+              "memory": 4,
+              "disk": 80,
+              "egress": 20000,
+              "price": 6,
+              "originalPrice": 7.46,
               "available": true
             }
           ]
@@ -44,7 +47,11 @@ Returns JSON with all providers, regions, and plans:
 }
 ```
 
-**Note:** `price` is in cents (USD). Divide by 100 for dollars per month.
+**Notes:**
+- `price` is in **USD per month** (integer or float). `originalPrice` shows the provider's list price before Zeabur discount.
+- `memory` is in **GB** (not MB).
+- `egress` is monthly bandwidth in **GB**.
+- `code` is **uppercase** (e.g. `HETZNER`, `VULTR`), but `--provider` filter accepts lowercase.
 
 ## Filter Options
 
@@ -53,7 +60,7 @@ Returns JSON with all providers, regions, and plans:
 | `--provider` | `--provider hetzner` | Filter by provider code |
 | `--country` | `--country DE` | Filter by country code |
 | `--min-cpu` | `--min-cpu 4` | Minimum CPU cores |
-| `--min-memory` | `--min-memory 8192` | Minimum memory in MB |
+| `--min-memory` | `--min-memory 8192` | Minimum memory in **MB** (note: JSON output uses GB) |
 | `--gpu` | `--gpu` | Only GPU plans |
 
 ```bash
