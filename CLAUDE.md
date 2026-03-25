@@ -15,12 +15,14 @@ Zeabur Claude Plugin — a Claude Code plugin providing CLI-based skills for man
 
 | Category | Skills |
 |----------|--------|
-| Deployment & Logs | `zeabur-deploy`, `zeabur-deployment-logs`, `zeabur-template-deploy`, `zeabur-template-backup` |
-| Service Management | `zeabur-service-list`, `zeabur-restart`, `zeabur-update-service`, `zeabur-variables` |
+| Deployment & Logs | `zeabur-deploy`, `zeabur-deployment-logs`, `zeabur-template-deploy`, `zeabur-template-backup`, `zeabur-template-publish` |
+| Service Management | `zeabur-service-list`, `zeabur-restart`, `zeabur-update-service`, `zeabur-variables`, `zeabur-service-delete`, `zeabur-service-exec` |
 | Server Management | `zeabur-server-list`, `zeabur-server-catalog`, `zeabur-server-rent` |
-| Project Management | `zeabur-project-create` |
+| Project Management | `zeabur-project-create`, `zeabur-project-delete` |
 | Domain Registration | `zeabur-domain-register`, `zeabur-domain-dns` |
+| Template Authoring | `zeabur-template` |
 | Troubleshooting | `zeabur-domain-url`, `zeabur-migration`, `zeabur-port-mismatch`, `zeabur-startup-order` |
+| AI & Email | `zeabur-ai-hub`, `zeabur-email` |
 
 ## Conventions
 

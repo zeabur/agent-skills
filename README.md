@@ -2,7 +2,7 @@
 
 Claude Code plugin for Zeabur CLI operations, deployment, and troubleshooting.
 
-**Current version: 1.12.0**
+**Current version: 1.13.1**
 
 ## Installation
 
@@ -49,9 +49,24 @@ claude --plugin-dir /path/to/zeabur-claude-plugin
 | `zeabur-email` | Manage Zeabur Email (ZSend) service | Email domains, API keys, webhooks, ZSend |
 | `zeabur-domain-register` | Search, purchase, renew, and manage registered domains | Buying domains, checking availability, renewal |
 | `zeabur-domain-dns` | Manage DNS records for registered domains | Adding/updating/deleting DNS records |
-| `zeabur-domain-registrant` | Manage registrant profiles for domain registration | Creating/updating contact info for domains |
+| `zeabur-project-delete` | Delete Zeabur projects | Deleting or cleaning up projects |
+| `zeabur-service-delete` | Delete individual services | Removing specific services |
+| `zeabur-service-exec` | Run commands inside service containers | Debugging, database queries, inspecting containers |
+| `zeabur-template-publish` | Publish templates to marketplace | Publishing or updating templates online |
 
 ## Changelog
+
+### 1.13.1
+
+- Added `zeabur-service-exec` — run commands inside running service containers for debugging and one-off operations
+- Added `zeabur-project-delete` — delete projects with safety confirmation
+- Added `zeabur-service-delete` — delete individual services with safety confirmation
+- Added `zeabur-template-publish` — publish and update templates on the Zeabur marketplace
+
+### 1.13.0
+
+- Added `zeabur-server-catalog` — browse available server providers, regions, and plans
+- Added `zeabur-server-rent` — rent a new dedicated server with payment guidance
 
 ### 1.12.0
 
