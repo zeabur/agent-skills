@@ -20,7 +20,7 @@ npx zeabur@latest context set env --id <env-id> -i=false
 npx zeabur@latest context set service --id <service-id> -i=false
 ```
 
-Supports `--name` as alternative to `--id`. Abbreviations also work: `proj`, `env`, `svc`.
+**Always use `--id` (not `--name`)** — name lookup is unreliable. Abbreviations also work: `proj`, `env`, `svc`.
 
 ## Get Context
 
