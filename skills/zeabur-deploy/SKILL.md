@@ -20,6 +20,17 @@ npx zeabur@latest project list -i=false --json
 
 **Do not proceed with deployment until the target project is confirmed.**
 
+### Deploying to a Specific Dedicated Server
+
+If the user asks to deploy to a specific **server** (e.g. "deploy to my AWS Tokyo server"), do **NOT** SSH into the server. Zeabur dedicated servers are managed via the platform — you deploy services through the Zeabur CLI, not by manually placing files on the machine.
+
+To find the project bound to a server:
+
+1. Get the server ID from `npx zeabur@latest server list -i=false` (or from conversation context).
+2. In the `project list --json` output, look for a project whose `Region.ID` matches `server-<server-id>`.
+3. If a matching project exists, use its project ID to deploy.
+4. If no matching project exists, **invoke the `zeabur-project-create` skill** to create one on that server.
+
 ## Choosing a Deploy Method
 
 Zeabur supports two ways to deploy a project:
