@@ -1,6 +1,6 @@
 ---
 name: zeabur-update-service
-description: Use when modifying service config without full redeploy. Use when updating env vars and restarting single service. Use when user says "change env var", "update config", or "fix variable without redeploying".
+description: Use when modifying service config without full redeploy. Use when updating env vars and restarting single service. Use when user says "change env var", "update config", "fix variable without redeploying", "upgrade service version", "update image tag", or "change service tag".
 ---
 
 # Zeabur Update Service Without Redeploy
@@ -33,11 +33,37 @@ npx zeabur@latest service restart --id <service-id> -y -i=false
 | `${VAR}` references | Set in Dashboard, not CLI (shell expands to empty) |
 | `variable update` clears vars | Use `variable create` instead |
 
+## Update Image Tag (Upgrade Service Version)
+
+For prebuilt/marketplace services, update the image tag to upgrade to a newer version.
+
+### Workflow
+
+```bash
+# 1. Get service ID
+npx zeabur@latest service list --project-id <project-id> -i=false
+
+# 2. Update tag (triggers redeploy automatically)
+npx zeabur@latest service update tag --id <service-id> -t <new-tag> -y -i=false
+```
+
+### Flags
+
+| Flag | Description |
+|------|-------------|
+| `--id` | Service ID (**required**, do not use `--name`) |
+| `-t, --tag` | New image tag to deploy |
+| `--env-id` | Environment ID (optional, resolved automatically) |
+| `-y, --yes` | Skip confirmation |
+
+> **Note:** Updating the tag triggers a new deployment. The service will restart with the updated image.
+
 ## When to Use
 
 - Fix environment variable typos
 - Add missing config
 - Change ports, URLs, credentials
+- Upgrade a prebuilt service to a newer version
 - **No need to redeploy entire template**
 
 ## See Also
