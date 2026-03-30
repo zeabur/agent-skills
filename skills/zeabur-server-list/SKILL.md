@@ -39,7 +39,14 @@ npx zeabur@latest server reboot <server-id> -y
 
 **`-y` skips confirmation prompt** — required for non-interactive use.
 
-## SSH into a Server
+## Servers and Projects
+
+Each dedicated server can have Zeabur projects bound to it. A project's `Region.ID` will be `server-<server-id>` when it is deployed on a dedicated server.
+
+- **To deploy a service to a server**, use the `zeabur-deploy` skill with the project bound to that server — do NOT SSH in and manually set up web servers or copy files.
+- **SSH is for low-level debugging only** (e.g. checking kubectl, inspecting disk, network diagnostics). It is not needed for deploying or managing services.
+
+## SSH into a Server (Debugging Only)
 
 ```bash
 npx zeabur@latest server ssh <server-id>
@@ -73,5 +80,6 @@ echo 'kubectl get pods -A; kubectl get svc -A' | npx zeabur@latest server ssh <s
 
 ## See Also
 
+- `zeabur-deploy` — deploy services to a server's project (do NOT use SSH for deployment)
 - `zeabur-server-catalog` — browse available servers to rent
 - `zeabur-server-rent` — rent a new dedicated server
