@@ -66,15 +66,20 @@ After running `env`, you must restart the service manually to apply changes.
 
 ## Variable References
 
+> **Warning:** The CLI `-k` flag uses Cobra's `StringToStringVar` parser which cannot reliably handle values containing `${}`, even with single quotes. The value may be truncated or emptied. See [zeabur/cli#201](https://github.com/zeabur/cli/issues/201).
+
 ```bash
 # WRONG — shell expands ${VAR} to empty
 npx zeabur@latest variable create --id <service-id> -k "REDIS_URL=${REDIS_URI_INTERNAL}" -y -i=false
 
-# CORRECT — single quotes prevent shell expansion
+# STILL UNRELIABLE — single quotes prevent shell expansion but Cobra's CSV parser may still mangle the value
 npx zeabur@latest variable create --id <service-id> -k 'REDIS_URL=${REDIS_URI_INTERNAL}' -y -i=false
 
-# Or set references in Zeabur Dashboard instead
+# RECOMMENDED — set variable references in Zeabur Dashboard
+# Or use GraphQL API with updateEnvironmentVariable(data: Map!) mutation
 ```
+
+For cross-service variable references like `${POSTGRESQL.POSTGRES_CONNECTION_STRING}`, **always use the Zeabur Dashboard** or the GraphQL API directly until the CLI bug is fixed.
 
 ## Quick Reference
 
