@@ -2,7 +2,7 @@
 
 Claude Code plugin for Zeabur CLI operations, deployment, and troubleshooting.
 
-**Current version: 1.14.0**
+**Current version: 1.15.0**
 
 ## Installation
 
@@ -49,9 +49,14 @@ claude --plugin-dir /path/to/zeabur-claude-plugin
 | `zeabur-email` | Manage Zeabur Email (ZSend) service | Email domains, API keys, webhooks, ZSend |
 | `zeabur-domain-register` | Search, purchase, renew, and manage registered domains | Buying domains, checking availability, renewal |
 | `zeabur-domain-dns` | Manage DNS records for registered domains | Adding/updating/deleting DNS records |
+| `zeabur-auth` | Login, logout, and check auth status | User says "login", "登入", "logout", "登出" |
 | `zeabur-domain-registrant` | Manage registrant profiles for domain registration | Creating/updating contact info for domains |
 
 ## Changelog
+
+### 1.15.0
+
+- Added `zeabur-auth` — login, logout, and auth status check. Runs login directly so the CLI auto-opens the browser for the user
 
 ### 1.14.0
 
