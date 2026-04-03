@@ -2,7 +2,7 @@
 
 Claude Code plugin for Zeabur CLI operations, deployment, and troubleshooting.
 
-**Current version: 1.15.0**
+**Current version: 1.16.0**
 
 ## Installation
 
@@ -53,6 +53,11 @@ claude --plugin-dir /path/to/zeabur-claude-plugin
 | `zeabur-domain-registrant` | Manage registrant profiles for domain registration | Creating/updating contact info for domains |
 
 ## Changelog
+
+### 1.16.0
+
+- Improved `zeabur-email` — added Send an Email section with REST API endpoint and usage examples
+- Refactored all skills — inlined cross-skill references into relevant context, removed standalone "See Also" sections for better readability
 
 ### 1.15.0
 
