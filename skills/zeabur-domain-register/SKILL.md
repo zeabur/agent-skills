@@ -29,7 +29,7 @@ A registrant profile is the WHOIS contact info required for domain registration.
 npx zeabur@latest domain registrant list -i=false --json
 ```
 
-If empty, use the `zeabur-domain-registrant` skill to create one first. Alternatively, create one inline:
+If empty, create one:
 
 ```bash
 npx zeabur@latest domain registrant create \
