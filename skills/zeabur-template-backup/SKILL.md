@@ -54,6 +54,8 @@ curl -sL https://zeabur.com/templates/{TEMPLATE_CODE}.yaml -o output.yaml
 
 ## Step-by-Step
 
+For template YAML reference and editing, use the `zeabur-template` skill.
+
 ### 1. Extract Template Code from URL
 
 URL format: `https://zeabur.com/templates/{TEMPLATE_CODE}`
@@ -122,6 +124,3 @@ git push
 | Template name has special chars | Use simple kebab-case for directory |
 | Already exists | Compare with existing file, update if needed |
 
-## See Also
-
-- `zeabur-template` — template YAML reference and editing guide

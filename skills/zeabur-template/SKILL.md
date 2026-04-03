@@ -497,8 +497,3 @@ See `references/complexity-levels.md` for the 5-level complexity guide (single s
 ## Hard-Won Lessons
 
 See `references/hard-won-lessons.md` for battle-tested patterns: wait-for-db, first-run init markers, OOM recovery, ImagePullBackOff, and more.
-
-## See Also
-
-- `zeabur-template-deploy` — deploy a template via CLI
-- `zeabur-template-backup` — backup a template to git

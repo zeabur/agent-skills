@@ -28,6 +28,7 @@ Proxy expects service on port X, but service listens on port Y.
    ```bash
    npx zeabur@latest service exec --id SERVICE_ID -- netstat -tlnp
    ```
+   (use the `zeabur-deployment-logs` skill to also check logs for port binding info)
 3. Check what port proxy expects (from Caddyfile/nginx.conf)
 4. Check what port container exposes (Dockerfile `EXPOSE`)
 
@@ -39,6 +40,8 @@ Proxy expects service on port X, but service listens on port Y.
 | `:80` | app on `:3000` | Change template port to 3000 |
 
 ## Fix in Template
+
+Use the `zeabur-template` skill for full YAML reference on port configuration and `portForwarding`:
 
 ```yaml
 ports:
@@ -99,7 +102,3 @@ If a TCP service is deployed but not reachable externally:
    # Output: proxy (TCP 8888) → 34.x.x.x:20143
    ```
 
-## See Also
-
-- `zeabur-template` — template YAML reference for port configuration (including TCP services and `portForwarding`)
-- `zeabur-deployment-logs` — check logs to confirm port binding

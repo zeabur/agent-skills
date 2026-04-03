@@ -73,9 +73,4 @@ npx zeabur@latest service exec --id <service-id> -- df -h
 - For compound commands, wrap in `sh -c "..."`.
 - Not all containers have a full shell — `sh` is more portable than `bash`.
 - Use single quotes outside and double quotes inside when dealing with variable expansion: `sh -c "echo \$VAR"`.
-
-## See Also
-
-- `zeabur-service-list` — find service IDs
-- `zeabur-deployment-logs` — check logs without exec
-- `zeabur-variables` — manage env vars via CLI instead of exec
+- To find service IDs, use the `zeabur-service-list` skill. To check logs without exec, use the `zeabur-deployment-logs` skill. To manage env vars via CLI, use the `zeabur-variables` skill.

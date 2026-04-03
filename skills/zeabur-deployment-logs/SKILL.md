@@ -10,7 +10,7 @@ description: Use when viewing service runtime or build logs. Use when user says 
 ## Workflow
 
 ```bash
-# 1. Get service ID
+# 1. Get service ID (use the `zeabur-service-list` skill)
 npx zeabur@latest service list --project-id <project-id> -i=false
 
 # 2. View runtime logs
@@ -39,7 +39,4 @@ npx zeabur@latest deployment log --service-id <id> -w -i=false
 | Note singular | `deployment log` not `deployment logs` |
 | Check service status | Look for `SERVER STARTED`, `Ready`, `listening` |
 
-## See Also
-
-- `zeabur-service-list` — get service IDs needed for log commands
-- `zeabur-restart` — restart a service after diagnosing issues
+After diagnosing issues from logs, use the `zeabur-restart` skill to restart the service if needed.

@@ -29,7 +29,7 @@ A registrant profile is the WHOIS contact info required for domain registration.
 npx zeabur@latest domain registrant list -i=false --json
 ```
 
-If empty, create one:
+If empty, use the `zeabur-domain-registrant` skill to create one first. Alternatively, create one inline:
 
 ```bash
 npx zeabur@latest domain registrant create \
@@ -58,6 +58,8 @@ npx zeabur@latest domain purchase example.com --registrant-id <profile-id> -y -i
 - Purchase may take up to 60 seconds (registers with OpenSRS + creates Cloudflare DNS zone)
 - Requires Developer Plan or above
 - Prices are in USD
+
+After purchasing, use the `zeabur-domain-dns` skill to manage DNS records, or use the `zeabur-domain-url` skill to bind the domain to a Zeabur service.
 
 ### Payment Errors
 
@@ -198,8 +200,3 @@ In interactive mode, the command pre-fills current values so the user only chang
 - If still not received, update to a different email: `npx zeabur@latest domain verification update-contact --id <domain-id>`
 
 ---
-
-## See Also
-
-- `zeabur-domain-dns` — manage DNS records (A, CNAME, MX, TXT, etc.)
-- `zeabur-domain-url` — bind domains to Zeabur services

@@ -9,6 +9,8 @@ description: Use when deploying Zeabur templates or common services/databases vi
 
 Deploy Zeabur templates and marketplace prebuilt services via CLI. **Always use non-interactive mode (`-i=false`) in CLI automation.**
 
+If no project exists yet, use the `zeabur-project-create` skill to create one before deploying.
+
 ## Deploying Prebuilt Services (MongoDB, PostgreSQL, Redis, etc.)
 
 For well-known services available in the Zeabur template marketplace, **do NOT write custom template YAML files**. Search for the template code and deploy it directly with `-c`:
@@ -124,6 +126,8 @@ spec:
       description: Database name
 ```
 
+To create or edit template YAML files, use the `zeabur-template` skill.
+
 ## Known Limitations
 
 ### Custom PREBUILT template YAML: internal DNS may not register
@@ -175,7 +179,3 @@ spec:
 | `missing property 'spec'` | Wrap `source`/`ports`/`env` under `spec:` (double-nested) |
 | Other services can't connect to DB | Use marketplace code (`-c`) not custom YAML (`-f`) for databases |
 
-## See Also
-
-- `zeabur-template` — create and edit template YAML files
-- `zeabur-project-create` — create a project before deploying a template

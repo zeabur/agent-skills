@@ -34,7 +34,7 @@ npx zeabur@latest service delete -i=false --id <service-id> -y
 ## Workflow
 
 ```bash
-# 1. List services to find the target
+# 1. List services to find the target (use the `zeabur-service-list` skill)
 npx zeabur@latest service list --project-id <project-id> -i=false --json
 
 # 2. Confirm with user: "Delete <service-name> (<service-id>)?"
@@ -43,7 +43,4 @@ npx zeabur@latest service list --project-id <project-id> -i=false --json
 npx zeabur@latest service delete -i=false --id <service-id> -y
 ```
 
-## See Also
-
-- `zeabur-service-list` — list services to find the ID before deleting
-- `zeabur-project-delete` — delete an entire project (includes all services)
+To delete an entire project instead, use the `zeabur-project-delete` skill.

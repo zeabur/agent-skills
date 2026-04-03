@@ -21,7 +21,7 @@ App expects migrations to run separately, but no migrator service exists.
 
 ## Solutions
 
-### Option A: Add migration to API startup
+### Option A: Add migration to API startup (edit template YAML — use the `zeabur-template` skill for reference)
 
 ```yaml
 # In api service — command MUST be inside source
@@ -49,8 +49,4 @@ spec:
 
 **Option A is simpler** - migrations run on API startup and are idempotent (safe to repeat).
 
-## See Also
-
-- `zeabur-template` — template YAML reference for command placement
-- `zeabur-deployment-logs` — check migration logs for errors
-- `zeabur-startup-order` — similar issue where services start before dependencies are ready
+To check migration logs for errors, use the `zeabur-deployment-logs` skill. If the issue is about services starting before dependencies are ready (not migration-specific), use the `zeabur-startup-order` skill instead.

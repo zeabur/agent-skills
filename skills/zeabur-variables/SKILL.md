@@ -20,6 +20,7 @@ description: Use for ALL Zeabur environment variable operations — create, list
 Creates new variables. **Errors if a key already exists** — use `update` to change existing keys.
 
 ```bash
+# Always use service ID — use the `zeabur-service-list` skill to get it
 npx zeabur@latest variable create --id <service-id> \
   -k "KEY1=value1" \
   -k "KEY2=value2" \
@@ -91,7 +92,3 @@ For cross-service variable references like `${POSTGRESQL.POSTGRES_CONNECTION_STR
 | Overwrite all vars from file | `npx zeabur@latest variable env --id <service-id> -f .env` | **Replaces entire variable set** |
 | View vars | `npx zeabur@latest variable list --id <service-id> -i=false` | Read-only |
 
-## See Also
-
-- `zeabur-service-list` — get service IDs needed for variable commands
-- `zeabur-update-service` — update variables and restart in one workflow

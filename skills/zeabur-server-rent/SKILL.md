@@ -15,7 +15,7 @@ npx zeabur@latest server rent --provider <code> --region <id> --plan <name> -y -
 
 ## Workflow
 
-### 1. Browse available options
+### 1. Browse available options (use the `zeabur-server-catalog` skill for filtering)
 
 ```bash
 npx zeabur@latest server catalog -i=false
@@ -48,10 +48,5 @@ The server takes a few minutes to provision. Check status with:
 npx zeabur@latest server get <server-id> -i=false
 ```
 
-Look for `provisioningStatus` to change to `READY` and `VM STATUS` to `RUNNING`.
+Look for `provisioningStatus` to change to `READY` and `VM STATUS` to `RUNNING`. Once ready, use the `zeabur-project-create` skill to create a project on the new server.
 
-## See Also
-
-- `zeabur-server-catalog` — browse available server options before renting
-- `zeabur-server-list` — check server status after provisioning
-- `zeabur-project-create` — create a project on the new server

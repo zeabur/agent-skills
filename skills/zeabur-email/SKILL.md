@@ -47,7 +47,7 @@ npx zeabur@latest email domains add --domain example.com --region us-east-1 -i=f
 # 2. Get DNS records to configure (note the domain ID from step 1)
 npx zeabur@latest email domains get --id <domain-id> -i=false
 
-# 3. After configuring DNS records at your DNS provider, verify
+# 3. Configure the required DNS records using the `zeabur-domain-dns` skill, then verify
 npx zeabur@latest email domains verify --id <domain-id> -i=false
 ```
 
@@ -93,8 +93,3 @@ npx zeabur@latest email webhooks delete --id <webhook-id> -i=false
 **Supported events:** `send`, `delivery`, `bounce`, `complaint`, `reject`, `open`, `click`
 
 **The webhook secret is only shown once at creation time.** Make sure the user saves it immediately.
-
-## See Also
-
-- `zeabur-domain-url` — configure public domains and URLs for services
-- `zeabur-variables` — set environment variables (e.g., email API keys as env vars)
