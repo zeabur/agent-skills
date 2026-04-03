@@ -78,8 +78,3 @@ echo 'kubectl get pods -A; kubectl get svc -A' | npx zeabur@latest server ssh <s
 - If the remote command has a non-zero exit code (e.g. `grep` with no matches), the CLI will print `ERROR exit status 1`. This does not necessarily mean the SSH connection failed.
 - Heredoc syntax (`<<'EOF'`) does **not** work reliably with this command. Always use `echo '...' |` instead.
 
-## See Also
-
-- `zeabur-deploy` — deploy services to a server's project (do NOT use SSH for deployment)
-- `zeabur-server-catalog` — browse available servers to rent
-- `zeabur-server-rent` — rent a new dedicated server

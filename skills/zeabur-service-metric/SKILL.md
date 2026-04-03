@@ -31,7 +31,7 @@ npx zeabur@latest service metric CPU --id <service-id> --hour 24 -i=false
 When a user reports a slow or unresponsive service, **check metrics before restarting**:
 
 ```bash
-# 1. Get service ID
+# 1. Get service ID (use the `zeabur-service-list` skill)
 npx zeabur@latest service list --project-id <project-id> -i=false
 
 # 2. Check CPU — is the service compute-bound?
@@ -43,7 +43,7 @@ npx zeabur@latest service metric MEMORY --id <service-id> -i=false
 # 4. Check network — is there unusual traffic?
 npx zeabur@latest service metric NETWORK --id <service-id> -i=false
 
-# 5. Check logs for errors
+# 5. Check logs for errors (use the `zeabur-deployment-logs` skill for details)
 npx zeabur@latest deployment log --id <service-id> -i=false
 ```
 
@@ -52,12 +52,7 @@ npx zeabur@latest deployment log --id <service-id> -i=false
 | Symptom | Likely cause | Action |
 |---------|-------------|--------|
 | CPU consistently near 100% | Compute-bound workload | Upgrade plan or optimize code |
-| Memory climbing until OOM | Memory leak or undersized plan | Restart (temporary) + fix leak |
+| Memory climbing until OOM | Memory leak or undersized plan | Restart with `zeabur-restart` skill (temporary) + fix leak |
 | Network spikes | Traffic surge or external API issues | Check logs for request patterns |
 | All metrics normal | Application-level bug | Check deployment logs |
 
-## See Also
-
-- `zeabur-deployment-logs` — check logs after identifying the bottleneck
-- `zeabur-restart` — restart only after diagnosing the issue
-- `zeabur-service-list` — get service IDs needed for metric queries

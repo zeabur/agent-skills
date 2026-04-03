@@ -70,13 +70,9 @@ npx zeabur@latest server catalog --country DE --min-cpu 4 -i=false
 
 ## Use With Server Rent
 
-Parse the catalog JSON to extract `provider`, `region`, and `plan` values, then:
+Parse the catalog JSON to extract `provider`, `region`, and `plan` values, then use the `zeabur-server-rent` skill to rent:
 
 ```bash
 npx zeabur@latest server rent --provider <code> --region <id> --plan <name> -y -i=false
 ```
 
-## See Also
-
-- `zeabur-server-rent` — rent a server after browsing the catalog
-- `zeabur-server-list` — list your existing servers

@@ -21,7 +21,7 @@ npx zeabur@latest server list -i=false --json
 
 Present the server list to the user (show name, provider, and region for each) and **ask them to pick one**. Do NOT choose a server on the user's behalf. Also offer the option to rent a new server if none of the existing ones are suitable.
 
-- If the user has **no servers**, guide them to rent one first using the `zeabur-server-rent` skill (or `zeabur-server-catalog` to browse options).
+- If the user has **no servers**, use the `zeabur-server-catalog` skill to browse options, then the `zeabur-server-rent` skill to rent one.
 
 **Step 3 — Use the selected server ID with `server-` prefix as the region:**
 
@@ -68,11 +68,7 @@ PROJECT_ID=$(npx zeabur@latest project list -i=false --json | jq -r '.[] | selec
 echo "Project ID: $PROJECT_ID"
 echo "Dashboard: https://zeabur.com/projects/$PROJECT_ID"
 
-# 4. Deploy template (non-interactive)
+# 4. Deploy template — use the `zeabur-template-deploy` skill for detailed flags and troubleshooting
 npx zeabur@latest template deploy -i=false --json -f template.yml --project-id $PROJECT_ID --var PUBLIC_DOMAIN=myapp
 ```
 
-## See Also
-
-- `zeabur-template-deploy` — detailed template deployment flags and troubleshooting
-- `zeabur-server-rent` — rent a dedicated server before creating a project on it

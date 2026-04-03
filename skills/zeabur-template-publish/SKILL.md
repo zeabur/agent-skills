@@ -69,7 +69,7 @@ npx zeabur@latest template get -c <TEMPLATE_CODE> --raw
 ## Workflow
 
 ```bash
-# First time: create and note the returned code
+# First time: create and note the returned code (use the `zeabur-template` skill to create the YAML first)
 npx zeabur@latest template create -f zeabur-template-myapp.yaml
 # → Template created: VTZ4FX
 
@@ -80,8 +80,3 @@ npx zeabur@latest template update -c VTZ4FX -f zeabur-template-myapp.yaml
 npx zeabur@latest template get -c VTZ4FX --raw
 ```
 
-## See Also
-
-- `zeabur-template` — create and edit template YAML files
-- `zeabur-template-deploy` — deploy a template to a project
-- `zeabur-template-backup` — backup an online template to local git

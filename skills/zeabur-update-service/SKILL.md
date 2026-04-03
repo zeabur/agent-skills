@@ -10,7 +10,7 @@ description: Use when modifying service config without full redeploy. Use when u
 ## Workflow
 
 ```bash
-# 1. Get service ID
+# 1. Get service ID (use the `zeabur-service-list` skill)
 npx zeabur@latest service list --project-id <project-id> -i=false
 
 # 2. Check current variables
@@ -22,7 +22,7 @@ npx zeabur@latest variable create --id <service-id> \
   --key "KEY2=value2" \
   -i=false -y
 
-# 4. Restart service
+# 4. Restart service (use the `zeabur-restart` skill for details)
 npx zeabur@latest service restart --id <service-id> -y -i=false
 ```
 
@@ -40,7 +40,7 @@ For prebuilt/marketplace services, update the image tag to upgrade to a newer ve
 ### Workflow
 
 ```bash
-# 1. Get service ID
+# 1. Get service ID (use the `zeabur-service-list` skill)
 npx zeabur@latest service list --project-id <project-id> -i=false
 
 # 2. Update tag (triggers redeploy automatically)
@@ -66,8 +66,3 @@ npx zeabur@latest service update tag --id <service-id> -t <new-tag> -y -i=false
 - Upgrade a prebuilt service to a newer version
 - **No need to redeploy entire template**
 
-## See Also
-
-- `zeabur-service-list` — get service IDs needed for updates
-- `zeabur-variables` — detailed guide on variable management
-- `zeabur-restart` — restart service after config changes

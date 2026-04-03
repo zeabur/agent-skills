@@ -76,10 +76,5 @@ dig @<nameserver> <name>.<domain> <type> +short
 ## Important Notes
 
 - This manages DNS for **Zeabur-registered domains** only. For domains registered elsewhere, configure DNS at your registrar.
-- To bind a domain to a Zeabur service, use `zeabur-domain-url` instead.
+- To bind a domain to a Zeabur service, use the `zeabur-domain-url` skill instead.
 - `--domain` accepts the domain name (e.g. `example.com`). Use `--domain-id` only for advanced scripting.
-
-## See Also
-
-- `zeabur-domain-register` — search, purchase, renew domains, manage registrant profiles, ICANN verification
-- `zeabur-domain-url` — bind domains to Zeabur services

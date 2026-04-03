@@ -47,7 +47,7 @@ npx zeabur@latest project list -i=false 2>/dev/null | grep "<project-name>"
 # 1. List projects to find the target
 npx zeabur@latest project list -i=false
 
-# 2. Confirm with user: "Delete <project-name> (<project-id>)?"
+# 2. Check services with the `zeabur-service-list` skill, then confirm with user: "Delete <project-name> (<project-id>)?"
 
 # 3. Delete
 npx zeabur@latest project delete -i=false --id <project-id> -y
@@ -62,7 +62,3 @@ npx zeabur@latest project delete -i=false --id <project-id> -y
 | `-y, --yes` | Skip confirmation prompt |
 | `-i=false` | Non-interactive mode (always use this) |
 
-## See Also
-
-- `zeabur-project-create` — create a new project
-- `zeabur-service-list` — check what services exist before deleting a project

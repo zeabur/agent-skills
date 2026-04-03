@@ -148,7 +148,4 @@ Only guide the user through this flow when they specifically ask for Git-based d
 - Direct deploy only requires `--project-id` — a new service is created automatically. No Git history or GitHub account required.
 - For static sites, Zeabur auto-detects and serves them correctly.
 - **Always save both Project ID and Service ID** after first deploy. This prevents duplicate services on redeploy.
-## See Also
-
-- `zeabur-project-create` — create a project if none exists
-- `zeabur-deployment-logs` — check logs after deployment
+- After deployment, use the `zeabur-deployment-logs` skill to check build and runtime logs.

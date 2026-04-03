@@ -136,7 +136,3 @@ npx zeabur@latest ai-hub auto-recharge --threshold 0 --amount 0 -i=false
 ```
 
 Both `--threshold` and `--amount` are in whole dollars.
-
-## See Also
-
-- `zeabur-service-list` — get service IDs for other operations

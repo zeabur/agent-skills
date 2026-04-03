@@ -78,7 +78,7 @@ Without `-g`, `--domain` takes a **full domain name**:
 npx zeabur@latest domain create --id <service-id> --domain example.com -y -i=false
 ```
 
-After creating a custom domain, configure an **A record** at your DNS provider pointing to the server IP. Find the IP with:
+After creating a custom domain, use the `zeabur-domain-dns` skill to configure the required DNS records. For dedicated servers, find the IP with:
 
 ```bash
 npx zeabur@latest server list -i=false
@@ -105,9 +105,3 @@ npx zeabur@latest domain delete --id <service-id> --domain <domain> -y -i=false
 - `--domain` is always required in non-interactive mode. Without it the CLI returns `INVALID_DOMAIN_NAME`.
 - With `-g`, provide only the prefix (e.g., `myapp`), **not** the full `myapp.zeabur.app`.
 - Without `-g`, provide the complete domain (e.g., `example.com`).
-
-## See Also
-
-- `zeabur-template` — template YAML reference for domain binding and env vars
-- `zeabur-domain-dns` — manage DNS records for Zeabur-registered domains
-- `zeabur-server-list` — find server IPs for A record configuration
