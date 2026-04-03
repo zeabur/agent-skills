@@ -1,6 +1,6 @@
 ---
 name: zeabur-email
-description: Use when managing Zeabur Email (ZSend) service. Use when user says "email", "send email", "email domain", "email API key", "email webhook", or "ZSend".
+description: Use when managing Zeabur Email (ZSend) service or sending emails. Use when user says "email", "send email", "send mail", "email domain", "email API key", "email webhook", or "ZSend".
 ---
 
 # Zeabur Email (ZSend) Management
@@ -93,3 +93,28 @@ npx zeabur@latest email webhooks delete --id <webhook-id> -i=false
 **Supported events:** `send`, `delivery`, `bounce`, `complaint`, `reject`, `open`, `click`
 
 **The webhook secret is only shown once at creation time.** Make sure the user saves it immediately.
+
+## Send an Email
+
+Use the REST API directly with `curl`. The endpoint is `https://api.zeabur.com/api/v1/zsend/emails`.
+
+```bash
+curl -X POST https://api.zeabur.com/api/v1/zsend/emails \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <api-key>" \
+  -d '{
+    "from": "sender@example.com",
+    "to": ["recipient@example.com"],
+    "subject": "Hello from Zeabur Email",
+    "html": "<h1>Hello!</h1><p>This is a test email.</p>",
+    "text": "Hello! This is a test email."
+  }'
+```
+
+- `from`: Must use a verified domain (e.g., `noreply@example.com`)
+- `to`: Array of recipient email addresses
+- `subject`: Email subject line
+- `html`: HTML body (optional if `text` is provided)
+- `text`: Plain text body (optional if `html` is provided)
+
+The API key must have `send_only` or `all` permission. If no key exists, create one first (see API Key Management above).
