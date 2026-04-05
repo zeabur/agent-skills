@@ -1,15 +1,15 @@
-# Zeabur Claude Plugin
+# Zeabur Agent Skills
 
-Claude Code plugin for Zeabur CLI operations, deployment, and troubleshooting.
+Agent skills for Zeabur CLI operations, deployment, and troubleshooting. Works with **Claude Code**, **OpenAI Codex**, and other agents supporting the SKILL.md format.
 
 **Current version: 1.16.0**
 
 ## Installation
 
-In Claude Code, run:
+### Claude Code
 
 ```
-claude plugin marketplace add zeabur/zeabur-claude-plugin && claude plugin install zeabur@zeabur
+claude plugin marketplace add zeabur/agent-skills && claude plugin install zeabur@zeabur
 ```
 
 Update to latest version:
@@ -18,10 +18,23 @@ Update to latest version:
 claude plugin marketplace update zeabur && claude plugin update zeabur@zeabur
 ```
 
-Or test locally:
+### OpenAI Codex
+
+Install from the Codex plugin directory, or add manually:
 
 ```bash
-claude --plugin-dir /path/to/zeabur-claude-plugin
+# Copy to your plugins directory
+git clone https://github.com/zeabur/agent-skills.git ~/.codex/plugins/zeabur
+```
+
+### Local testing
+
+```bash
+# Claude Code
+claude --plugin-dir /path/to/agent-skills
+
+# Codex
+codex --plugin-dir /path/to/agent-skills
 ```
 
 ## Skills
