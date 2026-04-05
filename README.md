@@ -20,12 +20,9 @@ claude plugin marketplace update zeabur && claude plugin update zeabur@zeabur
 
 ### OpenAI Codex
 
-Install from the Codex plugin directory, or add manually:
+In the Codex app, search for "Zeabur" in the plugin directory and click **Add to Codex**.
 
-```bash
-# Copy to your plugins directory
-git clone https://github.com/zeabur/agent-skills.git ~/.codex/plugins/zeabur
-```
+In the Codex CLI, run `/plugins` and select "Install plugin" to browse and install.
 
 ### Local testing
 
