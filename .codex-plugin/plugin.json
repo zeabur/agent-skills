@@ -1,0 +1,27 @@
+{
+  "name": "zeabur",
+  "version": "1.14.0",
+  "description": "Zeabur CLI skills for deployment, template management, server management, and troubleshooting",
+  "author": {
+    "name": "Zeabur",
+    "url": "https://zeabur.com"
+  },
+  "repository": "https://github.com/zeabur/zeabur-claude-plugin",
+  "license": "MIT",
+  "keywords": ["zeabur", "deployment", "cli", "templates", "devops", "cloud"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Zeabur",
+    "shortDescription": "Deploy and manage apps on Zeabur",
+    "longDescription": "CLI-based skills for deploying, managing services, renting servers, registering domains, and troubleshooting on Zeabur. Works with both Claude Code and OpenAI Codex.",
+    "developerName": "Zeabur",
+    "category": "Developer Tools",
+    "capabilities": ["Read", "Write"],
+    "websiteURL": "https://zeabur.com",
+    "defaultPrompt": [
+      "Deploy this project to Zeabur",
+      "List my Zeabur servers",
+      "Rent a new server on Hetzner"
+    ]
+  }
+}
