@@ -5,11 +5,13 @@ description: Use when generating a Dockerfile for deploying a project to Zeabur.
 
 # Zeabur Dockerfile Generation
 
+> **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method. If `npx` is not available, install Node.js first.
+
 When deploying source code to Zeabur, you must generate a Dockerfile. This skill covers how to analyze a project and produce a correct, deployable Dockerfile.
 
-## Step 1 — Analyze the Project
+## Prerequisites
 
-Read the key files that affect Dockerfile generation:
+Before generating a Dockerfile, read the key project files:
 
 | Language | Files to read |
 |----------|---------------|
@@ -33,7 +35,11 @@ Also check for:
 - Lockfile contents — only check which lockfile *exists* (to determine package manager). Do NOT parse the contents.
 - Markdown files — documentation only, never influences Dockerfile decisions
 
-From the analysis, determine:
+## Workflow
+
+### 1. Analyze the Project
+
+From the prerequisite files, determine:
 1. Programming language and version
 2. Framework (if any)
 3. Package manager
@@ -42,9 +48,9 @@ From the analysis, determine:
 6. Port the app listens on
 7. Static site vs server-side app
 
-## Step 2 — Generate the Dockerfile
+### 2. Generate the Dockerfile
 
-### General Rules
+#### General Rules
 
 - No comments in the Dockerfile
 - No `ENV` or `ARG` instructions (unless required by the framework — see language-specific sections)
@@ -55,7 +61,7 @@ From the analysis, determine:
 - Add `EXPOSE` for the port the app listens on
 - Do not use multi-stage builds unless the build image differs from the runtime image (e.g., build with Node.js, serve with `zeabur/caddy-static`)
 
-### Framework vs Package — Only These Get a Framework Label
+#### Framework vs Package — Only These Get a Framework Label
 
 **Frameworks** (use `LABEL "framework"="..."`):
 `vite`, `create-react-app`, `next.js`, `remix`, `nuxt.js`, `umi`, `nest.js`, `hexo`, `vitepress`, `astro`, `sli.dev`, `docusaurus`, `nitropack`, `hono`, `medusa`, `svelte`, `flask`, `django`, `fastapi`, `spring-boot`, `laravel`, `thinkphp`, `rails`, `aspnet`, `blazorwasm`, `elysia`, `baojs`
@@ -67,7 +73,7 @@ From the analysis, determine:
 
 > If unsure whether something is a framework or package, do NOT add the framework label.
 
-### Static Sites — `zeabur/caddy-static`
+#### Static Sites — `zeabur/caddy-static`
 
 For **pure static websites** (Vite, Astro static, Docusaurus, plain HTML), use `zeabur/caddy-static`:
 
@@ -91,9 +97,7 @@ Rules for `zeabur/caddy-static`:
 - Only use for truly static sites. Do NOT use for SSR frameworks (Next.js, Nuxt.js, SvelteKit, etc.)
 - If building with Node.js then serving as static, set `LABEL "language"="nodejs"` (not `"static"`)
 
-## Language-Specific Guidelines
-
-### Node.js
+#### Node.js
 
 - Default base image: `node:22-slim`
 - Determine package manager by lockfile presence:
@@ -108,9 +112,7 @@ Rules for `zeabur/caddy-static`:
 - For Vite static sites (React, Vue static builds), use `zeabur/caddy-static` to serve.
 - For Vite with SSR frameworks (SvelteKit), use Node.js runtime.
 
-#### Next.js
-
-Zeabur injects a hidden environment variable `PORT=8080` into the container, so Next.js production mode listens on 8080 by default. No extra config needed.
+**Next.js** — Zeabur injects `PORT=8080` into the container, so Next.js production mode listens on 8080 by default. No extra config needed.
 
 ```dockerfile
 FROM node:22-slim
@@ -124,12 +126,7 @@ EXPOSE 8080
 CMD ["npm", "start"]
 ```
 
-#### Svelte / SvelteKit
-
-- Use `node:22` (not alpine, not slim)
-- Set `ENV PORT=8080`
-- Single-stage build — do NOT use `zeabur/caddy-static`
-- Do NOT use `cross-env ADAPTER=static` or adapter-specific build commands
+**Svelte / SvelteKit** — Use `node:22` (not alpine, not slim). Set `ENV PORT=8080`. Single-stage build — do NOT use `zeabur/caddy-static`. Do NOT use `cross-env ADAPTER=static` or adapter-specific build commands.
 
 ```dockerfile
 FROM node:22
@@ -145,13 +142,11 @@ EXPOSE 8080
 CMD ["pnpm", "start"]
 ```
 
-### Python
+#### Python
 
 - Default base image: `python:3.10`
 
-#### Flask
-
-Find the WSGI entry first. For example, if `main.py` contains `app = Flask(__name__)`, the entry is `main:app`.
+**Flask** — Find the WSGI entry first. For example, if `main.py` contains `app = Flask(__name__)`, the entry is `main:app`.
 
 ```dockerfile
 FROM python:3.10
@@ -164,9 +159,7 @@ EXPOSE 8080
 CMD ["gunicorn", "--bind", "0.0.0.0:8080", "main:app"]
 ```
 
-#### FastAPI
-
-Choose the start method based on what exists:
+**FastAPI** — Choose the start method based on what exists:
 1. If `fastapi-cli` is in `requirements.txt` → `fastapi run`
 2. If `if __name__ == "__main__":` exists in a `.py` file → `python <file>.py`
 3. Otherwise → `uvicorn main:app --host 0.0.0.0 --port 8080` (install `uvicorn` if missing)
@@ -182,11 +175,9 @@ EXPOSE 8080
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
 ```
 
-#### Generic Python
+**Generic Python** — If WSGI might be applicable, use `gunicorn`. If unsure, just use `python <file>.py`.
 
-If WSGI might be applicable, use `gunicorn`. If unsure, just use `python <file>.py`.
-
-### Go
+#### Go
 
 ```dockerfile
 FROM golang:1.23 AS build
@@ -201,7 +192,7 @@ EXPOSE 8080
 CMD ["/app"]
 ```
 
-### PHP (Laravel / Symfony / Generic)
+#### PHP (Laravel / Symfony / Generic)
 
 Uses NGINX + PHP-FPM. Adjust PHP version and extensions as needed.
 
@@ -250,19 +241,42 @@ CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"]
 ```
 
 For Laravel, add optimization after `composer install`:
-```
+```dockerfile
 RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
 ```
 
-## If the Project Already Has a Dockerfile
+### 3. Handle Existing Dockerfiles
 
 - Analyze the existing Dockerfile first
 - Use it as-is if it looks correct
 - Suggest improvements only if there are issues (wrong port, missing dependencies, etc.)
 - Always add Zeabur-specific labels (`language`, `framework`) if missing
 
-## After Generating the Dockerfile
+## CLI Commands
 
-Deploy with the `zeabur-deploy` skill. Zeabur CLI picks up the Dockerfile from the project directory automatically.
+After generating the Dockerfile, deploy with:
 
-If the build or runtime fails, use the `zeabur-deployment-logs` skill to check logs and iterate on the Dockerfile.
+```bash
+npx zeabur@latest deploy --project-id <project-id> --json
+```
+
+For redeployment (must pass service ID to avoid creating duplicates):
+
+```bash
+npx zeabur@latest deploy --project-id <project-id> --service-id <service-id> --json
+```
+
+Use the `zeabur-deploy` skill for the full deployment workflow.
+
+## Error Handling
+
+If the build or runtime fails:
+
+1. Check build logs with the `zeabur-deployment-logs` skill
+2. Common issues:
+   - **Missing dependencies** — add to `RUN` install step
+   - **Wrong port** — verify `EXPOSE` matches what the app listens on; check with `zeabur-port-mismatch` skill
+   - **Wrong start command** — verify `CMD` matches the project's actual entry point
+   - **Static site served as SSR** — switch to `zeabur/caddy-static` if the app produces static output
+   - **SSR served as static** — switch to Node.js runtime if the app requires a server
+3. Fix the Dockerfile, then redeploy with `--service-id` to update the existing service
