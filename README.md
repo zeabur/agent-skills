@@ -2,7 +2,7 @@
 
 Agent skills for Zeabur CLI operations, deployment, and troubleshooting. Works with **Claude Code**, **OpenAI Codex**, and other agents supporting the SKILL.md format.
 
-**Current version: 1.16.0**
+**Current version: 1.17.0**
 
 ## Installation
 
@@ -63,6 +63,10 @@ codex --plugin-dir /path/to/agent-skills
 | `zeabur-domain-registrant` | Manage registrant profiles for domain registration | Creating/updating contact info for domains |
 
 ## Changelog
+
+### 1.17.0
+
+- Improved `zeabur-deploy` — added mandatory Post-Deploy Verification (4 checks: build log / runtime log / HTTP smoke-test / process sanity) and a Verify-and-Fix Loop so agents don't treat `"status": "success"` as proof of a working deploy. On failure, the loop routes symptoms through a triage table to the right sibling skill (`zeabur-deployment-logs`, `zeabur-port-mismatch`, `zeabur-startup-order`, `zeabur-migration`, `zeabur-variables`, `zeabur-domain-url`, `zeabur-service-exec`, `zeabur-service-list`), applies a fix, redeploys with `--service-id`, and re-verifies. Max 3 fix attempts per round; on budget exhaustion the loop pauses with a structured continue-or-skip prompt (symptom + attempts log + hypothesis + blocker) instead of silently retrying or giving up. Triage table also covers the `CannotConnectNowError` / "database system is starting up" readiness case and the "internal hostname `Name or service not known` because the sibling service doesn't exist" case — both previously unrouted.
 
 ### 1.16.0
 
