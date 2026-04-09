@@ -151,33 +151,70 @@ Only guide the user through this flow when they specifically ask for Git-based d
 
 ## Post-Deploy Verification (MANDATORY)
 
-**A green CLI exit code is NOT proof of a working deploy.** `zeabur deploy` can return `"status": "success"` while the build picked the wrong buildpack, the container crashes on boot, or the proxy returns 502 on every request. **Every deploy MUST end with the checks below before you report "deployed" to the user.** If any check fails, jump straight to the triage table in the next section — do not retry the same deploy and do not bail out to the user with "it failed, not sure why".
+**A green CLI exit code is NOT proof of a working deploy.** `zeabur deploy` can return `"status": "success"` (and the process can exit 0) while the build picked the wrong buildpack, the container crashes on boot, the proxy returns 502 on every request, or the API itself rejected the mutation and only wrote the error to stderr. **Every deploy MUST end with the checks below before you report "deployed" to the user.** If any check fails, jump straight to the triage table in the next section — do not retry the same deploy and do not bail out to the user with "it failed, not sure why".
 
-1. **Build log — confirm the correct builder ran**
-   ```bash
-   npx zeabur@latest deployment log --service-id <svc> -t build -i=false 2>&1 | tail -40
-   ```
-   Look for the builder you expect (e.g. `zbpack: detected Next.js`, `Dockerfile: …`). Seeing `detected static` for a Node/Python/Go app means the wrong directory was uploaded — re-run the deploy from inside the correct subdirectory.
+### Check 0 — stderr sanity (run first, before anything else)
 
-2. **Runtime log — confirm the process booted**
-   ```bash
-   npx zeabur@latest deployment log --service-id <svc> -t runtime -i=false 2>&1 | tail -40
-   ```
-   Look for `listening`, `Ready`, `started on port N`, or your app's own ready marker. A stack trace here means a runtime failure, not a deploy failure — still route via the triage table.
+The Zeabur CLI is known to exit 0 even when the underlying GraphQL mutation fails — the error is printed to **stderr** and the process still returns 0. You MUST capture stderr and grep it before trusting the JSON success response.
 
-3. **HTTP smoke-test — hit the public URL**
-   ```bash
-   curl -s -o /dev/null -w "HTTP %{http_code}\n" https://<service>.zeabur.app/
-   ```
-   2xx/3xx = good. 502 = port mismatch or nothing listening. 404 on every route while CLI says success = wrong directory uploaded.
+```bash
+npx zeabur@latest deploy --project-id <p> --json -i=false 2> /tmp/zeabur-deploy.err
+RC=$?
+if grep -qE '^(ERROR|FATAL|rpc error|FailedPrecondition)' /tmp/zeabur-deploy.err; then
+  echo "CLI exited $RC but stderr has a hard error — treat as FAIL"
+  cat /tmp/zeabur-deploy.err
+fi
+```
 
-4. **Process sanity — only if steps 1–3 look suspicious**
-   ```bash
-   npx zeabur@latest service exec --id <svc> -- ps aux
-   ```
-   If PID 1 is `caddy run --config /etc/caddy/Caddyfile` and you expected Node/Python/Go/your own Dockerfile, the wrong buildpack was selected — re-deploy from the correct directory.
+If stderr shows `SHARED_CLUSTER_SERVICE_CREATION_DISABLED`, `FailedPrecondition`, `rpc error`, `permission denied`, or any GraphQL `ERROR`, treat the deploy as failed regardless of exit code and route via the triage table below — **do not** proceed to the later verification checks.
 
-**Do not mark the deploy complete until all four checks pass (or until you've handed off to a specific sibling skill with a concrete next command).**
+### Check 1 — build log (confirm the correct builder ran)
+
+```bash
+npx zeabur@latest deployment log --service-id <svc> -t build -i=false 2>&1 | tail -40
+```
+
+Look for the builder you expect (e.g. `zbpack: detected Next.js`, `zbpack: detected Rust`, `Dockerfile: …`) and a terminal `🥳 Build completed!` line. Seeing `detected static` for a Node/Python/Go/Rust app means the wrong directory was uploaded — re-run the deploy from inside the correct subdirectory.
+
+### Check 2 — runtime log (confirm the process booted)
+
+```bash
+npx zeabur@latest deployment log --service-id <svc> -t runtime -i=false 2>&1 | tail -40
+```
+
+Look for `listening`, `Ready`, `started on port N`, or your app's own ready marker.
+
+**Empty runtime log is ambiguous, not a failure on its own.** Observed in practice on Rust `rust:1-slim` and other minimal/distroless images — the container is running, `println!` / `log` output just isn't being captured by the log endpoint. Treat an empty runtime log as "no evidence either way" and fall through to the HTTP smoke-test (check 3) as the authoritative signal. A stack trace, on the other hand, means a runtime failure — route via the triage table immediately.
+
+### Check 3 — HTTP smoke-test (hit the public URL)
+
+```bash
+curl -s -o /dev/null -w "HTTP %{http_code}\n" https://<service>.zeabur.app/
+```
+
+If the service has no public domain yet, create one first (see "Creating a Generated Domain" below). 2xx/3xx = good. 502 = port mismatch, app bound to loopback, or app ignoring `$PORT`. 404 on every route while CLI says success = wrong directory uploaded. **This check is the authoritative one — when check 2 is ambiguous, let check 3 decide.**
+
+### Check 4 — process sanity (only if checks 1–3 are suspicious)
+
+```bash
+npx zeabur@latest service exec --id <svc> -- sh -c "cat /proc/1/cmdline | tr '\000' ' '; echo"
+```
+
+`/proc/1/cmdline` is the portable way to identify PID 1. **Do not use `ps aux`** — minimal runtime images like `rust:1-slim`, `python:-slim`, distroless, and Alpine-based Node containers do not ship `procps` and the exec will fail with `OCI runtime exec failed: exec: "ps": executable file not found in $PATH`. `/proc` is always mounted so `cat /proc/1/cmdline` works on any Linux container.
+
+If PID 1 is `caddy run --config /etc/caddy/Caddyfile` and you expected Node/Python/Go/Rust/your own Dockerfile, the wrong buildpack was selected — re-deploy from the correct directory.
+
+### Creating a Generated Domain
+
+If the HTTP smoke-test can't run because the service has no public domain, `domain list --id <svc> --json` returns `[]`. Create one with:
+
+```bash
+npx zeabur@latest domain create --id <svc> -g --domain <unique-name> -y -i=false
+```
+
+**Footgun: do not use `--name` / `-n`.** `domain create -g -n <name>` returns EXIT=0 with empty stdout and silently does nothing. The `--domain` flag is the one that actually works. After creation the URL is `https://<unique-name>.zeabur.app/`.
+
+**Do not mark the deploy complete until checks 0, 1, and 3 all pass (or until you've handed off to a specific sibling skill with a concrete next command).** Check 2 is advisory when empty; check 4 only runs when something else looks wrong.
 
 ## Verify-and-Fix Loop (Fix Until It Succeeds)
 
@@ -236,15 +273,17 @@ Continue (3 more attempts) or skip (stop here and leave the service as-is)?
 
 | Failing check / symptom | Next skill to invoke | First diagnostic command |
 |---|---|---|
+| CLI exit 0 but stderr contains `SHARED_CLUSTER_SERVICE_CREATION_DISABLED`, `FailedPrecondition`, `rpc error`, or any GraphQL `ERROR` (the Zeabur CLI exits 0 on hard API failures) | **Platform block** — the shared cluster is not accepting new services; switch to a project on a dedicated server via `zeabur-project-create` (and `zeabur-server-rent` if none exists) | `grep -E '^(ERROR\|FATAL\|rpc error)' /tmp/zeabur-deploy.err` |
 | CLI exited non-zero, or build log ends in compile/install error | `zeabur-deployment-logs` | `deployment log --service-id <svc> -t build -i=false \| tail -80` |
 | Build log shows zbpack detected the wrong project type (e.g. `static` for a Node app) | **Fix immediately:** `cd` into the correct subdir, then redeploy | `deployment log --service-id <svc> -t build -i=false \| head -40` |
 | Runtime crashes on boot with a stack trace | `zeabur-deployment-logs` | `deployment log --service-id <svc> -t runtime -i=false \| tail -80` |
-| `dial tcp …: i/o timeout`, `connection refused` from proxy, or **502 Bad Gateway** | `zeabur-port-mismatch` | `service network --id <svc>` |
+| **HTTP 502** on Rust / Go / Python-stdlib / any-language app that hardcodes its listen port (e.g. `127.0.0.1:3000`, `0.0.0.0:8080`) — Zeabur auto-injects `PORT=${WEB_PORT}` on HTTP services and the proxy reaches for that port; hardcoding any other port = 502 | **Fix immediately:** edit the app to read `PORT` from env and bind `0.0.0.0:$PORT`, then redeploy | `variable list --id <svc> -i=false \| grep -i '^PORT'` |
+| `dial tcp …: i/o timeout`, `connection refused` from proxy, or **502 Bad Gateway** not matching the case above | `zeabur-port-mismatch` | `service network --id <svc>` |
 | Stuck on `Waiting for database migrations to complete` | `zeabur-migration` | `deployment log --service-id <svc> -t runtime -i=false \| tail -40` |
 | `Connection refused` / `CannotConnectNowError` / `database system is starting up` to Postgres/Redis/MySQL on boot (`:5432`, `:6379`, `:3306`) — including the "DB is up but still recovering" case, not just TCP refused | `zeabur-startup-order` | `deployment log --service-id <svc> -t runtime -i=false \| tail -40` |
 | `Name or service not known` / DNS resolution fails for an internal hostname (e.g. `redis:6379`, `postgres:5432`) because the sibling service does not exist in the project at all | `zeabur-service-list` → then `zeabur-template` if you need to provision it | `service list --project-id <proj> -i=false` |
 | Env var empty at runtime, `SERVICE_NOT_FOUND`, or `${VAR}` not expanding | `zeabur-variables` | `variable list --id <svc> -i=false` |
-| CLI exit 0 + `"status": "success"` + public URL 404s on every route | **Fix immediately:** `cd` into the correct subdir, then redeploy | `service exec --id <svc> -- ps aux` |
+| CLI exit 0 + `"status": "success"` + public URL 404s on every route | **Fix immediately:** `cd` into the correct subdir, then redeploy | `service exec --id <svc> -- sh -c "cat /proc/1/cmdline \| tr '\000' ' '"` |
 | Redirects to wrong URL, CORS error, or trailing-slash issue from `${ZEABUR_WEB_URL}` | `zeabur-domain-url` | `domain list --id <svc> -i=false` |
 | None of the above but the container is clearly wrong | `zeabur-service-exec` | `service exec --id <svc> -- sh` |
 
