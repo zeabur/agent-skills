@@ -181,12 +181,12 @@ CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
 
 ```dockerfile
 FROM golang:1.23 AS build
-LABEL "language"="go"
 WORKDIR /src
 COPY . .
 RUN go build -o /app .
 
 FROM debian:bookworm-slim
+LABEL "language"="go"
 COPY --from=build /app /app
 EXPOSE 8080
 CMD ["/app"]
