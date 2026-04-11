@@ -19,8 +19,8 @@ npx zeabur@latest template search minio -i=false --json
 
 Pick the template with the highest deployment count.
 
-- **Default to MinIO** if the user doesn't specify — most widely supported, built-in web console.
-- **Recommend RustFS** if the user wants lightweight/minimal or mentions RustFS.
+- **Default to MinIO** if the user doesn't specify — most widely supported, built-in web console, auto-creates a default bucket.
+- **Recommend RustFS** if the user wants lightweight/minimal or mentions RustFS specifically.
 
 ---
 
@@ -32,14 +32,37 @@ After deploying, list the storage service's variables:
 npx zeabur@latest variable list --id <storage-service-id> -i=false
 ```
 
-Common variables exposed by storage templates:
+Exposed variables from the official Zeabur templates:
 
-| Service | Key Variables | Description |
-|---------|--------------|-------------|
-| MinIO | `MINIO_ROOT_USER`, `MINIO_ROOT_PASSWORD`, `MINIO_HOST`, `MINIO_PORT`, `MINIO_ENDPOINT` | Endpoint is `http://<host>:<port>` |
-| RustFS | `RUSTFS_ROOT_USER`, `RUSTFS_ROOT_PASSWORD`, `RUSTFS_HOST`, `RUSTFS_PORT`, `RUSTFS_ENDPOINT` | Same pattern as MinIO |
+### MinIO (template code: `TLJ3RL`)
 
-> **Variable names depend on the template.** Always run `variable list` to confirm the actual keys.
+| Variable | Description |
+|----------|-------------|
+| `MINIO_USERNAME` | Access Key ID (default: `minio`) |
+| `MINIO_PASSWORD` | Secret Access Key (auto-generated) |
+| `MINIO_CONSOLE_URL` | Full URL for the web console |
+| `MINIO_DEFAULT_BUCKET` | Default bucket name (default: `zeabur`) |
+
+The MinIO template exposes two HTTP ports:
+- **API** (port `9000`) — S3-compatible API, accessed internally as `http://minio.zeabur.internal:9000`
+- **Console** (port `9090`) — Web management UI, accessed via the domain in `MINIO_CONSOLE_URL`
+
+> **Note:** The MinIO template does **not** expose `MINIO_HOST`, `MINIO_PORT`, or `MINIO_ENDPOINT` variables. The internal S3 endpoint must be constructed manually: `http://minio.zeabur.internal:9000` (where `minio` is the service name).
+
+### RustFS (template code: `7FG0WI`)
+
+| Variable | Description |
+|----------|-------------|
+| `RUSTFS_USERNAME` | Access Key ID (default: `rustfs`) |
+| `RUSTFS_PASSWORD` | Secret Access Key (auto-generated) |
+
+The RustFS template exposes two HTTP ports:
+- **API** (port `9000`) — S3-compatible API, accessed internally as `http://rustfs.zeabur.internal:9000`
+- **Console** (port `9001`) — Web management UI
+
+> **Note:** The RustFS template does **not** expose HOST/PORT/ENDPOINT variables. Construct the internal endpoint manually: `http://rustfs.zeabur.internal:9000` (where `rustfs` or `RustFS` is the service name — check `service list` for the exact name).
+
+> **Variable names may differ across templates.** Always run `variable list` to confirm the actual keys.
 
 ---
 
@@ -50,25 +73,26 @@ Common variables exposed by storage templates:
 In Zeabur, services can reference other services' exposed variables using the `${SERVICE_NAME.VAR_NAME}` syntax. For example, if the storage service is named `minio`:
 
 ```
-${MINIO.MINIO_ENDPOINT}
-${MINIO.MINIO_ROOT_USER}
-${MINIO.MINIO_ROOT_PASSWORD}
+${MINIO.MINIO_USERNAME}
+${MINIO.MINIO_PASSWORD}
 ```
 
 > **CLI limitation:** The CLI has a known bug with `${}` expansion — cross-service references should be set via the **Zeabur Dashboard** or GraphQL API. See the `zeabur-variables` skill for details.
 
 ### S3 SDK env var mapping
 
-Most S3-compatible SDKs use these standard env vars:
+Most S3-compatible SDKs need these values:
 
-| App Env Var | Value | Notes |
-|-------------|-------|-------|
-| `S3_ENDPOINT` or `AWS_ENDPOINT_URL` | `${MINIO.MINIO_ENDPOINT}` | Internal endpoint, e.g. `http://minio.zeabur.internal:9000` |
-| `S3_ACCESS_KEY` or `AWS_ACCESS_KEY_ID` | `${MINIO.MINIO_ROOT_USER}` | |
-| `S3_SECRET_KEY` or `AWS_SECRET_ACCESS_KEY` | `${MINIO.MINIO_ROOT_PASSWORD}` | |
-| `S3_BUCKET` | (bucket name created in console) | Must create bucket first |
-| `S3_REGION` | `us-east-1` | Any value works, but must be set |
-| `S3_FORCE_PATH_STYLE` | `true` | **Required** — see caveats |
+| App Env Var | MinIO Value | RustFS Value |
+|-------------|-------------|--------------|
+| `S3_ENDPOINT` or `AWS_ENDPOINT_URL` | `http://minio.zeabur.internal:9000` | `http://rustfs.zeabur.internal:9000` |
+| `S3_ACCESS_KEY` or `AWS_ACCESS_KEY_ID` | `${MINIO.MINIO_USERNAME}` | `${RUSTFS.RUSTFS_USERNAME}` |
+| `S3_SECRET_KEY` or `AWS_SECRET_ACCESS_KEY` | `${MINIO.MINIO_PASSWORD}` | `${RUSTFS.RUSTFS_PASSWORD}` |
+| `S3_BUCKET` | `zeabur` (MinIO auto-creates this) | (must create bucket first) |
+| `S3_REGION` | `us-east-1` (any value works, but must be set) | `us-east-1` |
+| `S3_FORCE_PATH_STYLE` | `true` | `true` |
+
+> **Important:** The S3 endpoint must be hardcoded or set manually because the templates don't expose it as a variable. Use the internal hostname `<service-name>.zeabur.internal:9000`.
 
 ### SDK code examples
 
@@ -76,7 +100,7 @@ Most S3-compatible SDKs use these standard env vars:
 // Node.js (AWS SDK v3)
 const { S3Client } = require("@aws-sdk/client-s3");
 const s3 = new S3Client({
-  endpoint: process.env.S3_ENDPOINT,
+  endpoint: process.env.S3_ENDPOINT, // http://minio.zeabur.internal:9000
   credentials: {
     accessKeyId: process.env.S3_ACCESS_KEY,
     secretAccessKey: process.env.S3_SECRET_KEY,
@@ -91,7 +115,7 @@ const s3 = new S3Client({
 import boto3
 s3 = boto3.client(
     "s3",
-    endpoint_url=os.environ["S3_ENDPOINT"],
+    endpoint_url=os.environ["S3_ENDPOINT"],  # http://minio.zeabur.internal:9000
     aws_access_key_id=os.environ["S3_ACCESS_KEY"],
     aws_secret_access_key=os.environ["S3_SECRET_KEY"],
     region_name="us-east-1",
@@ -108,7 +132,7 @@ cfg, _ := config.LoadDefaultConfig(ctx,
     ),
 )
 client := s3.NewFromConfig(cfg, func(o *s3.Options) {
-    o.BaseEndpoint = aws.String(endpoint)
+    o.BaseEndpoint = aws.String(endpoint) // http://minio.zeabur.internal:9000
     o.UsePathStyle = true
 })
 ```
@@ -117,26 +141,22 @@ client := s3.NewFromConfig(cfg, func(o *s3.Options) {
 
 ## Web Console
 
-Both MinIO and RustFS provide a web console (usually on port 9001) for managing buckets and files. After deployment:
+Both MinIO and RustFS provide a web console for managing buckets and files:
 
-1. Check the service list for the console domain:
-   ```bash
-   npx zeabur@latest service list --project-id <project-id>
-   ```
-2. Log in with root credentials (from `variable list`).
-3. **Create a bucket** before the application can upload files — most S3 SDKs don't auto-create buckets.
+- **MinIO:** Console URL is in `MINIO_CONSOLE_URL`. Login with `MINIO_USERNAME` / `MINIO_PASSWORD`. The MinIO template auto-creates a `zeabur` default bucket.
+- **RustFS:** Console is on the domain bound to port `9001`. Login with `RUSTFS_USERNAME` / `RUSTFS_PASSWORD`. **You must create a bucket manually** before the app can upload files.
 
 ---
 
 ## Local Connection (Port Forwarding)
 
-The S3 API port (9000) is TCP with port forwarding auto-enabled. To get the external endpoint:
+To access the S3 API or console from your local machine, get the forwarded host:port:
 
 ```bash
 npx zeabur@latest service network --id <storage-service-id>
 ```
 
-Use the forwarded host:port to connect from local tools:
+Use the forwarded endpoint with local tools:
 
 ```bash
 # MinIO Client (mc)
@@ -155,7 +175,8 @@ aws --endpoint-url http://FORWARDED_HOST:FORWARDED_PORT s3 mb s3://my-bucket
 ## Caveats
 
 1. **`forcePathStyle` is required** — MinIO and RustFS use path-style URLs (`http://host:9000/bucket/key`). Without `forcePathStyle: true` (or equivalent), S3 SDKs default to virtual-hosted-style (`http://bucket.host:9000/key`) which won't resolve on internal networks. This is the #1 cause of "bucket not found" or DNS errors.
-2. **Create bucket before uploading** — Unlike managed S3, self-hosted storage starts with zero buckets. The app will get a `NoSuchBucket` error if the bucket doesn't exist. Create it via the web console, `mc mb`, or programmatically with `CreateBucket` API.
-3. **Data persistence** — Storage templates include volumes. Uploaded files survive restarts. If a user reports file loss, verify the template has a `volumes` section.
-4. **Console vs API ports** — The web console (port 9001, HTTP) and S3 API (port 9000, TCP) are separate. Applications should connect to the API port, not the console port.
-5. **Large file uploads** — If uploads fail or timeout, check the app's request size limits (e.g., Nginx `client_max_body_size`, Express `bodyParser.limit`). The storage service itself has no practical upload limit.
+2. **Create bucket before uploading (RustFS)** — Unlike the MinIO template which auto-creates a `zeabur` bucket, RustFS starts with zero buckets. The app will get a `NoSuchBucket` error if the bucket doesn't exist. Create it via the web console or programmatically with `CreateBucket` API.
+3. **S3 endpoint is not a template variable** — Neither MinIO nor RustFS templates expose the S3 API endpoint as an env var. You must set it manually as `http://<service-name>.zeabur.internal:9000` in the app's env vars.
+4. **Data persistence** — Storage templates include volumes. Uploaded files survive restarts.
+5. **Console vs API ports** — MinIO uses port `9000` for S3 API and port `9090` for web console. RustFS uses `9000` for API and `9001` for console. Applications should connect to the API port, not the console port.
+6. **Large file uploads** — If uploads fail or timeout, check the app's request size limits (e.g., Nginx `client_max_body_size`, Express `bodyParser.limit`). The storage service itself has no practical upload limit.

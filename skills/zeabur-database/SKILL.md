@@ -29,16 +29,54 @@ After deploying, list the database service's variables to get the actual connect
 npx zeabur@latest variable list --id <database-service-id> -i=false
 ```
 
-Common variables exposed by database templates:
+Exposed variables from the official Zeabur templates:
 
-| Database | Key Variables | Example Values |
-|----------|--------------|----------------|
-| PostgreSQL | `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, `POSTGRES_CONNECTION_STRING` | `postgresql://postgres:xxx@postgresql.zeabur.internal:5432/mydb` |
-| MySQL | `MYSQL_HOST`, `MYSQL_PORT`, `MYSQL_ROOT_PASSWORD`, `MYSQL_DATABASE`, `MYSQL_CONNECTION_STRING` | `mysql://root:xxx@mysql.zeabur.internal:3306/mydb` |
-| MongoDB | `MONGO_HOST`, `MONGO_PORT`, `MONGO_INITDB_ROOT_USERNAME`, `MONGO_INITDB_ROOT_PASSWORD`, `MONGO_CONNECTION_STRING` | `mongodb://root:xxx@mongodb.zeabur.internal:27017` |
-| Redis | `REDIS_HOST`, `REDIS_PORT`, `REDIS_URI` | `redis://redis.zeabur.internal:6379` |
+### PostgreSQL (template code: `B20CX0`)
 
-> **Variable names depend on the template.** Always run `variable list` to confirm the actual keys.
+| Variable | Description |
+|----------|-------------|
+| `POSTGRES_USERNAME` | Username (default: `root`) |
+| `POSTGRES_PASSWORD` | Password (auto-generated) |
+| `POSTGRES_HOST` | Internal hostname |
+| `POSTGRES_PORT` | Port (`5432`) |
+| `POSTGRES_DATABASE` | Database name (default: `zeabur`) |
+| `POSTGRES_CONNECTION_STRING` | `postgresql://username:password@host:port/database` |
+| `POSTGRES_URI` | Same as `POSTGRES_CONNECTION_STRING` |
+
+### MySQL (template code: `DGLGRG`)
+
+| Variable | Description |
+|----------|-------------|
+| `MYSQL_USERNAME` | Username (default: `root`) |
+| `MYSQL_PASSWORD` | Password (auto-generated) |
+| `MYSQL_HOST` | Internal hostname |
+| `MYSQL_PORT` | Port (`3306`) |
+| `MYSQL_DATABASE` | Database name (default: `zeabur`) |
+
+> **Note:** The official MySQL template does not expose a connection string variable. Construct it manually: `mysql://${MYSQL_USERNAME}:${MYSQL_PASSWORD}@${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}`
+
+### MongoDB (template code: `KXL04P`)
+
+| Variable | Description |
+|----------|-------------|
+| `MONGO_USERNAME` | Username (default: `mongo`) |
+| `MONGO_PASSWORD` | Password (auto-generated) |
+| `MONGO_HOST` | Internal hostname |
+| `MONGO_PORT` | Port (`27017`) |
+| `MONGO_CONNECTION_STRING` | `mongodb://username:password@host:port` |
+| `MONGO_URI` | Same as `MONGO_CONNECTION_STRING` |
+
+### Redis (template code: `KQZHXT`)
+
+| Variable | Description |
+|----------|-------------|
+| `REDIS_PASSWORD` | Password (auto-generated) |
+| `REDIS_HOST` | Internal hostname |
+| `REDIS_PORT` | Port (`6379`) |
+| `REDIS_CONNECTION_STRING` | `redis://:password@host:port` |
+| `REDIS_URI` | Same as `REDIS_CONNECTION_STRING` |
+
+> **Variable names may differ across templates.** The above are from the official Zeabur templates. Always run `variable list` to confirm the actual keys.
 
 ---
 
@@ -58,12 +96,12 @@ ${POSTGRESQL.POSTGRES_CONNECTION_STRING}
 
 | Framework / App | Env Var to Set | Value |
 |-----------------|---------------|-------|
-| Django, Rails, Prisma, Next.js | `DATABASE_URL` | `${POSTGRESQL.POSTGRES_CONNECTION_STRING}` or `${MYSQL.MYSQL_CONNECTION_STRING}` |
+| Django, Rails, Prisma, Next.js | `DATABASE_URL` | `${POSTGRESQL.POSTGRES_CONNECTION_STRING}` or construct MySQL URL manually |
 | Laravel | `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` | Individual vars from database service |
-| Spring Boot (PostgreSQL) | `SPRING_DATASOURCE_URL` | `jdbc:postgresql://${POSTGRESQL.POSTGRES_HOST}:${POSTGRESQL.POSTGRES_PORT}/${POSTGRESQL.POSTGRES_DB}` |
+| Spring Boot (PostgreSQL) | `SPRING_DATASOURCE_URL` | `jdbc:postgresql://${POSTGRESQL.POSTGRES_HOST}:${POSTGRESQL.POSTGRES_PORT}/${POSTGRESQL.POSTGRES_DATABASE}` |
 | Spring Boot (MySQL) | `SPRING_DATASOURCE_URL` | `jdbc:mysql://${MYSQL.MYSQL_HOST}:${MYSQL.MYSQL_PORT}/${MYSQL.MYSQL_DATABASE}` |
 | Mongoose / Node.js | `MONGODB_URI` | `${MONGODB.MONGO_CONNECTION_STRING}` |
-| Redis clients (ioredis, redis-py, etc.) | `REDIS_URL` | `${REDIS.REDIS_URI}` |
+| Redis clients (ioredis, redis-py, etc.) | `REDIS_URL` | `${REDIS.REDIS_CONNECTION_STRING}` |
 
 ---
 
@@ -79,16 +117,16 @@ This returns `PORT_FORWARDED_HOSTNAME` and the forwarded port. Use them to conne
 
 ```bash
 # PostgreSQL (psql)
-psql "postgresql://postgres:PASSWORD@FORWARDED_HOST:FORWARDED_PORT/mydb"
+psql "postgresql://root:PASSWORD@FORWARDED_HOST:FORWARDED_PORT/zeabur"
 
 # MySQL (mysql)
-mysql -h FORWARDED_HOST -P FORWARDED_PORT -u root -p mydb
+mysql -h FORWARDED_HOST -P FORWARDED_PORT -u root -p zeabur
 
 # MongoDB (mongosh)
-mongosh "mongodb://root:PASSWORD@FORWARDED_HOST:FORWARDED_PORT"
+mongosh "mongodb://mongo:PASSWORD@FORWARDED_HOST:FORWARDED_PORT"
 
 # Redis (redis-cli)
-redis-cli -h FORWARDED_HOST -p FORWARDED_PORT
+redis-cli -h FORWARDED_HOST -p FORWARDED_PORT -a PASSWORD
 ```
 
 You can also connect from GUI tools (DBeaver, TablePlus, pgAdmin, MongoDB Compass, RedisInsight, etc.) using the same forwarded host:port.
@@ -101,16 +139,16 @@ Use the `zeabur-service-exec` skill to run database clients directly:
 
 ```bash
 # PostgreSQL
-npx zeabur@latest service exec --id <db-service-id> -- psql -U postgres -d mydb
+npx zeabur@latest service exec --id <db-service-id> -- psql -U root -d zeabur
 
 # MySQL
-npx zeabur@latest service exec --id <db-service-id> -- mysql -u root -p
+npx zeabur@latest service exec --id <db-service-id> -- mysql -u root -p zeabur
 
 # MongoDB
-npx zeabur@latest service exec --id <db-service-id> -- mongosh -u root -p
+npx zeabur@latest service exec --id <db-service-id> -- mongosh -u mongo -p
 
 # Redis
-npx zeabur@latest service exec --id <db-service-id> -- redis-cli
+npx zeabur@latest service exec --id <db-service-id> -- redis-cli -a PASSWORD
 ```
 
 ---
