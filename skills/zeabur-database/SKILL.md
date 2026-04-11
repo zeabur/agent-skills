@@ -7,20 +7,38 @@ description: Use when deploying a database to Zeabur. Use when user needs MySQL,
 
 > **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method. If `npx` is not available, install Node.js first.
 
-Deploy a database (PostgreSQL, MySQL, MongoDB, or Redis) to the user's Zeabur project via a template YAML, then help them integrate it with their application.
+Deploy a database (PostgreSQL, MySQL, MongoDB, or Redis) to the user's Zeabur project via an existing template, then help them integrate it with their application.
 
 ## Step 1 — Identify What the User Needs
 
-| User Need | Database | Default Image |
-|-----------|----------|---------------|
-| Relational DB, SQL, ORM | PostgreSQL | `postgres:16-alpine` |
-| MySQL-compatible, WordPress, legacy apps | MySQL (MariaDB) | `mariadb:10.6` |
-| Document store, JSON, NoSQL | MongoDB | `mongo:8.0` |
-| Cache, session store, queue, pub/sub | Redis | `redis:7-alpine` |
+| User Need | Search Keyword |
+|-----------|---------------|
+| Relational DB, SQL, ORM | `postgresql` |
+| MySQL-compatible, WordPress, legacy apps | `mysql` |
+| Document store, JSON, NoSQL | `mongodb` |
+| Cache, session store, queue, pub/sub | `redis` |
 
 If the user doesn't specify, **ask which database they need** rather than guessing.
 
-## Step 2 — Identify the Target Project
+## Step 2 — Find the Template
+
+Search for existing database templates on Zeabur:
+
+```bash
+npx zeabur@latest template search postgresql -i=false --json
+```
+
+This returns a JSON array of matching templates. Pick the one with the highest deployment count (more battle-tested). Note the `code` field — you'll need it to deploy.
+
+To inspect a template's full YAML (service definitions, env vars, volumes, etc.):
+
+```bash
+npx zeabur@latest template get -c <TEMPLATE_CODE> --raw
+```
+
+> For advanced customization or creating a template from scratch, use the `zeabur-template` skill.
+
+## Step 3 — Identify the Target Project
 
 The database must be deployed into a project. Use the `zeabur-service-list` skill or ask the user for their project ID.
 
@@ -28,212 +46,15 @@ The database must be deployed into a project. Use the `zeabur-service-list` skil
 npx zeabur@latest service list --project-id <project-id>
 ```
 
-## Step 3 — Write and Deploy the Template
+## Step 4 — Deploy the Template
 
-Create a template YAML file and deploy it to the user's project. Pick the matching template below, save it to a `.yaml` file, then deploy:
+Deploy the database template into the user's project:
 
 ```bash
-npx zeabur@latest template deploy -f database.yaml -i=false --project-id <project-id>
+npx zeabur@latest template deploy -c <TEMPLATE_CODE> -i=false --project-id <project-id>
 ```
 
-### PostgreSQL
-
-```yaml
-# yaml-language-server: $schema=https://schema.zeabur.app/template.json
-apiVersion: zeabur.com/v1
-kind: Template
-metadata:
-  name: PostgreSQL
-spec:
-  description: PostgreSQL relational database
-  icon: https://raw.githubusercontent.com/zeabur/service-icons/main/marketplace/postgresql.svg
-  tags:
-    - Database
-  variables: []
-  readme: ""
-  services:
-    - name: postgresql
-      icon: https://raw.githubusercontent.com/zeabur/service-icons/main/marketplace/postgresql.svg
-      template: PREBUILT_V2
-      spec:
-        source:
-          image: postgres:16-alpine
-        ports:
-          - id: database
-            port: 5432
-            type: TCP
-        volumes:
-          - id: data
-            dir: /var/lib/postgresql/data
-        env:
-          POSTGRES_USER:
-            default: postgres
-            expose: true
-          POSTGRES_PASSWORD:
-            default: ${PASSWORD}
-            expose: true
-          POSTGRES_DB:
-            default: mydb
-            expose: true
-          POSTGRES_HOST:
-            default: ${CONTAINER_HOSTNAME}
-            expose: true
-            readonly: true
-          POSTGRES_PORT:
-            default: ${DATABASE_PORT}
-            expose: true
-            readonly: true
-          POSTGRES_CONNECTION_STRING:
-            default: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
-            expose: true
-            readonly: true
-```
-
-### MySQL (MariaDB)
-
-```yaml
-# yaml-language-server: $schema=https://schema.zeabur.app/template.json
-apiVersion: zeabur.com/v1
-kind: Template
-metadata:
-  name: MySQL
-spec:
-  description: MySQL-compatible database (MariaDB)
-  icon: https://raw.githubusercontent.com/zeabur/service-icons/main/marketplace/mariadb.svg
-  tags:
-    - Database
-  variables: []
-  readme: ""
-  services:
-    - name: mysql
-      icon: https://raw.githubusercontent.com/zeabur/service-icons/main/marketplace/mariadb.svg
-      template: PREBUILT_V2
-      spec:
-        source:
-          image: mariadb:10.6
-        ports:
-          - id: database
-            port: 3306
-            type: TCP
-        volumes:
-          - id: data
-            dir: /var/lib/mysql
-        env:
-          MYSQL_ROOT_PASSWORD:
-            default: ${PASSWORD}
-            expose: true
-          MYSQL_DATABASE:
-            default: mydb
-            expose: true
-          MYSQL_HOST:
-            default: ${CONTAINER_HOSTNAME}
-            expose: true
-            readonly: true
-          MYSQL_PORT:
-            default: ${DATABASE_PORT}
-            expose: true
-            readonly: true
-          MYSQL_CONNECTION_STRING:
-            default: mysql://root:${MYSQL_ROOT_PASSWORD}@${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}
-            expose: true
-            readonly: true
-```
-
-### MongoDB
-
-```yaml
-# yaml-language-server: $schema=https://schema.zeabur.app/template.json
-apiVersion: zeabur.com/v1
-kind: Template
-metadata:
-  name: MongoDB
-spec:
-  description: MongoDB document database
-  icon: https://raw.githubusercontent.com/zeabur/service-icons/main/marketplace/mongodb.svg
-  tags:
-    - Database
-  variables: []
-  readme: ""
-  services:
-    - name: mongodb
-      icon: https://raw.githubusercontent.com/zeabur/service-icons/main/marketplace/mongodb.svg
-      template: PREBUILT_V2
-      spec:
-        source:
-          image: mongo:8.0
-        ports:
-          - id: database
-            port: 27017
-            type: TCP
-        volumes:
-          - id: data
-            dir: /data/db
-        env:
-          MONGO_INITDB_ROOT_USERNAME:
-            default: root
-            expose: true
-          MONGO_INITDB_ROOT_PASSWORD:
-            default: ${PASSWORD}
-            expose: true
-          MONGO_HOST:
-            default: ${CONTAINER_HOSTNAME}
-            expose: true
-            readonly: true
-          MONGO_PORT:
-            default: ${DATABASE_PORT}
-            expose: true
-            readonly: true
-          MONGO_CONNECTION_STRING:
-            default: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}
-            expose: true
-            readonly: true
-```
-
-### Redis
-
-```yaml
-# yaml-language-server: $schema=https://schema.zeabur.app/template.json
-apiVersion: zeabur.com/v1
-kind: Template
-metadata:
-  name: Redis
-spec:
-  description: Redis in-memory data store
-  icon: https://raw.githubusercontent.com/zeabur/service-icons/main/marketplace/redis.svg
-  tags:
-    - Database
-  variables: []
-  readme: ""
-  services:
-    - name: redis
-      icon: https://raw.githubusercontent.com/zeabur/service-icons/main/marketplace/redis.svg
-      template: PREBUILT_V2
-      spec:
-        source:
-          image: redis:7-alpine
-        ports:
-          - id: database
-            port: 6379
-            type: TCP
-        volumes:
-          - id: data
-            dir: /data
-        env:
-          REDIS_HOST:
-            default: ${CONTAINER_HOSTNAME}
-            expose: true
-            readonly: true
-          REDIS_PORT:
-            default: ${DATABASE_PORT}
-            expose: true
-            readonly: true
-          REDIS_URI:
-            default: redis://${REDIS_HOST}:${REDIS_PORT}
-            expose: true
-            readonly: true
-```
-
-## Step 4 — Integrate with Application
+## Step 5 — Integrate with Application
 
 After deploying, the database exposes connection variables that other services can reference. Use the `zeabur-variables` skill to set env vars on the application service.
 
@@ -245,6 +66,8 @@ After deploying, the database exposes connection variables that other services c
 | MySQL | `MYSQL_CONNECTION_STRING` | `mysql://root:xxx@mysql.zeabur.internal:3306/mydb` |
 | MongoDB | `MONGO_CONNECTION_STRING` | `mongodb://root:xxx@mongodb.zeabur.internal:27017` |
 | Redis | `REDIS_URI` | `redis://redis.zeabur.internal:6379` |
+
+> **Note:** The actual variable names depend on the template. Use `npx zeabur@latest template get -c <TEMPLATE_CODE> --raw` to check the exact env var names exposed by the template.
 
 ### Common Application Env Var Names
 
@@ -263,7 +86,7 @@ Map the database connection string to whatever env var your app framework expect
 
 > **Cross-service variable references** (e.g., `${POSTGRESQL.POSTGRES_CONNECTION_STRING}`) should be set via the Zeabur Dashboard or GraphQL API — the CLI has a known issue with `${}` expansion. See the `zeabur-variables` skill for details.
 
-## Step 5 — Verify
+## Step 6 — Verify
 
 1. Check that the database service is running:
    ```bash
@@ -289,9 +112,8 @@ Map the database connection string to whatever env var your app framework expect
 
 ## Tips
 
-- **Change the default database name:** Edit the `POSTGRES_DB` / `MYSQL_DATABASE` / `MONGO_INITDB_DATABASE` value in the template before deploying.
 - **External access:** Databases use TCP ports. Port forwarding is auto-enabled. Get the external host:port with `npx zeabur@latest service network --id <service-id>`.
-- **Data persistence:** All templates include volumes. Data survives restarts and redeployments.
+- **Data persistence:** Database templates include volumes. Data survives restarts and redeployments.
 - **Run queries:** Use the `zeabur-service-exec` skill to run database clients inside the container:
   ```bash
   # PostgreSQL
