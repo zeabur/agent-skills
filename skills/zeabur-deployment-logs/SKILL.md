@@ -20,14 +20,37 @@ npx zeabur@latest deployment log --service-id <service-id> -t runtime -i=false 2
 ## Log Types
 
 ```bash
-# Runtime logs
+# Runtime logs (CLI auto-resolves the latest deployment if needed)
 npx zeabur@latest deployment log --service-id <id> -t runtime -i=false
 
-# Build logs
+# Runtime logs for a specific deployment
+npx zeabur@latest deployment log --service-id <id> --deployment-id <deployment-id> -t runtime -i=false
+
+# Build logs (CLI auto-resolves the latest deployment if needed)
 npx zeabur@latest deployment log --service-id <id> -t build -i=false
+
+# Build logs for a specific deployment
+npx zeabur@latest deployment log --deployment-id <deployment-id> -t build -i=false
 
 # Watch logs (live tail)
 npx zeabur@latest deployment log --service-id <id> -w -i=false
+```
+
+## DeploymentID Behavior
+
+The CLI automatically resolves the latest deployment when `--deployment-id` is not provided:
+
+| Scenario | What happens |
+|----------|-------------|
+| Git/Upload service, no `--deployment-id` | CLI auto-resolves latest deployment → logs returned |
+| Pure image service (e.g. Docker image), runtime log | No deployment exists → falls back to prebuilt query → logs returned |
+| Pure image service, build log | No deployment exists → returns error (image services have no build logs) |
+| Explicit `--deployment-id` provided | Uses the provided ID directly, no auto-resolution |
+
+Use `--deployment-id` when you need logs from a **specific** deployment (not the latest). List deployments with:
+
+```bash
+npx zeabur@latest deployment list --service-id <service-id> -i=false
 ```
 
 ## Tips
