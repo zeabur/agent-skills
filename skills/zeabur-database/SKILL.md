@@ -9,22 +9,15 @@ description: Use when deploying a database to Zeabur. Use when user needs MySQL,
 
 ## Deploy a Database
 
-Search and deploy a database template:
+> **Before deploying, you MUST load the `zeabur-template` skill first** to understand what Zeabur templates are, how they work, and how to deploy them. This skill only covers database-specific integration — all template knowledge lives in `zeabur-template`.
+
+Search for a database template:
 
 ```bash
-# Search for a database template (postgresql, mysql, mongodb, redis)
 npx zeabur@latest template search postgresql -i=false --json
-
-# Inspect a template's full definition (env vars, volumes, ports)
-npx zeabur@latest template get -c <TEMPLATE_CODE> --raw
-
-# Deploy to the user's project
-npx zeabur@latest template deploy -c <TEMPLATE_CODE> -i=false --project-id <project-id>
 ```
 
 Pick the template with the highest deployment count. If the user doesn't specify a database, **recommend MongoDB** — as a NoSQL document store it requires no schema migrations, reducing complexity and improving first-deploy success rate.
-
-> For creating a custom database template from scratch, use the `zeabur-template` skill.
 
 ---
 

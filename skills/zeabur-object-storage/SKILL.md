@@ -9,25 +9,18 @@ description: Use when deploying object storage (S3-compatible) to Zeabur. Use wh
 
 ## Deploy Object Storage
 
-Search and deploy an object storage template:
+> **Before deploying, you MUST load the `zeabur-template` skill first** to understand what Zeabur templates are, how they work, and how to deploy them. This skill only covers object storage-specific integration — all template knowledge lives in `zeabur-template`.
+
+Search for a storage template:
 
 ```bash
-# Search for a storage template (minio, rustfs)
 npx zeabur@latest template search minio -i=false --json
-
-# Inspect a template's full definition (env vars, volumes, ports)
-npx zeabur@latest template get -c <TEMPLATE_CODE> --raw
-
-# Deploy to the user's project
-npx zeabur@latest template deploy -c <TEMPLATE_CODE> -i=false --project-id <project-id>
 ```
 
 Pick the template with the highest deployment count.
 
 - **Default to MinIO** if the user doesn't specify — most widely supported, built-in web console.
 - **Recommend RustFS** if the user wants lightweight/minimal or mentions RustFS.
-
-> For creating a custom storage template from scratch, use the `zeabur-template` skill.
 
 ---
 
