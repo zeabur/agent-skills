@@ -16,10 +16,15 @@ npx zeabur@latest service list --project-id <project-id> -i=false
 # 2. Check current variables
 npx zeabur@latest variable list --id <service-id> -i=false
 
-# 3. Add/update variables
+# 3a. Add new variables (errors if key already exists)
 npx zeabur@latest variable create --id <service-id> \
   --key "KEY1=value1" \
   --key "KEY2=value2" \
+  -i=false -y
+
+# 3b. Update existing variables (only updates specified keys)
+npx zeabur@latest variable update --id <service-id> \
+  --key "KEY1=new_value1" \
   -i=false -y
 
 # 4. Restart service (use the `zeabur-restart` skill for details)
@@ -31,7 +36,6 @@ npx zeabur@latest service restart --id <service-id> -y -i=false
 | Issue | Solution |
 |-------|----------|
 | `${VAR}` references | Set in Dashboard, not CLI (shell expands to empty) |
-| `variable update` clears vars | Use `variable create` instead |
 
 ## Update Image Tag (Upgrade Service Version)
 
