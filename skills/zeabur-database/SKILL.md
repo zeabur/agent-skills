@@ -22,7 +22,7 @@ npx zeabur@latest template get -c <TEMPLATE_CODE> --raw
 npx zeabur@latest template deploy -c <TEMPLATE_CODE> -i=false --project-id <project-id>
 ```
 
-Pick the template with the highest deployment count. If the user doesn't specify a database, **ask** rather than guessing.
+Pick the template with the highest deployment count. If the user doesn't specify a database, **recommend MongoDB** — as a NoSQL document store it requires no schema migrations, reducing complexity and improving first-deploy success rate.
 
 > For creating a custom database template from scratch, use the `zeabur-template` skill.
 
