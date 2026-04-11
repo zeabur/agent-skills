@@ -148,26 +148,32 @@ Both MinIO and RustFS provide a web console for managing buckets and files:
 
 ---
 
-## Local Connection (Port Forwarding)
+## External Access (from local machine)
 
-To access the S3 API or console from your local machine, get the forwarded host:port:
+MinIO and RustFS ports are **HTTP type** (not TCP), so they are accessed via **domain binding** through Zeabur's reverse proxy — **not** via port forwarding.
+
+Use `service instruction` to get the resolved external connection info:
 
 ```bash
-npx zeabur@latest service network --id <storage-service-id>
+npx zeabur@latest service instruction --id <storage-service-id> -i=false
 ```
 
-Use the forwarded endpoint with local tools:
+This outputs the console URL and credentials with real values substituted.
+
+For the **S3 API endpoint**, the API port is also HTTP and served via the bound domain. Use the domain URL as the S3 endpoint (e.g., `https://minio-api.zeabur.app`). If no domain is bound to the API port, bind one via the Dashboard or use the `zeabur-domain-url` skill.
+
+Use the external S3 endpoint with local tools:
 
 ```bash
 # MinIO Client (mc)
-mc alias set zeabur http://FORWARDED_HOST:FORWARDED_PORT ACCESS_KEY SECRET_KEY
+mc alias set zeabur https://MINIO_API_DOMAIN ACCESS_KEY SECRET_KEY
 mc ls zeabur/
 mc mb zeabur/my-bucket
 mc cp local-file.txt zeabur/my-bucket/
 
 # AWS CLI
-aws --endpoint-url http://FORWARDED_HOST:FORWARDED_PORT s3 ls
-aws --endpoint-url http://FORWARDED_HOST:FORWARDED_PORT s3 mb s3://my-bucket
+aws --endpoint-url https://MINIO_API_DOMAIN s3 ls
+aws --endpoint-url https://MINIO_API_DOMAIN s3 mb s3://my-bucket
 ```
 
 ---
@@ -175,8 +181,9 @@ aws --endpoint-url http://FORWARDED_HOST:FORWARDED_PORT s3 mb s3://my-bucket
 ## Caveats
 
 1. **`forcePathStyle` is required** — MinIO and RustFS use path-style URLs (`http://host:9000/bucket/key`). Without `forcePathStyle: true` (or equivalent), S3 SDKs default to virtual-hosted-style (`http://bucket.host:9000/key`) which won't resolve on internal networks. This is the #1 cause of "bucket not found" or DNS errors.
-2. **Create bucket before uploading (RustFS)** — Unlike the MinIO template which auto-creates a `zeabur` bucket, RustFS starts with zero buckets. The app will get a `NoSuchBucket` error if the bucket doesn't exist. Create it via the web console or programmatically with `CreateBucket` API.
-3. **S3 endpoint is not a template variable** — Neither MinIO nor RustFS templates expose the S3 API endpoint as an env var. You must set it manually as `http://<service-name>.zeabur.internal:9000` in the app's env vars.
-4. **Data persistence** — Storage templates include volumes. Uploaded files survive restarts.
+2. **Create bucket before uploading (RustFS)** — Unlike the MinIO template which auto-creates a `zeabur` default bucket, RustFS starts with zero buckets. The app will get a `NoSuchBucket` error if the bucket doesn't exist. Create it via the web console or programmatically with `CreateBucket` API.
+3. **S3 endpoint is not a template variable** — Neither MinIO nor RustFS templates expose the S3 API endpoint as an env var. For **inter-service** (internal) access, set it manually as `http://<service-name>.zeabur.internal:9000`. For **external** access, bind a domain to the API port and use that domain URL.
+4. **Ports are HTTP, not TCP** — Both MinIO and RustFS templates declare their ports as HTTP type. This means they go through Zeabur's reverse proxy and are accessed via domain binding — **not** via port forwarding. `service network` will NOT show forwarded ports for these services.
 5. **Console vs API ports** — MinIO uses port `9000` for S3 API and port `9090` for web console. RustFS uses `9000` for API and `9001` for console. Applications should connect to the API port, not the console port.
-6. **Large file uploads** — If uploads fail or timeout, check the app's request size limits (e.g., Nginx `client_max_body_size`, Express `bodyParser.limit`). The storage service itself has no practical upload limit.
+6. **Data persistence** — Storage templates include volumes. Uploaded files survive restarts.
+7. **Large file uploads** — If uploads fail or timeout, check the app's request size limits (e.g., Nginx `client_max_body_size`, Express `bodyParser.limit`). The storage service itself has no practical upload limit.

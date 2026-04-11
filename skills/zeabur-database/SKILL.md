@@ -105,15 +105,29 @@ ${POSTGRESQL.POSTGRES_CONNECTION_STRING}
 
 ---
 
-## Local Connection (Port Forwarding)
+## External Connection (from local machine)
 
-Database ports are TCP with port forwarding auto-enabled. To get the external host:port for local tools:
+Database ports are TCP. Use `service instruction` to get the **resolved** external connection info (hostname, port, connection string with real values already substituted):
 
 ```bash
-npx zeabur@latest service network --id <database-service-id>
+npx zeabur@latest service instruction --id <database-service-id> -i=false
 ```
 
-This returns `PORT_FORWARDED_HOSTNAME` and the forwarded port. Use them to connect from local tools:
+This outputs ready-to-use values like:
+```
+Connection String: postgresql://root:abc123@xxx.clusters.zeabur.com:12345/zeabur
+PostgreSQL Connect Command: psql "postgresql://root:abc123@xxx.clusters.zeabur.com:12345/zeabur"
+PostgreSQL host: xxx.clusters.zeabur.com
+PostgreSQL port: 12345
+```
+
+Alternatively, use `service network` to get the raw port-forwarding details (only works for TCP/UDP ports):
+
+```bash
+npx zeabur@latest service network --id <database-service-id> --json -i=false
+```
+
+This returns `portForwardedHost` and each port's `forwardedPort`. Use them to connect from local tools:
 
 ```bash
 # PostgreSQL (psql)
@@ -129,7 +143,7 @@ mongosh "mongodb://mongo:PASSWORD@FORWARDED_HOST:FORWARDED_PORT"
 redis-cli -h FORWARDED_HOST -p FORWARDED_PORT -a PASSWORD
 ```
 
-You can also connect from GUI tools (DBeaver, TablePlus, pgAdmin, MongoDB Compass, RedisInsight, etc.) using the same forwarded host:port.
+You can also connect from GUI tools (DBeaver, TablePlus, pgAdmin, MongoDB Compass, RedisInsight, etc.) using the same host:port.
 
 ---
 
