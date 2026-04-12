@@ -41,7 +41,7 @@ This shows:
 npx zeabur@latest variable list --id <database-service-id> -i=false
 ```
 
-This lists all the credentials (username, password, database name, connection string, etc.) for the database service.
+This lists all the credentials (username, password, database name, etc.) for the database service.
 
 ---
 
@@ -54,7 +54,6 @@ This lists all the credentials (username, password, database name, connection st
 | `POSTGRES_USERNAME` | Username (default: `root`) |
 | `POSTGRES_PASSWORD` | Password (auto-generated) |
 | `POSTGRES_DATABASE` | Database name (default: `zeabur`) |
-| `POSTGRES_CONNECTION_STRING` | Full connection string |
 
 ### Connect from local machine
 
@@ -64,15 +63,7 @@ psql "postgresql://POSTGRES_USERNAME:POSTGRES_PASSWORD@PUBLIC_HOST:PUBLIC_PORT/P
 
 ### Connect from app (same project)
 
-Set `DATABASE_URL` on your app service to reference the exposed variable:
-
-```
-${POSTGRES_CONNECTION_STRING}
-```
-
-Works with Django, Rails, Prisma, Next.js, and any framework that reads `DATABASE_URL`.
-
-For frameworks that need individual vars (e.g., Laravel, Spring Boot):
+Set env vars on your app service using the values from `variable list`:
 
 ```
 DB_HOST=${POSTGRES_HOST}
@@ -81,6 +72,8 @@ DB_USERNAME=${POSTGRES_USERNAME}
 DB_PASSWORD=${POSTGRES_PASSWORD}
 DB_DATABASE=${POSTGRES_DATABASE}
 ```
+
+Or construct a connection string: `postgresql://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}`
 
 ---
 
@@ -94,8 +87,6 @@ DB_DATABASE=${POSTGRES_DATABASE}
 | `MYSQL_PASSWORD` | Password (auto-generated) |
 | `MYSQL_DATABASE` | Database name (default: `zeabur`) |
 
-> The official MySQL template does not expose a connection string variable.
-
 ### Connect from local machine
 
 ```bash
@@ -104,13 +95,7 @@ mysql -h PUBLIC_HOST -P PUBLIC_PORT -u MYSQL_USERNAME -p MYSQL_DATABASE
 
 ### Connect from app (same project)
 
-Construct the connection string manually in your app's env var:
-
-```
-DATABASE_URL=mysql://root:${MYSQL_PASSWORD}@${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}
-```
-
-Or use individual vars:
+Set env vars on your app service using the values from `variable list`:
 
 ```
 DB_HOST=${MYSQL_HOST}
@@ -119,6 +104,8 @@ DB_USERNAME=${MYSQL_USERNAME}
 DB_PASSWORD=${MYSQL_PASSWORD}
 DB_DATABASE=${MYSQL_DATABASE}
 ```
+
+Or construct a connection string: `mysql://${MYSQL_USERNAME}:${MYSQL_PASSWORD}@${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}`
 
 ---
 
@@ -130,7 +117,6 @@ DB_DATABASE=${MYSQL_DATABASE}
 |----------|-------------|
 | `MONGO_USERNAME` | Username (default: `mongo`) |
 | `MONGO_PASSWORD` | Password (auto-generated) |
-| `MONGO_CONNECTION_STRING` | Full connection string |
 
 ### Connect from local machine
 
@@ -140,11 +126,7 @@ mongosh "mongodb://MONGO_USERNAME:MONGO_PASSWORD@PUBLIC_HOST:PUBLIC_PORT"
 
 ### Connect from app (same project)
 
-Set `MONGODB_URI` on your app service:
-
-```
-${MONGO_CONNECTION_STRING}
-```
+Construct a connection string: `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}`
 
 Works with Mongoose, PyMongo, and any MongoDB driver.
 
@@ -157,7 +139,6 @@ Works with Mongoose, PyMongo, and any MongoDB driver.
 | Variable | Description |
 |----------|-------------|
 | `REDIS_PASSWORD` | Password (auto-generated) |
-| `REDIS_CONNECTION_STRING` | Full connection string |
 
 > Redis has no username or database name by default.
 
@@ -169,11 +150,7 @@ redis-cli -h PUBLIC_HOST -p PUBLIC_PORT -a REDIS_PASSWORD
 
 ### Connect from app (same project)
 
-Set `REDIS_URL` on your app service:
-
-```
-${REDIS_CONNECTION_STRING}
-```
+Construct a connection string: `redis://:${REDIS_PASSWORD}@${REDIS_HOST}:${REDIS_PORT}`
 
 Works with ioredis, redis-py, go-redis, and any Redis client.
 
