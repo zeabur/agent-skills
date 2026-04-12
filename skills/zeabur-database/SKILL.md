@@ -84,24 +84,26 @@ Exposed variables from the official Zeabur templates:
 
 ### Cross-service variable references
 
-In Zeabur, services can reference other services' exposed variables using the `${SERVICE_NAME.VAR_NAME}` syntax. For example, if the database service is named `postgresql`:
+Zeabur uses a **flat variable namespace** — all exposed variables from every service in the same project are merged together. Your app can reference them directly by name, no service prefix needed:
 
 ```
-${POSTGRESQL.POSTGRES_CONNECTION_STRING}
+${POSTGRES_CONNECTION_STRING}
 ```
 
-> **CLI limitation:** The CLI has a known bug with `${}` expansion — cross-service references should be set via the **Zeabur Dashboard** or GraphQL API. See the `zeabur-variables` skill for details.
+> **CLI limitation:** The CLI has a known bug with `${}` expansion — variable references should be set via the **Zeabur Dashboard**. See the `zeabur-variables` skill for details.
+
+> **Name collision:** If multiple services expose the same variable name (e.g., two PostgreSQL instances both expose `POSTGRES_HOST`), the value may be unpredictable. In that case, manually specify the hostname and port from the service's Networking tab.
 
 ### Common framework env var mapping
 
 | Framework / App | Env Var to Set | Value |
 |-----------------|---------------|-------|
-| Django, Rails, Prisma, Next.js | `DATABASE_URL` | `${POSTGRESQL.POSTGRES_CONNECTION_STRING}` or construct MySQL URL manually |
-| Laravel | `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` | Individual vars from database service |
-| Spring Boot (PostgreSQL) | `SPRING_DATASOURCE_URL` | `jdbc:postgresql://${POSTGRESQL.POSTGRES_HOST}:${POSTGRESQL.POSTGRES_PORT}/${POSTGRESQL.POSTGRES_DATABASE}` |
-| Spring Boot (MySQL) | `SPRING_DATASOURCE_URL` | `jdbc:mysql://${MYSQL.MYSQL_HOST}:${MYSQL.MYSQL_PORT}/${MYSQL.MYSQL_DATABASE}` |
-| Mongoose / Node.js | `MONGODB_URI` | `${MONGODB.MONGO_CONNECTION_STRING}` |
-| Redis clients (ioredis, redis-py, etc.) | `REDIS_URL` | `${REDIS.REDIS_CONNECTION_STRING}` |
+| Django, Rails, Prisma, Next.js | `DATABASE_URL` | `${POSTGRES_CONNECTION_STRING}` or construct MySQL URL manually |
+| Laravel | `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` | `${MYSQL_HOST}`, `${MYSQL_PORT}`, etc. |
+| Spring Boot (PostgreSQL) | `SPRING_DATASOURCE_URL` | `jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}` |
+| Spring Boot (MySQL) | `SPRING_DATASOURCE_URL` | `jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}` |
+| Mongoose / Node.js | `MONGODB_URI` | `${MONGO_CONNECTION_STRING}` |
+| Redis clients (ioredis, redis-py, etc.) | `REDIS_URL` | `${REDIS_CONNECTION_STRING}` |
 
 ---
 

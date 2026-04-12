@@ -70,14 +70,14 @@ The RustFS template exposes two HTTP ports:
 
 ### Cross-service variable references
 
-In Zeabur, services can reference other services' exposed variables using the `${SERVICE_NAME.VAR_NAME}` syntax. For example, if the storage service is named `minio`:
+Zeabur uses a **flat variable namespace** — all exposed variables from every service in the same project are merged together. Your app can reference them directly by name, no service prefix needed:
 
 ```
-${MINIO.MINIO_USERNAME}
-${MINIO.MINIO_PASSWORD}
+${MINIO_USERNAME}
+${MINIO_PASSWORD}
 ```
 
-> **CLI limitation:** The CLI has a known bug with `${}` expansion — cross-service references should be set via the **Zeabur Dashboard** or GraphQL API. See the `zeabur-variables` skill for details.
+> **CLI limitation:** The CLI has a known bug with `${}` expansion — variable references should be set via the **Zeabur Dashboard**. See the `zeabur-variables` skill for details.
 
 ### S3 SDK env var mapping
 
@@ -86,8 +86,8 @@ Most S3-compatible SDKs need these values:
 | App Env Var | MinIO Value | RustFS Value |
 |-------------|-------------|--------------|
 | `S3_ENDPOINT` or `AWS_ENDPOINT_URL` | `http://minio.zeabur.internal:9000` | `http://rustfs.zeabur.internal:9000` |
-| `S3_ACCESS_KEY` or `AWS_ACCESS_KEY_ID` | `${MINIO.MINIO_USERNAME}` | `${RUSTFS.RUSTFS_USERNAME}` |
-| `S3_SECRET_KEY` or `AWS_SECRET_ACCESS_KEY` | `${MINIO.MINIO_PASSWORD}` | `${RUSTFS.RUSTFS_PASSWORD}` |
+| `S3_ACCESS_KEY` or `AWS_ACCESS_KEY_ID` | `${MINIO_USERNAME}` | `${RUSTFS_USERNAME}` |
+| `S3_SECRET_KEY` or `AWS_SECRET_ACCESS_KEY` | `${MINIO_PASSWORD}` | `${RUSTFS_PASSWORD}` |
 | `S3_BUCKET` | `zeabur` (MinIO auto-creates this) | (must create bucket first) |
 | `S3_REGION` | `us-east-1` (any value works, but must be set) | `us-east-1` |
 | `S3_FORCE_PATH_STYLE` | `true` | `true` |
