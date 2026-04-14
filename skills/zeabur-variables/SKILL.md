@@ -80,7 +80,7 @@ npx zeabur@latest variable create --id <service-id> -k 'REDIS_URL=${REDIS_URI_IN
 # Or use GraphQL API with updateEnvironmentVariable(data: Map!) mutation
 ```
 
-For cross-service variable references like `${POSTGRESQL.POSTGRES_CONNECTION_STRING}`, **always use the Zeabur Dashboard** or the GraphQL API directly until the CLI bug is fixed.
+For cross-service variable references like `${POSTGRES_CONNECTION_STRING}` (Zeabur uses a flat namespace — all exposed variables from other services are merged directly, no service prefix needed), **always use the Zeabur Dashboard** until the CLI bug is fixed.
 
 ## Quick Reference
 
