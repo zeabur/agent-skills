@@ -2,7 +2,7 @@
 
 Agent skills for Zeabur CLI operations, deployment, and troubleshooting. Works with **Claude Code**, **OpenAI Codex**, and other agents supporting the SKILL.md format.
 
-**Current version: 1.16.0**
+**Current version: 1.17.0**
 
 ## Installation
 
@@ -63,6 +63,17 @@ codex --plugin-dir /path/to/agent-skills
 | `zeabur-domain-registrant` | Manage registrant profiles for domain registration | Creating/updating contact info for domains |
 
 ## Changelog
+
+### 1.17.0
+
+- Improved `zeabur-deploy` — added mandatory Post-Deploy Verification (now 5 checks: **stderr sanity** / build log / runtime log / HTTP smoke-test / process sanity) and a Verify-and-Fix Loop so agents don't treat `"status": "success"` as proof of a working deploy. Validated end-to-end against a real broken Rust deploy; the real test surfaced six previously-undocumented footguns that are now baked in:
+  - **CLI exits 0 on hard API failure** — errors like `SHARED_CLUSTER_SERVICE_CREATION_DISABLED`, `FailedPrecondition`, and other GraphQL `ERROR`s are printed to stderr only; the process still returns 0. New "Check 0 — stderr sanity" step greps the captured stderr before trusting the JSON success response.
+  - **`SHARED_CLUSTER_SERVICE_CREATION_DISABLED`** — new triage row routes users to `zeabur-project-create` / `zeabur-server-rent` for a dedicated server when the shared cluster refuses new services.
+  - **Empty runtime log ≠ failure** — observed in practice on `rust:1-slim` and other minimal runtimes; the check now falls through to the HTTP smoke-test as the authoritative signal rather than misreading silence as a crash.
+  - **`ps aux` doesn't work on minimal runtimes** — `rust:1-slim`, distroless, Alpine, etc. don't ship `procps` and `service exec -- ps aux` fails with an OCI exec error. Replaced with `cat /proc/1/cmdline | tr '\000' ' '` which works on any Linux container.
+  - **`PORT=${WEB_PORT}` auto-inject** — Zeabur auto-sets `PORT` on HTTP services; apps that hardcode a port get 502 even with `0.0.0.0` bind. New triage row specifically covers Rust / Go / Python-stdlib servers that commonly hardcode.
+  - **`domain create -g -n <name>` is a silent no-op** — returns EXIT=0 with empty stdout, does nothing. The `--domain` flag is the one that works. New "Creating a Generated Domain" section documents the working invocation.
+- The Verify-and-Fix Loop enforces max 3 fix attempts per round; on budget exhaustion the loop pauses with a structured continue-or-skip prompt (symptom + attempts log + hypothesis + blocker) instead of silently retrying or giving up. Triage table also covers the `CannotConnectNowError` / "database system is starting up" readiness case and the "internal hostname `Name or service not known` because the sibling service doesn't exist" case — both previously unrouted.
 
 ### 1.16.0
 
