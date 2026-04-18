@@ -82,6 +82,8 @@ The response includes a `service_id`. **You MUST save this `service_id` for all 
 npx zeabur@latest deploy --project-id <project-id> --service-id <service-id> --json
 ```
 
+> **Do NOT use this flow for version upgrades / downgrades of prebuilt or marketplace services** (e.g. "upgrade PostgreSQL to 16", "downgrade n8n to 1.2"). That is a version switch, not a code redeploy — use the **`zeabur-update-service`** skill's tag update instead. Redeploying in place of a tag change can orphan or wipe the service's mounted disk.
+
 If no project exists yet, **invoke the `zeabur-project-create` skill** (do not run CLI commands directly).
 
 ## Git Deploy (On User Request)
