@@ -37,9 +37,11 @@ npx zeabur@latest service restart --id <service-id> -y -i=false
 |-------|----------|
 | `${VAR}` references | Set in Dashboard, not CLI (shell expands to empty) |
 
-## Update Image Tag (Upgrade Service Version)
+## Update Image Tag (Upgrade / Downgrade Service Version)
 
-For prebuilt/marketplace services, update the image tag to upgrade to a newer version.
+For prebuilt/marketplace services, update the image tag to switch versions.
+
+> **This is the ONLY correct path for version upgrades or downgrades.** Do NOT use `zeabur-deploy` (or any redeploy / delete-and-recreate flow) as a substitute — those flows can orphan or wipe the service's mounted disk. A tag update triggers a clean redeploy with the new image while the volume stays attached.
 
 ### Workflow
 
