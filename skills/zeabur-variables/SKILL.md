@@ -67,20 +67,35 @@ After running `env`, you must restart the service manually to apply changes.
 
 ## Variable References
 
-> **Warning:** The CLI `-k` flag uses Cobra's `StringToStringVar` parser which cannot reliably handle values containing `${}`, even with single quotes. The value may be truncated or emptied. See [zeabur/cli#201](https://github.com/zeabur/cli/issues/201).
+> **Status (verified 2026-04):** Single-quoted `${VAR}` references via `update -k` DO get stored and DO resolve at injection time — no longer requiring the dashboard. Earlier reports of total breakage tracked in [zeabur/cli#201](https://github.com/zeabur/cli/issues/201) appear to be fixed for the common case. The Cobra parser can still mangle exotic values (commas inside the value, multiple `=` signs in a complex URL) — when in doubt, verify with `variable list` after the update and fall back to the dashboard if the stored value looks wrong.
 
 ```bash
-# WRONG — shell expands ${VAR} to empty
-npx zeabur@latest variable create --id <service-id> -k "REDIS_URL=${REDIS_URI_INTERNAL}" -y -i=false
+# WRONG — double quotes let the shell expand ${VAR} to empty before the CLI sees it
+npx zeabur@latest variable update --id <service-id> -k "REDIS_URL=${REDIS_URI_INTERNAL}" -y -i=false
 
-# STILL UNRELIABLE — single quotes prevent shell expansion but Cobra's CSV parser may still mangle the value
-npx zeabur@latest variable create --id <service-id> -k 'REDIS_URL=${REDIS_URI_INTERNAL}' -y -i=false
+# CORRECT — single quotes preserve ${VAR} so Zeabur resolves it at injection time
+npx zeabur@latest variable update --id <service-id> \
+  -k 'DATABASE_URL=postgresql+psycopg://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}' \
+  -k 'REDIS_URL=${REDIS_CONNECTION_STRING}' \
+  -y -i=false
 
-# RECOMMENDED — set variable references in Zeabur Dashboard
-# Or use GraphQL API with updateEnvironmentVariable(data: Map!) mutation
+# After updating, verify the stored value with variable list, then exec into the container
+# to confirm it resolved correctly: `service exec --id <id> -- env | grep DATABASE_URL`
 ```
 
-For cross-service variable references like `${POSTGRES_CONNECTION_STRING}` (Zeabur uses a flat namespace — all exposed variables from other services are merged directly, no service prefix needed), **always use the Zeabur Dashboard** until the CLI bug is fixed.
+Cross-service references work in a flat namespace — all exposed variables from other services in the project are merged directly, no service prefix needed (e.g. `${POSTGRES_HOST}` resolves regardless of which service exposes it).
+
+## zbpack build-time configuration via env vars
+
+For services that build from source, zbpack reads its config from BOTH `zbpack.json` AND service env vars (env vars take precedence). The most useful one for monorepo deploys:
+
+```bash
+# Tell zbpack to use a specific Dockerfile path (relative to upload tarball root)
+npx zeabur@latest variable update --id <service-id> \
+  -k 'ZBPACK_DOCKERFILE_PATH=infra/zeabur/api.Dockerfile' -y -i=false
+```
+
+The naming rule is `ZBPACK_<SCREAMING_SNAKE_CASE>` of the underlying config key — e.g. zbpack key `dockerfile.path` becomes env var `ZBPACK_DOCKERFILE_PATH`. This is preferable to swapping a root `zbpack.json` between deploys when the project has multiple services with different Dockerfiles.
 
 ## Quick Reference
 
