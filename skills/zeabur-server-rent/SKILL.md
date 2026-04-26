@@ -13,6 +13,8 @@ description: Use when renting a new dedicated server. Use when user wants to buy
 npx zeabur@latest server rent --provider <code> --region <id> --plan <name> -y -i=false
 ```
 
+> **Run foreground and wait for output before retrying.** `server rent` is a billable action with no built-in idempotency — if the first call appears to hang and you re-issue it, you can end up with two servers (and two monthly charges). If the foreground command produces no output for a while, **do not retry**: instead poll `npx zeabur@latest server list -i=false --json` to see whether a new server has appeared. Only retry if `server list` confirms no new server was created. The CLI has no `server delete` subcommand — duplicates have to be removed via the dashboard at <https://zeabur.com/account/server>, so the cost of a wrongful retry is non-trivial.
+
 ## Workflow
 
 ### 1. Browse available options (use the `zeabur-server-catalog` skill for filtering)
