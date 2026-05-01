@@ -1,6 +1,6 @@
 ---
 name: zeabur-deploy
-description: Use when deploying a local project or codebase to Zeabur. Use when the user says "deploy this" or "deploy to Zeabur". Default to direct deploy unless the user explicitly asks for Git-based deployment.
+description: Use when deploying a local project or codebase to Zeabur. Use when the user says "deploy this", "deploy to Zeabur", "deploy from GitHub", "search my repos", or "find my repository". Default to direct deploy unless the user explicitly asks for Git-based deployment.
 ---
 
 # Zeabur Deploy
@@ -126,18 +126,15 @@ npx zeabur@latest service deploy --json -i=false \
 **Non-interactive (fully automated):**
 
 ```bash
-# 1. Push code to GitHub
-git init && git add . && git commit -m "Initial commit"
-gh repo create my-app --public --source=. --push
+# 1. Search for the user's GitHub repo
+npx zeabur@latest service search-repo <keyword> --json -i=false
+# Returns: [{"Name":"my-app","Owner":"user","URL":"...","ID":12345}, ...]
 
-# 2. Get GitHub repo ID (Zeabur uses GitHub's numeric repo ID)
-REPO_ID=$(gh api repos/OWNER/my-app --jq .id)
-
-# 3. Deploy from GitHub (PROJECT_ID must be known beforehand — see Prerequisites)
+# 2. Deploy from GitHub using the repo ID from search results
 npx zeabur@latest service deploy --json -i=false \
   --project-id $PROJECT_ID \
   --template GIT \
-  --repo-id $REPO_ID \
+  --repo-id <repo-id> \
   --branch-name main
 ```
 
