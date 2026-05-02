@@ -123,14 +123,14 @@ npx zeabur@latest service deploy --json -i=false \
 
 ### Git Deploy Workflow
 
-**Non-interactive (fully automated):**
+**Git deploy workflow:**
 
 ```bash
 # 1. Search for the user's GitHub repo
 npx zeabur@latest service search-repo <keyword> --json -i=false
 # Returns: [{"Name":"my-app","Owner":"user","URL":"...","ID":12345}, ...]
-# If multiple results are returned, confirm the exact Owner/Name with the user.
-# Never pick the first result by default.
+# If multiple results are returned, ask the user which repo to deploy.
+# The agent (not the CLI) is responsible for disambiguation.
 
 # 2. Deploy from GitHub using the repo ID from search results
 npx zeabur@latest service deploy --json -i=false \
