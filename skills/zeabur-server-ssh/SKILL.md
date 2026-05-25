@@ -27,9 +27,9 @@ npx zeabur@latest server list -i=false
 
 ## Step 2: Run Commands via SSH
 
-Try `sshpass` first. If it's not available, fall back to the Node.js `ssh2` method.
+Use the Node.js `ssh2` method by default. Use `sshpass` only when its availability is already known.
 
-### Option A: sshpass (preferred if available)
+### Option A: sshpass (only if already known to be available)
 
 ```bash
 # Single command
@@ -43,9 +43,9 @@ sshpass -p '<password>' ssh -o StrictHostKeyChecking=no -p <port> <username>@<ip
 '
 ```
 
-### Option B: Node.js ssh2 (when sshpass is unavailable)
+### Option B: Node.js ssh2 (default)
 
-The Zeabur agent sandbox has `ssh2` pre-installed. Use this approach if `sshpass` is not available:
+The Zeabur agent sandbox has `ssh2` pre-installed. Use this approach by default:
 
 ```bash
 NODE_PATH=/home/vercel-sandbox/.global/node_modules node -e "
