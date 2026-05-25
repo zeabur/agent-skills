@@ -104,7 +104,7 @@ c.on('ready', () => {
 
 ## Tips
 
-- **Try `sshpass` first**: Run `which sshpass` to check. If available, use Option A (simpler). If not, use Option B (Node.js ssh2).
+- **Use Node.js ssh2 by default (Option B)**: Only use `sshpass` (Option A) if you already know it's available. Do NOT run `which sshpass` to check — it wastes a step in environments where it's never installed.
 - **Combine commands**: Batch related checks with `&&` in a single SSH call to reduce round trips.
 - **Do NOT use `bash -c '...'` over SSH**: Pass commands directly in SSH quotes. Using `bash -c` causes quoting conflicts.
 - **Use `-o wide`**: Adds node name and IP to pod listings, useful for debugging scheduling issues.
