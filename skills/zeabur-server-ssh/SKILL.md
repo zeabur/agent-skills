@@ -27,7 +27,25 @@ npx zeabur@latest server list -i=false
 
 ## Step 2: Run Commands via SSH
 
-The sandbox has `ssh2` pre-installed. Use this Node.js one-liner to run commands via SSH:
+Try `sshpass` first. If it's not available, fall back to the Node.js `ssh2` method.
+
+### Option A: sshpass (preferred if available)
+
+```bash
+# Single command
+sshpass -p '<password>' ssh -o StrictHostKeyChecking=no -p <port> <username>@<ip> sudo kubectl get pods -A
+
+# Multiple commands in one SSH call
+sshpass -p '<password>' ssh -o StrictHostKeyChecking=no -p <port> <username>@<ip> '
+  echo "=== PODS ===" && sudo kubectl get pods -A &&
+  echo "=== SERVICES ===" && sudo kubectl get svc -A &&
+  echo "=== EVENTS ===" && sudo kubectl get events -A --sort-by=.lastTimestamp | tail -20
+'
+```
+
+### Option B: Node.js ssh2 (when sshpass is unavailable)
+
+The Zeabur agent sandbox has `ssh2` pre-installed. Use this approach if `sshpass` is not available:
 
 ```bash
 NODE_PATH=/home/vercel-sandbox/.global/node_modules node -e "
@@ -50,18 +68,14 @@ c.on('ready', () => {
 "
 ```
 
-Replace `<ip>`, `<port>`, `<username>`, `<password>`, and `<command>` with actual values from Step 1.
-
-### Combine multiple commands (preferred)
-
-Batch related checks into a single SSH call to minimize overhead:
+For multiple commands, join them with `&&` in the command string:
 
 ```bash
 NODE_PATH=/home/vercel-sandbox/.global/node_modules node -e "
 const {Client} = require('ssh2');
 const c = new Client();
 c.on('ready', () => {
-  c.exec('echo \"=== PODS ===\" && kubectl get pods -A && echo \"=== SERVICES ===\" && kubectl get svc -A && echo \"=== EVENTS ===\" && kubectl get events -A --sort-by=.lastTimestamp | tail -20', (err, stream) => {
+  c.exec('echo \"=== PODS ===\" && sudo kubectl get pods -A && echo \"=== SERVICES ===\" && sudo kubectl get svc -A', (err, stream) => {
     if (err) { console.error(err); process.exit(1); }
     let out = '';
     stream.on('data', d => out += d);
@@ -74,7 +88,7 @@ c.on('ready', () => {
 
 ## Common kubectl Commands
 
-Use the SSH pattern above with these commands. **Always use `sudo kubectl`** — the SSH user may not have direct access to the k3s kubeconfig.
+**Always use `sudo kubectl`** — the SSH user may not have direct access to the k3s kubeconfig.
 
 | Task | Command |
 |------|---------|
@@ -90,8 +104,9 @@ Use the SSH pattern above with these commands. **Always use `sudo kubectl`** —
 
 ## Tips
 
-- **Do NOT use `sshpass` or `SSH_ASKPASS`**: They are not available in the sandbox. Always use the `ssh2` Node.js approach shown above.
+- **Try `sshpass` first**: Run `which sshpass` to check. If available, use Option A (simpler). If not, use Option B (Node.js ssh2).
 - **Combine commands**: Batch related checks with `&&` in a single SSH call to reduce round trips.
+- **Do NOT use `bash -c '...'` over SSH**: Pass commands directly in SSH quotes. Using `bash -c` causes quoting conflicts.
 - **Use `-o wide`**: Adds node name and IP to pod listings, useful for debugging scheduling issues.
 - **Namespace matters**: Zeabur services typically run in non-default namespaces. Use `-A` (all namespaces) first to locate the right namespace, then scope subsequent commands with `-n <namespace>`.
 - **Read project docs first**: If a fix attempt fails, exec into the container and check README or config files before blindly checking metrics: `sudo kubectl exec <pod> -n <ns> -- cat /app/README.md`
