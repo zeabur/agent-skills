@@ -30,8 +30,8 @@ npx zeabur@latest server list -i=false
 The sandbox has `ssh2` pre-installed. Use this Node.js one-liner to run commands via SSH:
 
 ```bash
-node -e "
-const {Client} = require('/home/vercel-sandbox/.global/node_modules/ssh2');
+NODE_PATH=/home/vercel-sandbox/.global/node_modules node -e "
+const {Client} = require('ssh2');
 const c = new Client();
 c.on('ready', () => {
   c.exec('<command>', (err, stream) => {
@@ -57,8 +57,8 @@ Replace `<ip>`, `<port>`, `<username>`, `<password>`, and `<command>` with actua
 Batch related checks into a single SSH call to minimize overhead:
 
 ```bash
-node -e "
-const {Client} = require('/home/vercel-sandbox/.global/node_modules/ssh2');
+NODE_PATH=/home/vercel-sandbox/.global/node_modules node -e "
+const {Client} = require('ssh2');
 const c = new Client();
 c.on('ready', () => {
   c.exec('echo \"=== PODS ===\" && kubectl get pods -A && echo \"=== SERVICES ===\" && kubectl get svc -A && echo \"=== EVENTS ===\" && kubectl get events -A --sort-by=.lastTimestamp | tail -20', (err, stream) => {
@@ -94,5 +94,5 @@ Use the SSH pattern above with these commands. **Always use `sudo kubectl`** —
 - **Combine commands**: Batch related checks with `&&` in a single SSH call to reduce round trips.
 - **Use `-o wide`**: Adds node name and IP to pod listings, useful for debugging scheduling issues.
 - **Namespace matters**: Zeabur services typically run in non-default namespaces. Use `-A` (all namespaces) first to locate the right namespace, then scope subsequent commands with `-n <namespace>`.
-- **Read project docs first**: If a fix attempt fails, exec into the container and check README or config files before blindly checking metrics: `kubectl exec <pod> -n <ns> -- cat /app/README.md`
+- **Read project docs first**: If a fix attempt fails, exec into the container and check README or config files before blindly checking metrics: `sudo kubectl exec <pod> -n <ns> -- cat /app/README.md`
 - To find server IDs, use the `zeabur-server-list` skill. For simpler container commands that don't need server-level access, use the `zeabur-service-exec` skill instead.
