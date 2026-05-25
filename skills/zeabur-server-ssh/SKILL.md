@@ -75,7 +75,7 @@ NODE_PATH=/home/vercel-sandbox/.global/node_modules node -e "
 const {Client} = require('ssh2');
 const c = new Client();
 c.on('ready', () => {
-  c.exec('echo \"=== PODS ===\" && sudo kubectl get pods -A && echo \"=== SERVICES ===\" && sudo kubectl get svc -A', (err, stream) => {
+  c.exec('echo \"=== PODS ===\" && sudo kubectl get pods -A && echo \"=== SERVICES ===\" && sudo kubectl get svc -A && echo \"=== EVENTS ===\" && sudo kubectl get events -A --sort-by=.lastTimestamp | tail -20', (err, stream) => {
     if (err) { console.error(err); process.exit(1); }
     let out = '';
     stream.on('data', d => out += d);
