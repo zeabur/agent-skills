@@ -25,84 +25,89 @@ If you don't know the server ID, list servers first:
 npx zeabur@latest server list -i=false
 ```
 
-## Step 2: Set Up SSH_ASKPASS
+## Step 2: Run Commands via SSH
 
-The sandbox does not have `sshpass`. Use `SSH_ASKPASS` instead — it is built into SSH and requires no extra packages.
+Try `sshpass` first. If it's not available, fall back to the Node.js `ssh2` method.
 
-```bash
-# Create the askpass script (do this once per session)
-umask 077
-cat > /tmp/askpass.sh <<'ASKPASS'
-#!/bin/sh
-echo "<password>"
-ASKPASS
-chmod 700 /tmp/askpass.sh
-```
-
-Replace `<password>` with the actual password from Step 1. Clean up when done: `rm -f /tmp/askpass.sh`
-
-## Step 3: Run Commands via SSH
-
-Always combine multiple checks into a single SSH call to minimize overhead.
+### Option A: sshpass (preferred if available)
 
 ```bash
 # Single command
-SSH_ASKPASS=/tmp/askpass.sh SSH_ASKPASS_REQUIRE=force ssh -o StrictHostKeyChecking=no -p <port> <username>@<ip> kubectl get pods -A
+sshpass -p '<password>' ssh -o StrictHostKeyChecking=no -p <port> <username>@<ip> sudo kubectl get pods -A
 
-# Multiple commands in one SSH call (preferred)
-SSH_ASKPASS=/tmp/askpass.sh SSH_ASKPASS_REQUIRE=force ssh -o StrictHostKeyChecking=no -p <port> <username>@<ip> '
-  echo "=== PODS ===" && kubectl get pods -A &&
-  echo "=== SERVICES ===" && kubectl get svc -A &&
-  echo "=== EVENTS ===" && kubectl get events -A --sort-by=.lastTimestamp | tail -20
+# Multiple commands in one SSH call
+sshpass -p '<password>' ssh -o StrictHostKeyChecking=no -p <port> <username>@<ip> '
+  echo "=== PODS ===" && sudo kubectl get pods -A &&
+  echo "=== SERVICES ===" && sudo kubectl get svc -A &&
+  echo "=== EVENTS ===" && sudo kubectl get events -A --sort-by=.lastTimestamp | tail -20
 '
 ```
 
-## Common kubectl Patterns
+### Option B: Node.js ssh2 (when sshpass is unavailable)
 
-### Check pod status and recent events
+The Zeabur agent sandbox has `ssh2` pre-installed. Use this approach if `sshpass` is not available:
+
 ```bash
-SSH_ASKPASS=/tmp/askpass.sh SSH_ASKPASS_REQUIRE=force ssh -o StrictHostKeyChecking=no -p <port> <username>@<ip> '
-  echo "=== PODS ===" && kubectl get pods -A -o wide &&
-  echo "=== PROBLEM PODS ===" && kubectl get pods -A --field-selector=status.phase!=Running,status.phase!=Succeeded &&
-  echo "=== RECENT EVENTS ===" && kubectl get events -A --sort-by=.lastTimestamp | tail -30
-'
+NODE_PATH=/home/vercel-sandbox/.global/node_modules node -e "
+const {Client} = require('ssh2');
+const c = new Client();
+c.on('ready', () => {
+  c.exec('<command>', (err, stream) => {
+    if (err) { console.error(err); process.exit(1); }
+    let out = '', errOut = '';
+    stream.on('data', d => out += d);
+    stream.stderr.on('data', d => errOut += d);
+    stream.on('close', code => {
+      if (out) console.log(out);
+      if (errOut) console.error(errOut);
+      c.end();
+      process.exit(code);
+    });
+  });
+}).connect({host:'<ip>', port:<port>, username:'<username>', password:'<password>'});
+"
 ```
 
-### View logs for a specific pod
+For multiple commands, join them with `&&` in the command string:
+
 ```bash
-SSH_ASKPASS=/tmp/askpass.sh SSH_ASKPASS_REQUIRE=force ssh -o StrictHostKeyChecking=no -p <port> <username>@<ip> kubectl logs <pod-name> -n <namespace> --tail=100
+NODE_PATH=/home/vercel-sandbox/.global/node_modules node -e "
+const {Client} = require('ssh2');
+const c = new Client();
+c.on('ready', () => {
+  c.exec('echo \"=== PODS ===\" && sudo kubectl get pods -A && echo \"=== SERVICES ===\" && sudo kubectl get svc -A && echo \"=== EVENTS ===\" && sudo kubectl get events -A --sort-by=.lastTimestamp | tail -20', (err, stream) => {
+    if (err) { console.error(err); process.exit(1); }
+    let out = '';
+    stream.on('data', d => out += d);
+    stream.stderr.on('data', d => out += d);
+    stream.on('close', () => { console.log(out); c.end(); });
+  });
+}).connect({host:'<ip>', port:<port>, username:'<username>', password:'<password>'});
+"
 ```
 
-### Exec into a container via kubectl
-```bash
-SSH_ASKPASS=/tmp/askpass.sh SSH_ASKPASS_REQUIRE=force ssh -o StrictHostKeyChecking=no -p <port> <username>@<ip> kubectl exec <pod-name> -n <namespace> -- <command>
-```
+## Common kubectl Commands
 
-### Check resource usage
-```bash
-SSH_ASKPASS=/tmp/askpass.sh SSH_ASKPASS_REQUIRE=force ssh -o StrictHostKeyChecking=no -p <port> <username>@<ip> '
-  echo "=== NODE RESOURCES ===" && kubectl top nodes &&
-  echo "=== POD RESOURCES ===" && kubectl top pods -A --sort-by=memory | head -20
-'
-```
+**Always use `sudo kubectl`** — the SSH user may not have direct access to the k3s kubeconfig.
 
-### Describe a failing pod
-```bash
-SSH_ASKPASS=/tmp/askpass.sh SSH_ASKPASS_REQUIRE=force ssh -o StrictHostKeyChecking=no -p <port> <username>@<ip> kubectl describe pod <pod-name> -n <namespace>
-```
-
-### Restart a deployment
-```bash
-SSH_ASKPASS=/tmp/askpass.sh SSH_ASKPASS_REQUIRE=force ssh -o StrictHostKeyChecking=no -p <port> <username>@<ip> kubectl rollout restart deployment/<deployment-name> -n <namespace>
-```
+| Task | Command |
+|------|---------|
+| List all pods | `sudo kubectl get pods -A -o wide` |
+| Problem pods only | `sudo kubectl get pods -A --field-selector=status.phase!=Running,status.phase!=Succeeded` |
+| Pod logs | `sudo kubectl logs <pod-name> -n <namespace> --tail=100` |
+| Exec into container | `sudo kubectl exec <pod-name> -n <namespace> -- <command>` |
+| Node resources | `sudo kubectl top nodes` |
+| Pod resources | `sudo kubectl top pods -A --sort-by=memory \| head -20` |
+| Describe pod | `sudo kubectl describe pod <pod-name> -n <namespace>` |
+| Recent events | `sudo kubectl get events -A --sort-by=.lastTimestamp \| tail -30` |
+| Restart deployment | `sudo kubectl rollout restart deployment/<name> -n <namespace>` |
 
 ## Tips
 
-- **Do NOT use `sshpass`**: It is not available in the sandbox. Use `SSH_ASKPASS` as shown above.
-- **Create askpass script once**: Run the `echo ... > /tmp/askpass.sh` command once, then reuse it for all subsequent SSH calls in the same session.
-- **Combine commands**: Always batch related checks into a single SSH call using single quotes with `&&` to reduce round trips.
-- **Do NOT use `bash -c '...'`**: Pass commands directly in SSH quotes. Using `bash -c` causes quoting conflicts over SSH.
+- **Try `sshpass` first**: Run `which sshpass` to check. If available, use Option A (simpler). If not, use Option B (Node.js ssh2).
+- **Combine commands**: Batch related checks with `&&` in a single SSH call to reduce round trips.
+- **Do NOT use `bash -c '...'` over SSH**: Pass commands directly in SSH quotes. Using `bash -c` causes quoting conflicts.
 - **Use `-o wide`**: Adds node name and IP to pod listings, useful for debugging scheduling issues.
 - **Namespace matters**: Zeabur services typically run in non-default namespaces. Use `-A` (all namespaces) first to locate the right namespace, then scope subsequent commands with `-n <namespace>`.
-- **Read project docs first**: If a fix attempt fails, SSH into the container and check README or config files before blindly checking metrics: `kubectl exec <pod> -n <ns> -- cat /app/README.md`
+- **Read project docs first**: If a fix attempt fails, exec into the container and check README or config files before blindly checking metrics: `sudo kubectl exec <pod> -n <ns> -- cat /app/README.md`
 - To find server IDs, use the `zeabur-server-list` skill. For simpler container commands that don't need server-level access, use the `zeabur-service-exec` skill instead.
