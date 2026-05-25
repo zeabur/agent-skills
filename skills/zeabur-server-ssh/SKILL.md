@@ -31,11 +31,15 @@ The sandbox does not have `sshpass`. Use `SSH_ASKPASS` instead — it is built i
 
 ```bash
 # Create the askpass script (do this once per session)
-echo '#!/bin/sh
-echo "<password>"' > /tmp/askpass.sh && chmod +x /tmp/askpass.sh
+umask 077
+cat > /tmp/askpass.sh <<'ASKPASS'
+#!/bin/sh
+echo "<password>"
+ASKPASS
+chmod 700 /tmp/askpass.sh
 ```
 
-Replace `<password>` with the actual password from Step 1.
+Replace `<password>` with the actual password from Step 1. Clean up when done: `rm -f /tmp/askpass.sh`
 
 ## Step 3: Run Commands via SSH
 
