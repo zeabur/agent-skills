@@ -48,7 +48,7 @@ sshpass -p '<password>' ssh -o StrictHostKeyChecking=no -p <port> <username>@<ip
 The Zeabur agent sandbox has `ssh2` pre-installed. Use this approach by default:
 
 ```bash
-NODE_PATH=/home/vercel-sandbox/.global/node_modules node -e "
+NODE_PATH=$([ -d /root/.global/node_modules ] && echo /root/.global/node_modules || echo /home/vercel-sandbox/.global/node_modules) node -e "
 const {Client} = require('ssh2');
 const c = new Client();
 c.on('ready', () => {
@@ -71,7 +71,7 @@ c.on('ready', () => {
 For multiple commands, join them with `&&` in the command string:
 
 ```bash
-NODE_PATH=/home/vercel-sandbox/.global/node_modules node -e "
+NODE_PATH=$([ -d /root/.global/node_modules ] && echo /root/.global/node_modules || echo /home/vercel-sandbox/.global/node_modules) node -e "
 const {Client} = require('ssh2');
 const c = new Client();
 c.on('ready', () => {
