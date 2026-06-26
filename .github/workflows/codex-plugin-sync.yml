@@ -1,0 +1,30 @@
+name: codex-plugin-sync
+
+# Ensures plugins/zeabur/ (the generated Codex plugin) stays in sync with the
+# canonical root skills/. If someone edits a skill without re-running the sync
+# script, this fails so the drift is caught before merge.
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check-sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '20'
+      - name: Regenerate Codex plugin
+        run: node scripts/sync-codex-plugin.mjs
+      - name: Verify it matches the committed output
+        run: |
+          if [[ -n "$(git status --porcelain=v1 --untracked-files=all -- plugins/zeabur)" ]]; then
+            echo "::error::plugins/zeabur is out of sync with root skills/. Run: node scripts/sync-codex-plugin.mjs and commit the result."
+            exit 1
+          fi
