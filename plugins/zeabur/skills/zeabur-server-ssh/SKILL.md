@@ -35,8 +35,8 @@ Notes:
   Quote a compound command (with `&&` / `|` / redirects) as a **single argument**.
 - stdout/stderr stream live; the remote command's **exit code is propagated**.
   A pipeline reports only its **last** command's status, so `... | tail` hides an
-  upstream failure — prefix `set -o pipefail && ...` inside the quoted command
-  when an earlier failure must surface.
+  upstream failure — wrap it as `bash -lc 'set -o pipefail && ...'` when an
+  earlier failure must surface (`set -o pipefail` needs Bash, not `/bin/sh`).
 - If you don't know the server ID, list servers first:
   ```bash
   npx zeabur@latest server list -i=false
