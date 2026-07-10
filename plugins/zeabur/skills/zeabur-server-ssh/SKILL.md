@@ -33,10 +33,9 @@ Notes:
 
 - Everything after `--` is the remote command, joined like `ssh host <command>`.
   Quote a compound command (with `&&` / `|` / redirects) as a **single argument**.
-- stdout/stderr stream live; the remote command's **exit code is propagated**.
-  A pipeline reports only its **last** command's status, so `... | tail` hides an
-  upstream failure — wrap it as `bash -lc 'set -o pipefail && ...'` when an
-  earlier failure must surface (`set -o pipefail` needs Bash, not `/bin/sh`).
+- stdout/stderr stream live; the remote command's **exit code is propagated**
+  (a pipeline reports only its **last** stage's status — `… | tail` hides an
+  upstream failure, so don't rely on the exit code across a pipe).
 - If you don't know the server ID, list servers first:
   ```bash
   npx zeabur@latest server list -i=false
