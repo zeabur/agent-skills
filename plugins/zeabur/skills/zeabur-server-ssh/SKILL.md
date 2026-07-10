@@ -34,6 +34,9 @@ Notes:
 - Everything after `--` is the remote command, joined like `ssh host <command>`.
   Quote a compound command (with `&&` / `|` / redirects) as a **single argument**.
 - stdout/stderr stream live; the remote command's **exit code is propagated**.
+  A pipeline reports only its **last** command's status, so `... | tail` hides an
+  upstream failure — prefix `set -o pipefail && ...` inside the quoted command
+  when an earlier failure must surface.
 - If you don't know the server ID, list servers first:
   ```bash
   npx zeabur@latest server list -i=false
@@ -43,7 +46,10 @@ Notes:
 ## Common kubectl Commands
 
 Pass any of these as the command to `server exec`. **Always use `sudo kubectl`** —
-the SSH user may not have direct access to the k3s kubeconfig.
+the SSH user may not have direct access to the k3s kubeconfig. Any command with a
+pipe (`|`) or `&&` must be **quoted as a single argument**, or the local shell
+splits it and runs part locally — e.g.
+`server exec --id <id> -- 'sudo kubectl top pods -A --sort-by=memory | head -20'`.
 
 | Task | Command |
 |------|---------|
