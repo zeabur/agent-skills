@@ -24,6 +24,10 @@ await mkdir(path.join(out, '.codex-plugin'), { recursive: true });
 // Mirror the canonical skills into the Codex plugin directory.
 await cp(path.join(root, 'skills'), path.join(out, 'skills'), { recursive: true });
 
+// Mirror the listing assets too — interface.logo/logoDark/composerIcon are
+// resolved relative to the plugin directory, so they must live inside it.
+await cp(path.join(root, 'assets'), path.join(out, 'assets'), { recursive: true });
+
 // Reuse the root Codex plugin manifest; its skills path ("./skills/") already
 // resolves correctly relative to the plugin directory.
 const manifest = JSON.parse(

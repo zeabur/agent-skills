@@ -6,7 +6,7 @@
     "name": "Zeabur",
     "url": "https://zeabur.com"
   },
-  "homepage": "https://zeabur.com/docs",
+  "homepage": "https://zeabur.com",
   "repository": "https://github.com/zeabur/agent-skills",
   "license": "MIT",
   "keywords": ["zeabur", "deployment", "cli", "templates", "devops", "cloud"],
@@ -21,6 +21,10 @@
     "websiteURL": "https://zeabur.com",
     "privacyPolicyURL": "https://zeabur.com/docs/legal/privacy",
     "termsOfServiceURL": "https://zeabur.com/docs/legal/terms",
+    "brandColor": "#6300FF",
+    "logo": "./assets/logo.png",
+    "logoDark": "./assets/logo-dark.png",
+    "composerIcon": "./assets/logo.png",
     "defaultPrompt": [
       "Deploy this project to Zeabur and give me the public URL.",
       "My Zeabur service keeps restarting — check the runtime logs and tell me why.",

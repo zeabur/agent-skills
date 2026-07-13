@@ -33,6 +33,7 @@ The bundle contains:
 |------|----------|
 | `.codex-plugin/plugin.json` | manifest (name `zeabur`, version `1.20.0`) |
 | `skills/` | 33 skills, each with an uppercase `SKILL.md` |
+| `assets/` | `logo.png` and `logo-dark.png` (512×512, transparent) |
 
 If the submission portal takes a repository URL instead of a zip, use `https://github.com/zeabur/agent-skills` — the marketplace at `.agents/plugins/marketplace.json` already points at `./plugins/zeabur`.
 
@@ -50,27 +51,22 @@ Values below come from `.codex-plugin/plugin.json` unless marked **TODO**.
 | Website | https://zeabur.com | `interface.websiteURL` |
 | Privacy policy | https://zeabur.com/docs/legal/privacy | `interface.privacyPolicyURL` |
 | Terms of service | https://zeabur.com/docs/legal/terms | `interface.termsOfServiceURL` |
-| Support URL | https://zeabur.com/support | **TODO — confirm** this is the right support surface for the listing form (the manifest schema has no `supportURL` field; it is entered in the portal) |
-| Logo | — | **TODO — asset missing** |
+| Homepage | https://zeabur.com | manifest `homepage` |
+| Support URL | https://zeabur.com/support | entered in the portal — the manifest schema has no `supportURL` field |
+| Logo | `./assets/logo.png` (512×512) | `interface.logo` / `composerIcon` |
+| Logo (dark) | `./assets/logo-dark.png` | `interface.logoDark` |
+| Brand color | `#6300FF` | `interface.brandColor` |
 | Developer name | Zeabur | `interface.developerName` |
 
-### TODO: logo assets
+Assets are generated from the official Zeabur logo pack: the source mark is 512×401, so it is scaled to 78% and centered on a transparent 512×512 canvas to meet the square-icon requirement. The brand color is the purple taken straight from the logo SVG (`#6300FF`); the palette also contains `#FF4400` and `#141216` if a different accent is preferred.
 
-The repo has no `assets/` directory. Official listings ship:
-
-- `interface.logo` → `./assets/logo.png`
-- `interface.logoDark` → `./assets/logo-dark.png` (optional)
-- `interface.composerIcon` → `./assets/logo.png`
-- `interface.brandColor` → hex, e.g. `#000000`
-- `interface.screenshots` → PNG filenames in `./assets/`
-
-Someone at Zeabur needs to drop the official logo into `assets/` (square PNG) and confirm the brand color. Once added, wire the paths into `.codex-plugin/plugin.json` and re-run the sync script.
+`interface.screenshots` is still empty — optional, but worth adding before submission if Zeabur wants richer listing imagery.
 
 ### TODO: business identity verification
 
 The public directory requires verifying that the submitter represents Zeabur. Confirm before submitting:
 
-- Submitting account is a Zeabur-owned OpenAI/ChatGPT org account, not a personal one.
+- Submitting account is a Zeabur-owned OpenAI/ChatGPT **org/workspace** account, not a personal one.
 - Domain ownership of `zeabur.com` can be proven (DNS record or verified email on the domain).
 - Business/legal entity details match whatever Zeabur uses for other app-store listings.
 - A support contact email on the `zeabur.com` domain is reachable.
@@ -133,9 +129,15 @@ codex plugin marketplace add "$(pwd)" && codex plugin add zeabur@zeabur
 codex plugin list
 ```
 
-## 8. Open decisions
+## 8. Open items
 
-- **Logo + brand color** — blocking; no asset in repo (see above).
-- **Support URL** — confirm `https://zeabur.com/support` is the surface Zeabur wants reviewers and users sent to.
-- **`policy.authentication`** in `.agents/plugins/marketplace.json` is `ON_INSTALL`, matching 177/180 official plugins. Since this plugin authenticates at *use* time (`zeabur login`) rather than install time, `ON_USE` may be more accurate. Left as-is; change only if the review flags it.
-- **`.claude-plugin/plugin.json` `author.name` is `"Can"`** while the Codex manifest uses `"Zeabur"`. Harmless for the Codex listing, but worth aligning if reviewers browse the repo.
+Everything in the manifest is settled. Remaining:
+
+- **Business identity verification** — must submit from a Zeabur org account that can prove `zeabur.com` ownership (see above). The only hard blocker left.
+- **Screenshots** — optional; none shipped.
+- **Version** — held at `1.20.0`. CodeRabbit flagged that CLAUDE.md's convention is to bump on release-visible metadata changes; deferred to the repo owner.
+
+Settled during prep, for the record:
+
+- `policy.authentication` is **`ON_USE`** — this plugin authenticates when the user first runs a Zeabur command (`zeabur login`), not at install time. Note 177/180 official plugins use `ON_INSTALL`, so a reviewer may query it; `ON_USE` is the honest value here.
+- `author.name` is now `Zeabur` in both the Claude and Codex manifests.
