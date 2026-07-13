@@ -82,7 +82,7 @@ When using `-i=false`, all required template variables must be provided via `--v
 
 If variables are missing, CLI shows helpful error:
 
-```
+```text
 Error: missing required variables in non-interactive mode:
   --var PUBLIC_DOMAIN=<value>  (Enter your domain prefix)
   --var DB_NAME=<value>  (Database name)

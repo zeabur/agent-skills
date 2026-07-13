@@ -3,9 +3,10 @@
   "description": "Zeabur CLI skills for deployment, template management, and troubleshooting",
   "version": "1.20.0",
   "author": {
-    "name": "Can"
+    "name": "Zeabur",
+    "url": "https://zeabur.com"
   },
-  "repository": "https://github.com/zeabur/zeabur-claude-plugin",
+  "repository": "https://github.com/zeabur/agent-skills",
   "license": "MIT",
   "keywords": ["zeabur", "deployment", "cli", "templates", "troubleshooting"]
 }
