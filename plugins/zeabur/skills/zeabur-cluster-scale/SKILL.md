@@ -26,14 +26,19 @@ Then ask a direct yes/no question, for example:
 
 ## Authentication
 
-All requests need a Bearer token:
+All requests need a Bearer token. Keep the token out of the process list — write it into a `0600` curl config and pass that with `-K`, instead of putting `-H "Authorization: ..."` on the command line:
 
 ```bash
 TOKEN="${ZEABUR_API_KEY:-$(grep '^token:' ~/.config/zeabur/cli.yaml | awk '{print $2}')}"
+ZAPI_CFG=$(mktemp)
+chmod 600 "$ZAPI_CFG"
+printf 'header = "Authorization: Bearer %s"\n' "$TOKEN" > "$ZAPI_CFG"
+unset TOKEN
 ```
 
 - Prefer the `ZEABUR_API_KEY` environment variable if set
 - Otherwise reuse the CLI token from `~/.config/zeabur/cli.yaml` (present after `npx zeabur@latest auth login` — use the `zeabur-auth` skill if the user is not logged in)
+- Each tool/Bash invocation is a fresh shell — run this setup in the same shell block as the requests that use `$ZAPI_CFG`, and `rm -f "$ZAPI_CFG"` when done
 
 All node pool mutations require **manage access** to the cluster (owner or admin). Collaborators with view-only access can list pools but not change them.
 
@@ -48,9 +53,8 @@ Only dedicated Kubernetes clusters (LKE / EKS) have node pools. If unsure whethe
 ## 2. List node pools
 
 ```bash
-curl -s https://api.zeabur.com/graphql \
+curl -sS --max-time 30 -K "$ZAPI_CFG" https://api.zeabur.com/graphql \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $TOKEN" \
   -d '{"query":"query($id: ObjectID!) { server(_id: $id) { name clusterType price nodePools { id instanceType nodeCount minNodes maxNodes readyNodes status } } }","variables":{"id":"<server-id>"}}'
 ```
 
@@ -67,13 +71,14 @@ Field notes:
 The most common operation — changes the node count of a pool in place:
 
 ```bash
-curl -s https://api.zeabur.com/graphql \
+curl -sS --max-time 30 -K "$ZAPI_CFG" https://api.zeabur.com/graphql \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $TOKEN" \
   -d '{"query":"mutation($sid: ObjectID!, $pid: String!, $n: Int!) { scaleNodePool(serverID: $sid, nodePoolID: $pid, nodeCount: $n) }","variables":{"sid":"<server-id>","pid":"<node-pool-id>","n":5}}'
 ```
 
-After mutating, poll the list query until `readyNodes` equals the new `nodeCount` (provider provisioning typically takes a few minutes), then report the updated pool and price to the user.
+After mutating, poll the list query every ~30 seconds until `readyNodes` equals the new `nodeCount` **and** the pool `status` is healthy (`ACTIVE` for EKS, `ready` for LKE) — provisioning typically takes a few minutes. **Bound the wait**: if the pool reports a failed/degraded `status`, stop immediately and relay it; if it has not converged after ~15 minutes, stop polling and report the current state instead of waiting forever. On success, report the updated pool and price to the user.
+
+**If a mutation request times out or fails at the transport layer, never blind-retry.** The change may have been applied server-side — re-fetch the node pool list first, and only retry if the state shows the change did not happen. Blind-retrying `addNodePool` can double-provision (and double-bill); blind-retrying `removeNodePool` can hit a second pool if IDs were reused from a stale list.
 
 **Scaling down:** warn the user that removed nodes are drained and their workloads reschedule onto the remaining nodes — make sure remaining capacity fits the current workload (check with the `zeabur-service-metric` skill if needed). Never scale the cluster's only pool to 0.
 
@@ -82,9 +87,8 @@ After mutating, poll the list query until `readyNodes` equals the new `nodeCount
 Use when the user needs a different machine type (e.g. adding bigger or GPU nodes) rather than more of the same:
 
 ```bash
-curl -s https://api.zeabur.com/graphql \
+curl -sS --max-time 30 -K "$ZAPI_CFG" https://api.zeabur.com/graphql \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $TOKEN" \
   -d '{"query":"mutation($sid: ObjectID!, $t: String!, $n: Int!) { addNodePool(serverID: $sid, instanceType: $t, nodeCount: $n) { id instanceType nodeCount status } }","variables":{"sid":"<server-id>","t":"g6-standard-4","n":2}}'
 ```
 
@@ -100,11 +104,12 @@ An invalid or out-of-region instance type fails at the provider — the error me
 **Destructive.** All nodes in the pool are drained and deleted; workloads reschedule onto the remaining pools. Never remove the last node pool of a cluster. Requires the same explicit confirmation as above, plus naming the pool being removed.
 
 ```bash
-curl -s https://api.zeabur.com/graphql \
+curl -sS --max-time 30 -K "$ZAPI_CFG" https://api.zeabur.com/graphql \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $TOKEN" \
   -d '{"query":"mutation($sid: ObjectID!, $pid: String!) { removeNodePool(serverID: $sid, nodePoolID: $pid) }","variables":{"sid":"<server-id>","pid":"<node-pool-id>"}}'
 ```
+
+Completion check for removal: poll the list query (same bounds as above) until the pool **no longer appears** in `nodePools`, then report the updated price.
 
 ## Recommended guidance flow
 
@@ -113,7 +118,7 @@ When the user asks to scale (or complains about capacity):
 1. **Show current state first** — list node pools with ready counts and the current monthly price
 2. **Propose a concrete change** — which pool, what count (or what new instance type), and the billing impact
 3. **Get explicit confirmation** — see the confirmation requirements at the top
-4. **Mutate, then watch** — poll until `readyNodes` catches up; report completion and the updated price
+4. **Mutate, then watch** — poll with the bounds above until the operation-specific completion check passes (scale/add: `readyNodes` matches and `status` healthy; remove: pool gone from the list); report completion and the updated price
 
 ## Errors
 
