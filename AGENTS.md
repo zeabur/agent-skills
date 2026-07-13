@@ -18,7 +18,7 @@ Zeabur Agent Skills — a plugin providing CLI-based skills for managing Zeabur 
 |----------|--------|
 | Deployment & Logs | `zeabur-deploy`, `zeabur-dockerfile`, `zeabur-deployment-logs`, `zeabur-template-deploy`, `zeabur-template-backup` |
 | Service Management | `zeabur-service-list`, `zeabur-service-delete`, `zeabur-service-exec`, `zeabur-service-metric`, `zeabur-restart`, `zeabur-update-service`, `zeabur-variables` |
-| Server Management | `zeabur-server-list`, `zeabur-server-catalog`, `zeabur-server-rent` |
+| Server Management | `zeabur-server-list`, `zeabur-server-catalog`, `zeabur-server-rent`, `zeabur-cluster-scale` |
 | Project Management | `zeabur-project-create`, `zeabur-project-delete` |
 | Domain & Email | `zeabur-domain-register`, `zeabur-domain-dns`, `zeabur-domain-url`, `zeabur-email` |
 | AI Hub | `zeabur-ai-hub` |
