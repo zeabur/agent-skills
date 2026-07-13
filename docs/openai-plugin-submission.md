@@ -124,8 +124,8 @@ Also worth checking: with no Zeabur account logged in, skills should surface the
 node scripts/sync-codex-plugin.mjs
 git status --porcelain -- plugins/zeabur   # must be empty
 
-# 2. Every skill file is uppercase SKILL.md
-find plugins/zeabur/skills -name 'skill.md'   # must print nothing
+# 2. Every skill file is uppercase SKILL.md (catches Skill.md / skill.md alike)
+find plugins/zeabur/skills -type f -iname 'skill.md' ! -name 'SKILL.md' -print   # must print nothing
 find plugins/zeabur/skills -name 'SKILL.md' | wc -l   # 33
 
 # 3. Plugin installs cleanly in Codex
