@@ -2,7 +2,7 @@
 
 Agent skills for Zeabur CLI operations, deployment, and troubleshooting. Works with **Claude Code**, **OpenAI Codex**, and other agents supporting the SKILL.md format.
 
-**Current version: 1.16.0**
+**Current version: 1.20.0**
 
 ## Installation
 
@@ -20,9 +20,21 @@ claude plugin marketplace update zeabur && claude plugin update zeabur@zeabur
 
 ### OpenAI Codex
 
-In the Codex app, search for "Zeabur" in the plugin directory and click **Add to Codex**.
+Install from this repository's marketplace:
 
-In the Codex CLI, run `/plugins` and select "Install plugin" to browse and install.
+```
+codex plugin marketplace add zeabur/agent-skills && codex plugin add zeabur@zeabur
+```
+
+Update to latest version:
+
+```
+codex plugin marketplace upgrade && codex plugin add zeabur@zeabur
+```
+
+The Codex plugin bundle lives in [`plugins/zeabur/`](plugins/zeabur) and is generated from the canonical root `skills/` — see [Repository layout](#repository-layout).
+
+> **Public plugin directory:** this plugin has not been submitted to the OpenAI public plugin directory yet, so it is not searchable in the Codex app or via `/plugins`. Use the marketplace command above. Submission is tracked in [`docs/openai-plugin-submission.md`](docs/openai-plugin-submission.md); once the listing is approved, "Zeabur" will also be installable directly from the directory.
 
 ### Local testing
 
@@ -30,38 +42,107 @@ In the Codex CLI, run `/plugins` and select "Install plugin" to browse and insta
 # Claude Code
 claude --plugin-dir /path/to/agent-skills
 
-# Codex
-codex --plugin-dir /path/to/agent-skills
+# Codex — add the local checkout as a marketplace
+codex plugin marketplace add /path/to/agent-skills && codex plugin add zeabur@zeabur
 ```
 
 ## Skills
 
+33 skills, all CLI-based. No MCP server, no extra credentials beyond your Zeabur login.
+
+### Deployment & build
+
 | Skill | Description | Use When |
 |-------|-------------|----------|
-| `zeabur-deployment-logs` | View and filter service logs | Checking logs or seeing env-id required errors |
-| `zeabur-domain-url` | Handle service domain and URL configuration | Services need public URLs or trailing slash issues |
-| `zeabur-migration` | Resolve database migration blocking issues | Service stuck "Waiting for migrations" |
-| `zeabur-port-mismatch` | Fix proxy connection issues from port mismatches | Proxy shows dial tcp timeout or connection refused |
+| `zeabur-deploy` | Deploy local projects or from GitHub | User says "deploy this" or wants Git-based CI/CD deployment |
+| `zeabur-dockerfile` | Generate a Dockerfile for a project | User needs a Dockerfile for Node.js, Python, Go, Rust, PHP, etc. |
+| `zeabur-deployment-logs` | View and filter build and runtime logs | Checking logs or debugging a failed deploy |
+| `zeabur-file` | Analyze an uploaded project archive | User uploads a project file and asks what it is or how to deploy it |
+
+### Services
+
+| Skill | Description | Use When |
+|-------|-------------|----------|
+| `zeabur-service-list` | List all services and get service IDs | Needing service IDs or checking existing services |
+| `zeabur-service-delete` | Delete a service | Tearing down a service |
+| `zeabur-service-exec` | Run commands inside a service container | One-off DB queries, data cleanup, or manual migrations |
+| `zeabur-service-metric` | Inspect CPU/memory usage | Service is slow, high CPU, or OOM |
+| `zeabur-restart` | Restart individual services | Service is stuck or frozen |
+| `zeabur-update-service` | Update service config without full redeploy | Modifying env vars or updating a single service |
+| `zeabur-variables` | Manage environment variables via CLI | Managing env vars or handling empty variable issues |
+
+### Projects
+
+| Skill | Description | Use When |
+|-------|-------------|----------|
 | `zeabur-project-create` | Create new Zeabur projects | Creating a new project or deploying templates |
-| `zeabur-restart` | Restart individual services | Restarting services or --env-id required error |
-| `zeabur-server-list` | List, get, reboot, and SSH into dedicated servers | Checking server status, IP, rebooting, or SSH access |
+| `zeabur-project-delete` | Delete a Zeabur project | Cleaning up test or temporary projects |
+| `zeabur-auth` | Login, logout, and check auth status | User says "login", "登入", "logout", "登出" |
+
+### Databases & storage
+
+| Skill | Description | Use When |
+|-------|-------------|----------|
+| `zeabur-database` | Deploy MySQL, PostgreSQL, MongoDB, or Redis | User says "I need a database" |
+| `zeabur-object-storage` | Deploy S3-compatible object storage (MinIO, RustFS) | User needs object storage or an S3 bucket |
+
+### Templates
+
+| Skill | Description | Use When |
+|-------|-------------|----------|
+| `zeabur-template` | Template knowledge base for authoring and validating | Creating or editing template YAML, converting docker-compose |
+| `zeabur-template-deploy` | Deploy templates via CLI | Deploying a marketplace template or well-known service |
+| `zeabur-template-publish` | Publish or update a template on the marketplace | Shipping a template publicly |
+| `zeabur-template-backup` | Back up a template to a git repository | Saving a template locally in a standardized format |
+
+### Servers & clusters
+
+| Skill | Description | Use When |
+|-------|-------------|----------|
 | `zeabur-server-catalog` | Browse available server providers/regions/plans | User asks what servers are available to rent |
 | `zeabur-server-rent` | Rent a new dedicated server | User wants to buy or provision a server |
-| `zeabur-cluster-scale` | Scale dedicated Kubernetes clusters (LKE/EKS) via node pools | User wants to add/remove nodes or resize a cluster |
-| `zeabur-service-list` | List all services and get service IDs | Needing service IDs or checking existing services |
-| `zeabur-startup-order` | Fix connection errors from startup order | Service fails with connection refused to database/redis |
-| `zeabur-template` | Template knowledge base for creating, validating, and troubleshooting | Creating or editing Zeabur template YAML, converting docker-compose |
-| `zeabur-template-backup` | Backup templates to git repository | Saving a template locally with standardized format |
-| `zeabur-template-deploy` | Deploy templates via CLI | Automating template deployments |
-| `zeabur-update-service` | Update service config without full redeploy | Modifying env vars or updating single service |
-| `zeabur-deploy` | Deploy local projects or from GitHub | User says "deploy this" or wants Git-based CI/CD deployment |
-| `zeabur-variables` | Manage environment variables via CLI | Managing env vars or handling empty variable issues |
-| `zeabur-ai-hub` | Manage AI Hub account, keys, balance, and usage | AI Hub status, API keys, add balance, usage, auto-recharge |
-| `zeabur-email` | Manage Zeabur Email (ZSend) service | Email domains, API keys, webhooks, ZSend |
-| `zeabur-domain-register` | Search, purchase, renew, and manage registered domains | Buying domains, checking availability, renewal |
+| `zeabur-server-list` | List, get, and reboot dedicated servers | Checking server status, IP, or provider info |
+| `zeabur-server-ssh` | Debug a dedicated server over SSH | Inspecting pods, container logs, or running server commands |
+| `zeabur-cluster-scale` | Scale Kubernetes clusters (LKE/EKS) via node pools | Adding/removing nodes or resizing a cluster |
+
+### Domains, DNS & email
+
+| Skill | Description | Use When |
+|-------|-------------|----------|
+| `zeabur-domain-register` | Search, purchase, renew, and manage domains | Buying domains, checking availability, renewal |
 | `zeabur-domain-dns` | Manage DNS records for registered domains | Adding/updating/deleting DNS records |
-| `zeabur-auth` | Login, logout, and check auth status | User says "login", "登入", "logout", "登出" |
-| `zeabur-domain-registrant` | Manage registrant profiles for domain registration | Creating/updating contact info for domains |
+| `zeabur-domain-url` | Handle service domain and URL configuration | Services need public URLs or have trailing-slash issues |
+| `zeabur-email` | Manage Zeabur Email (ZSend) and send email | Email domains, API keys, webhooks, sending mail |
+| `zeabur-ai-hub` | Manage AI Hub account, keys, balance, and usage | AI Hub status, API keys, add balance, auto-recharge |
+
+### Troubleshooting
+
+| Skill | Description | Use When |
+|-------|-------------|----------|
+| `zeabur-port-mismatch` | Fix proxy connection issues from port mismatches | Proxy shows dial tcp timeout or connection refused |
+| `zeabur-startup-order` | Fix connection errors caused by startup order | Service fails with connection refused to database/redis |
+| `zeabur-migration` | Resolve database migration blocking issues | Service stuck on "Waiting for migrations" |
+
+## Repository layout
+
+The canonical skills live in root `skills/`. The Codex plugin bundle in `plugins/zeabur/` is a **generated mirror** — Codex requires a plugin to live in a subdirectory with its skills physically inside it.
+
+```
+skills/                          # canonical — edit skills here only
+.claude-plugin/plugin.json       # Claude Code plugin manifest (repo root is the plugin)
+.codex-plugin/plugin.json        # canonical Codex manifest
+.agents/plugins/marketplace.json # Codex marketplace, points at ./plugins/zeabur
+plugins/zeabur/                  # GENERATED Codex bundle — do not edit by hand
+scripts/sync-codex-plugin.mjs    # regenerates plugins/zeabur/
+```
+
+After editing anything in `skills/` or `.codex-plugin/plugin.json`, regenerate the bundle and commit the result:
+
+```bash
+node scripts/sync-codex-plugin.mjs
+```
+
+CI (`.github/workflows/codex-plugin-sync.yml`) fails the build if `plugins/zeabur/` drifts from root `skills/`.
 
 ## Changelog
 

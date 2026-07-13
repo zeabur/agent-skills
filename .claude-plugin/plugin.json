@@ -5,7 +5,7 @@
   "author": {
     "name": "Can"
   },
-  "repository": "https://github.com/zeabur/zeabur-claude-plugin",
+  "repository": "https://github.com/zeabur/agent-skills",
   "license": "MIT",
   "keywords": ["zeabur", "deployment", "cli", "templates", "troubleshooting"]
 }

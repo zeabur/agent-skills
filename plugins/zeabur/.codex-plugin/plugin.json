@@ -6,7 +6,8 @@
     "name": "Zeabur",
     "url": "https://zeabur.com"
   },
-  "repository": "https://github.com/zeabur/zeabur-claude-plugin",
+  "homepage": "https://zeabur.com/docs",
+  "repository": "https://github.com/zeabur/agent-skills",
   "license": "MIT",
   "keywords": [
     "zeabur",
@@ -19,8 +20,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Zeabur",
-    "shortDescription": "Deploy and manage apps on Zeabur",
-    "longDescription": "CLI-based skills for deploying, managing services, renting servers, registering domains, and troubleshooting on Zeabur. Works with both Claude Code and OpenAI Codex.",
+    "shortDescription": "Deploy apps, manage services and servers, and troubleshoot on Zeabur",
+    "longDescription": "Zeabur is a cloud platform for deploying and operating applications, databases, and dedicated servers. This plugin teaches Codex to drive the official Zeabur CLI end to end: deploy a project from local source or from GitHub, create projects and services, manage environment variables and databases, read build and runtime logs, publish and deploy templates, rent dedicated servers, scale Kubernetes node pools, and register domains with their DNS records. It also bundles troubleshooting playbooks for the failures teams hit most — port mismatches, startup-order and migration deadlocks, and broken service URLs. Everything runs through the zeabur CLI on your own machine using your existing Zeabur login. This plugin ships skills only: no MCP server and no additional credentials.",
     "developerName": "Zeabur",
     "category": "Developer Tools",
     "capabilities": [
@@ -28,10 +29,12 @@
       "Write"
     ],
     "websiteURL": "https://zeabur.com",
+    "privacyPolicyURL": "https://zeabur.com/docs/legal/privacy",
+    "termsOfServiceURL": "https://zeabur.com/docs/legal/terms",
     "defaultPrompt": [
-      "Deploy this project to Zeabur",
-      "List my Zeabur servers",
-      "Rent a new server on Hetzner"
+      "Deploy this project to Zeabur and give me the public URL.",
+      "My Zeabur service keeps restarting — check the runtime logs and tell me why.",
+      "List my Zeabur servers and show what plans are available to rent."
     ]
   }
 }
