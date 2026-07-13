@@ -47,6 +47,7 @@ codex --plugin-dir /path/to/agent-skills
 | `zeabur-server-list` | List, get, reboot, and SSH into dedicated servers | Checking server status, IP, rebooting, or SSH access |
 | `zeabur-server-catalog` | Browse available server providers/regions/plans | User asks what servers are available to rent |
 | `zeabur-server-rent` | Rent a new dedicated server | User wants to buy or provision a server |
+| `zeabur-cluster-scale` | Scale dedicated Kubernetes clusters (LKE/EKS) via node pools | User wants to add/remove nodes or resize a cluster |
 | `zeabur-service-list` | List all services and get service IDs | Needing service IDs or checking existing services |
 | `zeabur-startup-order` | Fix connection errors from startup order | Service fails with connection refused to database/redis |
 | `zeabur-template` | Template knowledge base for creating, validating, and troubleshooting | Creating or editing Zeabur template YAML, converting docker-compose |
@@ -63,6 +64,10 @@ codex --plugin-dir /path/to/agent-skills
 | `zeabur-domain-registrant` | Manage registrant profiles for domain registration | Creating/updating contact info for domains |
 
 ## Changelog
+
+### 1.20.0
+
+- Added `zeabur-cluster-scale` — list, scale, add, and remove node pools on dedicated Kubernetes clusters (LKE/EKS) via the GraphQL API, with explicit priced confirmation before every change
 
 ### 1.16.0
 
