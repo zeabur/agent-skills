@@ -65,6 +65,10 @@ codex --plugin-dir /path/to/agent-skills
 
 ## Changelog
 
+### 1.20.1
+
+- Fixed `zeabur-server-rent`, `zeabur-server-ssh`, `zeabur-server-list`, `zeabur-deploy`, and `zeabur-project-create` — renting a server now provisions a clean VPS with no Zeabur services, so the skills no longer assume a rented server can host projects or that `kubectl` is present, and they explain how to convert a server to ZeaburOS
+
 ### 1.20.0
 
 - Added `zeabur-cluster-scale` — list, scale, add, and remove node pools on dedicated Kubernetes clusters (LKE/EKS) via the GraphQL API, with explicit priced confirmation before every change
