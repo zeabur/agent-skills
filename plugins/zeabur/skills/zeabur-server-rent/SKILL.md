@@ -7,6 +7,14 @@ description: Use when renting a new dedicated server. Use when user wants to buy
 
 > **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method. If `npx` is not available, install Node.js first.
 
+## What renting gives you: a standard VPS
+
+`server rent` provisions a **standard VPS** — base OS and SSH, nothing else. Zeabur services are **not** installed, so a freshly rented server **cannot host Zeabur projects yet**.
+
+This is intentional, not a failure. The machine is the user's to do as they please: docker compose, 1Panel, 寶塔, or anything else — a fully self-managed VPS. Running **ZeaburOS** (Zeabur's managed environment, built on k3s) is a separate, optional choice they make afterwards.
+
+Tell the user this when they rent, so a standard VPS is never mistaken for a broken one.
+
 ## ⚠️ Renting charges real money — explicit confirmation is REQUIRED
 
 `server rent` immediately charges the user's payment method (or Zeabur balance). The `-y` flag skips the CLI's own confirmation prompt, so **you are the last line of defense**: never run `server rent` until the user has explicitly confirmed the exact priced option.
@@ -72,5 +80,23 @@ The server takes a few minutes to provision. Check status with:
 npx zeabur@latest server get <server-id> -i=false
 ```
 
-Look for `provisioningStatus` to change to `READY` and `VM STATUS` to `RUNNING`. Once ready, use the `zeabur-project-create` skill to create a project on the new server.
+Wait for `provisioningStatus` to become `READY` and `VM STATUS` to become `RUNNING`.
+
+Then follow whichever path matches what the user wants:
+
+### Use it as a plain VPS
+
+Nothing else is needed — SSH in and set the machine up however they like (docker compose, 1Panel, 寶塔, …). Use the `zeabur-server-ssh` skill:
+
+```bash
+npx zeabur@latest server exec --id <server-id> -- <command>
+```
+
+### Deploy Zeabur projects on it
+
+The server must first be converted to **ZeaburOS**, which installs the Zeabur services (k3s) that projects are deployed onto.
+
+**The CLI has no command for this yet.** Direct the user to the Zeabur dashboard → the server's page → **Convert in Settings**. Once the conversion finishes, the `zeabur-project-create` skill works against this server.
+
+> **Do not run `zeabur-project-create` against a freshly rented server.** It has no Zeabur services, so creating a project on it will fail. Convert it first.
 
