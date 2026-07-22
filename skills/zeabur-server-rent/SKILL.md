@@ -7,13 +7,13 @@ description: Use when renting a new dedicated server. Use when user wants to buy
 
 > **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method. If `npx` is not available, install Node.js first.
 
-## What renting gives you: a clean VPS
+## What renting gives you: a standard VPS
 
-`server rent` provisions a **clean machine** — base OS and SSH, nothing else. Zeabur services (k3s) are **not** installed, so a freshly rented server **cannot host Zeabur projects yet**.
+`server rent` provisions a **standard VPS** — base OS and SSH, nothing else. Zeabur services are **not** installed, so a freshly rented server **cannot host Zeabur projects yet**.
 
-This is intentional, not a failure. The machine is the user's to do as they please: docker compose, 1Panel, 寶塔, or anything else. Installing Zeabur services is a separate, optional step they choose afterwards.
+This is intentional, not a failure. The machine is the user's to do as they please: docker compose, 1Panel, 寶塔, or anything else — a fully self-managed VPS. Running **ZeaburOS** (Zeabur's managed environment, built on k3s) is a separate, optional choice they make afterwards.
 
-Tell the user this when they rent, so a clean machine is never mistaken for a broken one.
+Tell the user this when they rent, so a standard VPS is never mistaken for a broken one.
 
 ## ⚠️ Renting charges real money — explicit confirmation is REQUIRED
 

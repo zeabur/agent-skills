@@ -43,14 +43,14 @@ npx zeabur@latest server reboot <server-id> -y
 
 A server can host Zeabur projects **only once it runs ZeaburOS**. A project's `Region.ID` will be `server-<server-id>` when it is deployed on such a server.
 
-Renting now provisions a **clean VPS** — base OS and SSH, no Zeabur services — so a newly rented server cannot host projects until it is converted to ZeaburOS (dashboard → the server's page → **Convert in Settings**).
+Renting now provisions a **standard VPS** — base OS and SSH, no Zeabur services — so a newly rented server cannot host projects until it is converted to ZeaburOS (dashboard → the server's page → **Convert in Settings**).
 
 **On a ZeaburOS server:**
 
 - **To deploy a service**, use the `zeabur-deploy` skill with the project bound to that server — do NOT SSH in and manually set up web servers or copy files.
 - **SSH is for low-level debugging only** (e.g. checking kubectl, inspecting disk, network diagnostics). It is not needed for deploying or managing services.
 
-**On a clean VPS:** SSH is not a debugging side-channel, it is the whole point — the machine is the user's to set up as they like (docker compose, 1Panel, 寶塔, …). There are no Zeabur services to manage, and `kubectl` does not exist.
+**On a standard VPS:** SSH is not a debugging side-channel, it is the whole point — the machine is the user's to set up as they like (docker compose, 1Panel, 寶塔, …). There are no Zeabur services to manage, and `kubectl` does not exist.
 
 ## SSH into a Server
 
@@ -58,7 +58,7 @@ Renting now provisions a **clean VPS** — base OS and SSH, no Zeabur services �
 npx zeabur@latest server ssh <server-id>
 ```
 
-> The `kubectl` examples below assume a **ZeaburOS** server. On a clean VPS they
+> The `kubectl` examples below assume a **ZeaburOS** server. On a standard VPS they
 > fail with `command not found` — see the `zeabur-server-ssh` skill for how to
 > tell the two apart.
 

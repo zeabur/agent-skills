@@ -14,12 +14,12 @@ workloads on servers that run ZeaburOS.
 
 - **ZeaburOS servers** run k3s with kubectl pre-installed. Everything in this
   skill applies.
-- **Clean VPS** — a rented server that has not been converted to ZeaburOS. It has
+- **Standard VPS** — a rented server that is not running ZeaburOS. It has
   **no k3s and no kubectl**; every `kubectl` command below fails with
   `command not found`. `server exec` still works for ordinary shell commands.
 
-**Renting now provisions a clean VPS**, so never assume kubectl exists. If a
-`kubectl` command fails with `command not found`, the server is a clean VPS —
+**Renting now provisions a standard VPS**, so never assume kubectl exists. If a
+`kubectl` command fails with `command not found`, the server is a standard VPS —
 tell the user that (and that converting it to ZeaburOS in the dashboard is what
 adds kubectl) instead of retrying the command.
 
@@ -61,7 +61,7 @@ Notes:
 
 ## Common kubectl Commands
 
-> **ZeaburOS servers only.** On a clean VPS these all fail with
+> **ZeaburOS servers only.** On a standard VPS these all fail with
 > `kubectl: command not found` — see the section above.
 
 Pass any of these as the command to `server exec`. **Always use `sudo kubectl`** —
