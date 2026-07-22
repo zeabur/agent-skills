@@ -2,7 +2,7 @@
 
 Agent skills for Zeabur CLI operations, deployment, and troubleshooting. Works with **Claude Code**, **OpenAI Codex**, and other agents supporting the SKILL.md format.
 
-**Current version: 1.21.1**
+**Current version: 1.21.2**
 
 ## Installation
 
@@ -64,6 +64,10 @@ codex --plugin-dir /path/to/agent-skills
 | `zeabur-domain-registrant` | Manage registrant profiles for domain registration | Creating/updating contact info for domains |
 
 ## Changelog
+
+### 1.21.2
+
+- Improved `zeabur-server-rent` — the ZeaburOS install is now one copy-pasteable block (authenticate, install, wait) instead of three fragments an agent had to assemble, with `jq` parsing rather than grepping raw JSON
 
 ### 1.21.1
 
