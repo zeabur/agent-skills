@@ -2,7 +2,7 @@
 
 Agent skills for Zeabur CLI operations, deployment, and troubleshooting. Works with **Claude Code**, **OpenAI Codex**, and other agents supporting the SKILL.md format.
 
-**Current version: 1.16.0**
+**Current version: 1.21.0**
 
 ## Installation
 
@@ -46,7 +46,7 @@ codex --plugin-dir /path/to/agent-skills
 | `zeabur-restart` | Restart individual services | Restarting services or --env-id required error |
 | `zeabur-server-list` | List, get, reboot, and SSH into dedicated servers | Checking server status, IP, rebooting, or SSH access |
 | `zeabur-server-catalog` | Browse available server providers/regions/plans | User asks what servers are available to rent |
-| `zeabur-server-rent` | Rent a new dedicated server | User wants to buy or provision a server |
+| `zeabur-server-rent` | Rent a new dedicated server, and install ZeaburOS on it | User wants to buy or provision a server, or make one able to host Zeabur projects |
 | `zeabur-cluster-scale` | Scale dedicated Kubernetes clusters (LKE/EKS) via node pools | User wants to add/remove nodes or resize a cluster |
 | `zeabur-service-list` | List all services and get service IDs | Needing service IDs or checking existing services |
 | `zeabur-startup-order` | Fix connection errors from startup order | Service fails with connection refused to database/redis |
@@ -64,6 +64,12 @@ codex --plugin-dir /path/to/agent-skills
 | `zeabur-domain-registrant` | Manage registrant profiles for domain registration | Creating/updating contact info for domains |
 
 ## Changelog
+
+### 1.21.0
+
+- Improved `zeabur-server-rent` — renting now asks which OS the user wants, and can install **ZeaburOS** on the machine afterwards (previously it could only point the user at the dashboard)
+- Improved `zeabur-server-ssh` — check `hasK3s` up front to tell a ZeaburOS server from a plain Ubuntu one, instead of inferring it from a failed `kubectl` call
+- Updated `zeabur-server-list`, `zeabur-deploy`, and `zeabur-project-create` to match
 
 ### 1.20.1
 

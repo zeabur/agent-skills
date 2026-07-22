@@ -14,17 +14,34 @@ workloads on servers that run ZeaburOS.
 
 - **ZeaburOS servers** run k3s with kubectl pre-installed. Everything in this
   skill applies.
-- **Standard VPS** — a rented server that is not running ZeaburOS. It has
+- **Ubuntu** — a rented server that is not running ZeaburOS. It has
   **no k3s and no kubectl**; every `kubectl` command below fails with
   `command not found`. `server exec` still works for ordinary shell commands.
 
-**Renting now provisions a standard VPS**, so never assume kubectl exists. If a
-`kubectl` command fails with `command not found`, the server is a standard VPS —
-tell the user that (and that converting it to ZeaburOS in the dashboard is what
-adds kubectl) instead of retrying the command.
+**Renting provisions Ubuntu only**, so never assume kubectl exists.
 
-> The CLI does not yet expose which kind a server is. Until it does, infer it
-> from the failure above, or check the server's page in the Zeabur dashboard.
+Check before connecting rather than guessing — query the API directly (see the
+`zeabur-server-rent` skill for the token setup that defines `$ZAPI_CFG`):
+
+```bash
+curl -sS --max-time 30 -K "$ZAPI_CFG" https://api.zeabur.com/graphql \
+  -H "Content-Type: application/json" \
+  -d '{"query":"query($id: ObjectID!) { server(_id: $id) { hasK3s } }","variables":{"id":"<server-id>"}}'
+```
+
+`hasK3s` is three-state, and the third state is a trap:
+
+- `true` — ZeaburOS. Everything in this skill applies.
+- `false` — Ubuntu only. No kubectl.
+- `null` — a server predating the field, which **does** run ZeaburOS.
+
+So the test is `hasK3s === false`, never `!hasK3s`: the latter sweeps in every
+older server and wrongly reports it as a plain VPS.
+
+If you did not check first and a `kubectl` command fails with `command not
+found`, that is the same signal — tell the user the server is a plain Ubuntu VPS
+instead of retrying the command. Installing ZeaburOS is what adds kubectl; the
+`zeabur-server-rent` skill covers how.
 
 ## Run a command: `server exec` (recommended)
 
@@ -61,7 +78,7 @@ Notes:
 
 ## Common kubectl Commands
 
-> **ZeaburOS servers only.** On a standard VPS these all fail with
+> **ZeaburOS servers only.** On a plain Ubuntu VPS these all fail with
 > `kubectl: command not found` — see the section above.
 
 Pass any of these as the command to `server exec`. **Always use `sudo kubectl`** —

@@ -27,7 +27,7 @@ Present the server list to the user (show name, provider, and region for each) a
 
 The region code format is `server-<server-id>`, where `<server-id>` comes from the server list output.
 
-> Some templates (e.g. with `REQUIRE_DEDICATED_SERVER`) can only be deployed on dedicated servers. If you get `Unsupported template (code: REQUIRE_DEDICATED_SERVER)`, the user needs a server running **ZeaburOS**, then recreate the project with its region. Note that renting provisions a standard VPS with no Zeabur services — it must be converted to ZeaburOS (dashboard → the server's page → **Convert in Settings**) before a project can be created on it.
+> Some templates (e.g. with `REQUIRE_DEDICATED_SERVER`) can only be deployed on dedicated servers. If you get `Unsupported template (code: REQUIRE_DEDICATED_SERVER)`, the user needs a server running **ZeaburOS**, then recreate the project with its region. Note that renting provisions Ubuntu with no Zeabur services — ZeaburOS must be installed on it (see the `zeabur-server-rent` skill) before a project can be created on it.
 
 ## Create Project
 
