@@ -24,11 +24,11 @@ npx zeabur@latest project list -i=false --json
 
 If the user asks to deploy to a specific **server** (e.g. "deploy to my AWS Tokyo server"), do **NOT** SSH into the server. Servers running ZeaburOS are managed via the platform — you deploy services through the Zeabur CLI, not by manually placing files on the machine.
 
-> **Only ZeaburOS servers can host projects.** A rented server starts as a clean
-> VPS (base OS and SSH, no Zeabur services) and must be converted first —
-> dashboard → the server's page → **Convert in Settings**. If deploying to a
-> server fails because it has no Zeabur services, that is why; tell the user
-> instead of trying to set the machine up over SSH.
+> **Only ZeaburOS servers can host projects.** A rented server starts as plain
+> Ubuntu (base OS and SSH, no Zeabur services); ZeaburOS has to be installed on
+> it first — see the `zeabur-server-rent` skill. If deploying to a server fails
+> because it has no Zeabur services, that is why; tell the user instead of
+> trying to set the machine up over SSH.
 
 To find the project bound to a server:
 
