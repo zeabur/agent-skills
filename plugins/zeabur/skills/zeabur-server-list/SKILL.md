@@ -15,12 +15,24 @@ npx zeabur@latest server list -i=false
 
 ## Output Example
 
+```text
+     ID              NAME        IP              PROVIDER   LOCATION         STATUS   VM STATUS   OS
+-----------------+-------------+---------------+----------+----------------+--------+-----------+----------
+ 6989b00fd42b...   my-server    103.45.67.89    Hetzner    Singapore, SG    Online   RUNNING     ZeaburOS
+ 6989b00fd42b...   dev-box      45.67.89.12     Vultr      Tokyo, JP        Online   RUNNING     Ubuntu
 ```
-     ID              NAME        IP              PROVIDER   LOCATION         STATUS   VM STATUS
------------------+-------------+---------------+----------+----------------+--------+----------
- 6989b00fd42b...   my-server    103.45.67.89    Hetzner    Singapore, SG    Online   RUNNING
- 6989b00fd42b...   dev-box      45.67.89.12     Vultr      Tokyo, JP        Online   RUNNING
+
+## Which servers can host Zeabur projects: read the OS column
+
+**`ZeaburOS` means the machine can host Zeabur projects; `Ubuntu` means it cannot** (not until ZeaburOS is installed on it). This is the authoritative answer — **do not SSH into a machine to work out which kind it is.**
+
+For machine-readable output, `--json` carries the same value as `os` on every server:
+
+```bash
+npx zeabur@latest server list -i=false --json | jq -r '.[] | "\(.Name)\t\(.os)"'
 ```
+
+> Requires CLI **0.21.0 or newer**. If the `OS` column and the `os` field are both absent, the CLI is older; either let `npx zeabur@latest` fetch the current version, or fall back to querying `hasK3s` through the API (see the `zeabur-server-ssh` skill, which documents that field's three-state trap).
 
 ## Get Server Details
 
@@ -29,7 +41,9 @@ npx zeabur@latest server list -i=false
 npx zeabur@latest server get <server-id> -i=false
 ```
 
-Shows detailed info: CPU/memory/disk usage, provider, location, managed status, creation time.
+Shows detailed info: OS, CPU/memory/disk usage, provider, location, managed status, creation time.
+
+Resource columns read `used/total` — CPU in millicores (`148/4000 m` is 0.15 of 4 cores), memory and disk in MB. A column showing `—` means the value was not measured, **not** that the machine has none.
 
 ## Reboot a Server
 
@@ -43,7 +57,7 @@ npx zeabur@latest server reboot <server-id> -y
 
 A server can host Zeabur projects **only once it runs ZeaburOS**. A project's `Region.ID` will be `server-<server-id>` when it is deployed on such a server.
 
-Renting provisions **Ubuntu** — base OS and SSH, no Zeabur services — so a newly rented server cannot host projects until ZeaburOS is installed on it. The `zeabur-server-rent` skill covers that step, and also how to check which kind a given server is (`hasK3s` via the API; the CLI does not report it yet).
+Renting provisions **Ubuntu** — base OS and SSH, no Zeabur services — so a newly rented server cannot host projects until ZeaburOS is installed on it. The `zeabur-server-rent` skill covers that step. Which kind a given server is, is answered by the **OS** column above.
 
 **On a ZeaburOS server:**
 

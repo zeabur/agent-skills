@@ -21,6 +21,8 @@ npx zeabur@latest server list -i=false --json
 
 Present the server list to the user (show name, provider, and region for each) and **ask them to pick one**. Do NOT choose a server on the user's behalf. Also offer the option to rent a new server if none of the existing ones are suitable.
 
+- **Only servers whose `os` is `ZeaburOS` can host projects.** Servers reporting `Ubuntu` have no Zeabur services; creating a project on one fails. Leave them out of the menu, or list them separately as "needs ZeaburOS installed first" — do not silently offer one as a deploy target.
+
 - If the user has **no servers**, use the `zeabur-server-catalog` skill to browse options, then the `zeabur-server-rent` skill to rent one.
 
 **Step 3 — Use the selected server ID with `server-` prefix as the region:**
