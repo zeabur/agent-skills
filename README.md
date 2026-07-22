@@ -2,7 +2,7 @@
 
 Agent skills for Zeabur CLI operations, deployment, and troubleshooting. Works with **Claude Code**, **OpenAI Codex**, and other agents supporting the SKILL.md format.
 
-**Current version: 1.21.0**
+**Current version: 1.21.1**
 
 ## Installation
 
@@ -64,6 +64,11 @@ codex --plugin-dir /path/to/agent-skills
 | `zeabur-domain-registrant` | Manage registrant profiles for domain registration | Creating/updating contact info for domains |
 
 ## Changelog
+
+### 1.21.1
+
+- Fixed `zeabur-server-list` and `zeabur-server-ssh` — Zeabur CLI 0.21.0 reports each server's OS, so the skills now read it directly instead of saying the CLI cannot report it (which sent agents SSHing into every machine to work it out)
+- Improved `zeabur-project-create` — only offer servers running ZeaburOS as deploy targets
 
 ### 1.21.0
 

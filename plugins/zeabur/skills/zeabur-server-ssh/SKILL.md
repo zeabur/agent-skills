@@ -20,28 +20,40 @@ workloads on servers that run ZeaburOS.
 
 **Renting provisions Ubuntu only**, so never assume kubectl exists.
 
-Check before connecting rather than guessing — query the API directly (see the
-`zeabur-server-rent` skill for the token setup that defines `$ZAPI_CFG`):
+**Read the machine's kind from the CLI — do not SSH in to work it out:**
 
 ```bash
-curl -sS --max-time 30 -K "$ZAPI_CFG" https://api.zeabur.com/graphql \
-  -H "Content-Type: application/json" \
-  -d '{"query":"query($id: ObjectID!) { server(_id: $id) { hasK3s } }","variables":{"id":"<server-id>"}}'
+npx zeabur@latest server get <server-id> -i=false --json | jq -r .os
 ```
 
-`hasK3s` is three-state, and the third state is a trap:
+`ZeaburOS` or `Ubuntu`. `server list` reports the same thing for every server at
+once, as an `OS` column and an `os` field.
 
-- `true` — ZeaburOS. Everything in this skill applies.
-- `false` — Ubuntu only. No kubectl.
-- `null` — a server predating the field, which **does** run ZeaburOS.
-
-So the test is `hasK3s === false`, never `!hasK3s`: the latter sweeps in every
-older server and wrongly reports it as a plain VPS.
+> Needs CLI **0.21.0 or newer**. If `os` comes back `null`, the CLI is older —
+> either let `npx zeabur@latest` fetch the current version, or fall back to the
+> API (see the `zeabur-server-rent` skill for the token setup that defines
+> `$ZAPI_CFG`):
+>
+> ```bash
+> curl -sS --max-time 30 -K "$ZAPI_CFG" https://api.zeabur.com/graphql \
+>   -H "Content-Type: application/json" \
+>   -d '{"query":"query($id: ObjectID!) { server(_id: $id) { hasK3s } }","variables":{"id":"<server-id>"}}'
+> ```
+>
+> `hasK3s` is three-state and the third state is a trap: `true` is ZeaburOS,
+> `false` is Ubuntu only, and `null` is a server predating the field — which
+> **does** run ZeaburOS. So the test is `hasK3s === false`, never `!hasK3s`; the
+> latter sweeps in every older server and wrongly reports it as a plain VPS.
 
 If you did not check first and a `kubectl` command fails with `command not
 found`, that is the same signal — tell the user the server is a plain Ubuntu VPS
 instead of retrying the command. Installing ZeaburOS is what adds kubectl; the
 `zeabur-server-rent` skill covers how.
+
+**One exception.** All of the above answers *what kind of machine this is*. If
+the user asks specifically whether some binary is present, check the machine —
+a ZeaburOS server always has `kubectl`, but a plain Ubuntu VPS may have had it
+installed by its owner, and the OS field cannot tell you that.
 
 ## Run a command: `server exec` (recommended)
 
