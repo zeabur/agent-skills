@@ -98,6 +98,8 @@ One block: authenticate, start the install, wait for it. Substitute the server I
 ```bash
 SERVER_ID="<server-id>"
 
+command -v jq >/dev/null 2>&1 || { echo "jq is required to read the API responses" >&2; exit 1; }
+
 # Keep the token out of the process list: write it into a 0600 curl config
 # passed with -K, never as -H "Authorization: ..." on the command line.
 TOKEN="${ZEABUR_API_KEY:-$(grep '^token:' ~/.config/zeabur/cli.yaml 2>/dev/null | awk '{print $2}')}"
@@ -116,15 +118,27 @@ zapi() {
     -H "Content-Type: application/json" -d "$1"
 }
 
-# Start the install. This returns immediately — the work runs in the background.
-zapi "{\"query\":\"mutation(\$id: ObjectID!) { installK3s(serverID: \$id) }\",\"variables\":{\"id\":\"$SERVER_ID\"}}"
+# GraphQL reports failures as HTTP 200 with an `errors` array, so a request that
+# "succeeded" can still be a hard failure. Stop on one instead of polling past it.
+die_on_error() {
+  if printf '%s' "$1" | jq -e 'has("errors")' >/dev/null 2>&1; then
+    printf '%s' "$1" | jq -r '.errors[] | "\(.extensions.code // "ERROR"): \(.message)\(if .extensions.description then " — " + .extensions.description else "" end)"' >&2
+    exit 1
+  fi
+}
 
-# Wait for it: up to 15 minutes, checking every 30 seconds.
-for _ in $(seq 1 30); do
+# Start the install. This returns immediately — the work runs in the background.
+RESP=$(zapi "{\"query\":\"mutation(\$id: ObjectID!) { installK3s(serverID: \$id) }\",\"variables\":{\"id\":\"$SERVER_ID\"}}")
+die_on_error "$RESP"
+
+# Wait for it, against a real 15-minute deadline.
+DEADLINE=$(( $(date +%s) + 900 ))
+while [ "$(date +%s)" -lt "$DEADLINE" ]; do
   sleep 30
   RESP=$(zapi "{\"query\":\"query(\$id: ObjectID!) { server(_id: \$id) { hasK3s provisioningStatus } }\",\"variables\":{\"id\":\"$SERVER_ID\"}}")
-  HAS_K3S=$(printf '%s' "$RESP" | jq -r '.data.server.hasK3s')
-  STATUS=$(printf '%s' "$RESP" | jq -r '.data.server.provisioningStatus')
+  die_on_error "$RESP"
+  HAS_K3S=$(printf '%s' "$RESP" | jq -r '.data.server.hasK3s // "unknown"')
+  STATUS=$(printf '%s' "$RESP" | jq -r '.data.server.provisioningStatus // "unknown"')
   echo "hasK3s=$HAS_K3S provisioningStatus=$STATUS"
   if [ "$HAS_K3S" = "true" ]; then echo "ZeaburOS is installed"; exit 0; fi
   if [ "$STATUS" = "FAILED" ]; then echo "Install failed: $RESP" >&2; exit 1; fi
@@ -138,8 +152,9 @@ Why each part is the way it is:
 - **The mutation returning does not mean the install finished.** The work runs in the background — SSH into the machine, install k3s, wait for the node to come up — and takes several minutes. A `true` response only means it was accepted and started. Never report success off the mutation alone.
 - **Success is `hasK3s: true`, not `provisioningStatus: "READY"`.** The status goes `READY` → `INITIALIZING` → `READY`, so `READY` is also the state *before* the install starts. Polling for it reports success the moment you look too early — and it will look right, because the machine really is `READY`.
 - **`FAILED` is checked separately**, so a broken install ends the wait instead of running out the clock.
-- **Parse with `jq`, not by grepping the raw JSON.** `grep '"hasK3s":true'` breaks the moment the response is formatted with a space after the colon, and it fails *open* — a missed match looks like "still installing".
-- **The wait is bounded.** After 15 minutes, stop and report the current state rather than polling forever; the server's page in the dashboard shows progress detail.
+- **Every response is checked for `errors` first.** GraphQL returns failures as HTTP 200 with an `errors` array and no `data`, so an unauthorized token, a bad server ID, or any of the precondition failures below would otherwise read as "still installing" and burn the full 15 minutes before reporting nothing useful. `extensions.code` is the machine-readable code from the table below; `extensions.description` is the user-facing explanation.
+- **Parse with `jq`, not by grepping the raw JSON.** `grep '"hasK3s":true'` breaks the moment the response is formatted with a space after the colon, and it fails *open* — a missed match looks like "still installing". For the same reason the block refuses to start without `jq` rather than silently mis-parsing.
+- **The wait is a deadline, not a counter.** `30 × sleep 30` runs past 15 minutes once request time is added; comparing against a timestamp means the stated bound is the real one.
 - **Stop if no token was found.** Continuing sends an unauthenticated request, and the resulting `401` reads as "the server is broken" rather than "you are not logged in".
 - **The `trap` removes the curl config** even if a command in between fails. Each tool/Bash invocation is a fresh shell, so keep the whole block together — `$ZAPI_CFG` does not survive into the next one.
 
