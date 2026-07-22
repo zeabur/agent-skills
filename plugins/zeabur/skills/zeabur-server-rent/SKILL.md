@@ -96,16 +96,22 @@ Works on any server that has no Zeabur services yet: one just rented, one reinst
 Keep the token out of the process list — write it into a `0600` curl config and pass that with `-K`, instead of putting `-H "Authorization: ..."` on the command line:
 
 ```bash
-TOKEN="${ZEABUR_API_KEY:-$(grep '^token:' ~/.config/zeabur/cli.yaml | awk '{print $2}')}"
+TOKEN="${ZEABUR_API_KEY:-$(grep '^token:' ~/.config/zeabur/cli.yaml 2>/dev/null | awk '{print $2}')}"
+if [ -z "$TOKEN" ]; then
+  echo "No Zeabur token found — set ZEABUR_API_KEY or run: npx zeabur@latest auth login" >&2
+  exit 1
+fi
 ZAPI_CFG=$(mktemp)
 chmod 600 "$ZAPI_CFG"
+trap 'rm -f "$ZAPI_CFG"' EXIT
 printf 'header = "Authorization: Bearer %s"\n' "$TOKEN" > "$ZAPI_CFG"
 unset TOKEN
 ```
 
 - Prefer the `ZEABUR_API_KEY` environment variable if set
 - Otherwise reuse the CLI token from `~/.config/zeabur/cli.yaml` (present after `npx zeabur@latest auth login` — use the `zeabur-auth` skill if the user is not logged in)
-- Each tool/Bash invocation is a fresh shell — run this setup in the same shell block as the requests that use `$ZAPI_CFG`, and `rm -f "$ZAPI_CFG"` when done
+- **Stop if no token was found.** Continuing sends an unauthenticated request, and the resulting `401` reads as "the server is broken" rather than "you are not logged in"
+- Each tool/Bash invocation is a fresh shell — run this setup in the same shell block as the requests that use `$ZAPI_CFG`. The `trap` removes the config even if a command in between fails
 
 ### Start the install
 
@@ -147,13 +153,15 @@ The mutation fails up front in these cases. Relay the meaning, not the raw Graph
 | `K3S_INSTALL_IN_PROGRESS` | An install is already running, or just finished | Do **not** send the mutation again — go straight to polling |
 | `SERVER_NOT_FOUND` | Wrong ID, or the server was deleted | Re-check the ID with `server list` |
 
-**If the mutation times out at the transport layer, never blind-retry.** The install may already be running server-side — poll the query above first, and only retry if `hasK3s` is still `false` and `provisioningStatus` is not `INITIALIZING`.
+**If the mutation times out at the transport layer, never blind-retry.** The install may already be running server-side. Poll the query above first, and only resend the mutation when the server is back in the documented pre-install state — `hasK3s: false` **and** `provisioningStatus: "READY"`.
+
+**Never auto-retry a `FAILED` install.** `FAILED` is terminal and means the install genuinely broke on the machine; retrying just repeats it. Report the failure and let the user decide.
 
 ## Payment Errors
 
 If the user has no credit card bound or insufficient balance, the CLI returns:
 
-```
+```text
 ERROR  Rent server failed: please bind a credit card or recharge credits first
 INFO   Please bind a credit card or top up your balance at: https://zeabur.com/account/billing
 ```
