@@ -7,7 +7,24 @@ description: Use when debugging services on a user's dedicated server via SSH. U
 
 > **Always use `npx zeabur@latest` to invoke Zeabur CLI.** Never use `zeabur` directly or any other installation method.
 
-Run commands on a user's dedicated server and use kubectl to debug Kubernetes workloads. Zeabur dedicated servers run k3s with kubectl pre-installed.
+Run commands on a user's dedicated server, and use kubectl to debug Kubernetes
+workloads on servers that run ZeaburOS.
+
+## Check which kind of server you are on before using kubectl
+
+- **ZeaburOS servers** run k3s with kubectl pre-installed. Everything in this
+  skill applies.
+- **Clean VPS** — a rented server that has not been converted to ZeaburOS. It has
+  **no k3s and no kubectl**; every `kubectl` command below fails with
+  `command not found`. `server exec` still works for ordinary shell commands.
+
+**Renting now provisions a clean VPS**, so never assume kubectl exists. If a
+`kubectl` command fails with `command not found`, the server is a clean VPS —
+tell the user that (and that converting it to ZeaburOS in the dashboard is what
+adds kubectl) instead of retrying the command.
+
+> The CLI does not yet expose which kind a server is. Until it does, infer it
+> from the failure above, or check the server's page in the Zeabur dashboard.
 
 ## Run a command: `server exec` (recommended)
 
@@ -43,6 +60,9 @@ Notes:
   (or use the `zeabur-server-list` skill).
 
 ## Common kubectl Commands
+
+> **ZeaburOS servers only.** On a clean VPS these all fail with
+> `kubectl: command not found` — see the section above.
 
 Pass any of these as the command to `server exec`. **Always use `sudo kubectl`** —
 the SSH user may not have direct access to the k3s kubeconfig. Any command with a
