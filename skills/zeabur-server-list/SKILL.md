@@ -59,6 +59,8 @@ A server can host Zeabur projects **only once it runs ZeaburOS**. A project's `R
 
 Renting provisions **Ubuntu** — base OS and SSH, no Zeabur services — so a newly rented server cannot host projects until ZeaburOS is installed on it. The `zeabur-server-rent` skill covers that step. Which kind a given server is, is answered by the **OS** column above.
 
+> Installing directly is only for a machine that is still blank. On one the user has already set up, converting means **reinstalling** it in the dashboard, which **erases the disk** — see the `zeabur-server-rent` skill before suggesting it.
+
 **On a ZeaburOS server:**
 
 - **To deploy a service**, use the `zeabur-deploy` skill with the project bound to that server — do NOT SSH in and manually set up web servers or copy files.

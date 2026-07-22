@@ -87,7 +87,15 @@ Follow "Install ZeaburOS on a server" below. If they chose Ubuntu, you are done 
 
 ## Install ZeaburOS on a server
 
-Works on any server that has no Zeabur services yet: one just rented, one reinstalled back to base OS, or a WonderMesh device that stopped at joining the mesh.
+**Only on a machine that is still blank** — one just rented, one just reinstalled back to base OS, or a WonderMesh device that stopped at joining the mesh. This installs k3s *on top of* the running system without wiping it: safe on an empty machine, unpredictable on one that is already in use.
+
+> **Do not run this on a machine the user has set up.** k3s claims ports (6443, the NodePort range, NATS on 4222), rewrites iptables rules, and brings its own container runtime alongside any Docker already there. On a box running docker compose, 1Panel, 寶塔 or similar, whether the install succeeds depends on what is already installed — and it can break what is running.
+>
+> For those machines, send the user to the dashboard instead: the server's **Settings → Danger Zone → Reinstall OS**, choosing ZeaburOS. Reinstalling makes the result predictable, **and it erases the disk**. Say that plainly and tell them to back up first — it is their call to make, not yours.
+>
+> Switching is destructive in **both** directions. ZeaburOS → standard distribution and standard distribution → ZeaburOS are both a reinstall, and both wipe the machine.
+
+If the machine is blank, run this.
 
 > **Not in the Zeabur CLI yet** — call the Zeabur GraphQL API directly at `https://api.zeabur.com/graphql`.
 
