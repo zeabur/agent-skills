@@ -104,7 +104,7 @@ npx zeabur@latest domain delete --id <service-id> --domain <domain> -y -i=false
 
 Domains cannot be bound directly to a service running on a Wonder Mesh provider server. Any flow that creates a domain — `domain create`, automatic domain binding during deploy, template deploy, or PR preview — can be rejected with:
 
-```
+```text
 Error: WONDER_MESH_SERVER_REQUIRES_GATEWAY
 ```
 
