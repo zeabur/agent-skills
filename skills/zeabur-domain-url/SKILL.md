@@ -1,6 +1,6 @@
 ---
 name: zeabur-domain-url
-description: Use when services need public URL for redirects or CORS. Use when WEB_URL or similar has trailing slash issues. Use when user reports "redirect goes to wrong URL", "CORS error", or "trailing slash problem". Also use when user says "add domain", "set up domain", "bind domain", "create domain", or "manage domains" for a Zeabur service.
+description: Use when services need public URL for redirects or CORS. Use when WEB_URL or similar has trailing slash issues. Use when user reports "redirect goes to wrong URL", "CORS error", or "trailing slash problem". Also use when user says "add domain", "set up domain", "bind domain", "create domain", or "manage domains" for a Zeabur service. Also use when domain creation fails with "WONDER_MESH_SERVER_REQUIRES_GATEWAY" or a domain is stuck in PROVISIONING on a Wonder Mesh server.
 ---
 
 # Zeabur Domain URL Configuration
@@ -99,6 +99,30 @@ Value: <server IP from above>
 ```bash
 npx zeabur@latest domain delete --id <service-id> --domain <domain> -y -i=false
 ```
+
+### Wonder Mesh servers: `WONDER_MESH_SERVER_REQUIRES_GATEWAY`
+
+Domains cannot be bound directly to a service running on a Wonder Mesh provider server. Any flow that creates a domain — `domain create`, automatic domain binding during deploy, template deploy, or PR preview — can be rejected with:
+
+```
+Error: WONDER_MESH_SERVER_REQUIRES_GATEWAY
+```
+
+This is **not** a port or networking misconfiguration on the service, and no CLI retry can succeed. The backend rejects the request because a domain bound directly to the app service would be stuck in `PROVISIONING` forever. Domains for these services must be attached through the Wonder Mesh gateway, and that flow only exists in the Zeabur Dashboard.
+
+When you receive this error:
+
+1. **Stop.** Do not retry `domain create` — not with the same arguments, different flags, a changed port config, or a different service ID.
+2. **Send the user to the Dashboard.** Tell them to open the service in the Zeabur Dashboard and set up the domain from its **Domains** tab.
+3. **Explain what the Dashboard does.** The Domains tab runs the Wonder Mesh gateway attach flow: it binds the domain to the `app-gateway` service in the `wonder-mesh-gateway-{wonderNetID}` project on the user's behalf. This is the only supported path.
+
+Do **not**:
+
+- Bind the domain directly to the Wonder Mesh app service via CLI or API
+- Bind the domain to the gateway service yourself with `domain create`
+- Use any CLI / MCP "gateway attach" command — none exists
+
+Services on all other servers are unaffected: the generated domain and custom domain flows above work unchanged.
 
 ### Caution
 
