@@ -2,7 +2,7 @@
 
 Agent skills for Zeabur CLI operations, deployment, and troubleshooting. Works with **Claude Code**, **OpenAI Codex**, and other agents supporting the SKILL.md format.
 
-**Current version: 1.21.2**
+**Current version: 1.21.3**
 
 ## Installation
 
@@ -64,6 +64,10 @@ codex --plugin-dir /path/to/agent-skills
 | `zeabur-domain-registrant` | Manage registrant profiles for domain registration | Creating/updating contact info for domains |
 
 ## Changelog
+
+### 1.21.3
+
+- Improved `zeabur-domain-url` — documented the `WONDER_MESH_SERVER_REQUIRES_GATEWAY` rejection for services on Wonder Mesh provider servers: stop retrying `domain create`, don't bind the domain to the app or gateway service directly, and send the user to the service's **Domains** tab in the Dashboard, which runs the gateway attach flow (binding to `app-gateway` in `wonder-mesh-gateway-{wonderNetID}`)
 
 ### 1.21.2
 
