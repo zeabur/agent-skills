@@ -158,7 +158,8 @@ Works with ioredis, redis-py, go-redis, and any Redis client.
 
 ## Caveats
 
-1. **Variable references** — Zeabur uses a flat namespace. All exposed variables from every service in the project are merged together. Your app references them directly by name (e.g., `${POSTGRES_HOST}`), no prefix needed. Set them via the **Zeabur Dashboard** — the CLI has a known bug with `${}` expansion.
-2. **Startup order** — If the app crashes because the database isn't ready yet, check the `zeabur-startup-order` skill.
-3. **Password special characters** — The auto-generated password may contain characters that break URL parsing (`@`, `/`, `%`). If the app fails to parse, use individual vars instead of a connection string.
-4. **Port forwarding disabled** — If `service network` shows port forwarding is disabled, enable it: `npx zeabur@latest service port-forward --id <id> --enable`
+1. **Variable references** — Zeabur uses a flat namespace. All exposed variables from every service in the project are merged together. Your app references them directly by name (e.g., `${POSTGRES_HOST}`), no prefix needed. **CLI updates DO work** for these references when single-quoted (observed 2026-04, see `zeabur-variables` skill for nuance) — `npx zeabur@latest variable update --id <svc> -k 'DATABASE_URL=postgresql://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}' -y -i=false` resolves correctly at injection time. The dashboard remains a reliable fallback for any unusual cases.
+2. **Custom URL schemes** — If your app needs a non-default driver prefix (e.g. SQLAlchemy + psycopg3 wants `postgresql+psycopg://`, not `postgresql://`), construct the URL by interpolating the parts (`${POSTGRES_USERNAME}`, etc.) rather than reusing the prebuilt `${POSTGRES_CONNECTION_STRING}` which always uses `postgresql://`.
+3. **Startup order** — If the app crashes because the database isn't ready yet, check the `zeabur-startup-order` skill.
+4. **Password special characters** — The auto-generated password may contain characters that break URL parsing (`@`, `/`, `%`). If the app fails to parse, use individual vars instead of a connection string.
+5. **Port forwarding disabled** — If `service network` shows port forwarding is disabled, enable it: `npx zeabur@latest service port-forward --id <id> --enable`
