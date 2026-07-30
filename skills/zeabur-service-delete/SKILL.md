@@ -43,4 +43,17 @@ npx zeabur@latest service list --project-id <project-id> -i=false --json
 npx zeabur@latest service delete -i=false --id <service-id> -y
 ```
 
+## Behavior to be aware of
+
+- **Deletion is async.** A successful `service delete` schedules the removal — the service typically continues to appear in `service list` for a while as `Status=SUSPENDED` until eventual consistency clears it. Don't panic if the list still shows it right after.
+- **Retrying a delete errors out.** If you call `service delete` a second time on a service whose first delete is already scheduled, the CLI returns:
+
+  ```
+  ERROR  delete service failed: Message: Resource already exists, ...
+         description:service deletion already scheduled or service not found
+  ```
+
+  This means the first delete worked. Treat this error as "already done", not as a failure.
+- **Confirming actual removal.** If you need to know whether a service is gone, query its status with `service get --id <id>` — once removed, the call returns "service not found". The `service list` output may lag behind by minutes.
+
 To delete an entire project instead, use the `zeabur-project-delete` skill.
