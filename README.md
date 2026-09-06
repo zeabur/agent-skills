@@ -56,7 +56,6 @@ codex --plugin-dir /path/to/agent-skills
 | `zeabur-update-service` | Update service config without full redeploy | Modifying env vars or updating single service |
 | `zeabur-deploy` | Deploy local projects or from GitHub | User says "deploy this" or wants Git-based CI/CD deployment |
 | `zeabur-variables` | Manage environment variables via CLI | Managing env vars or handling empty variable issues |
-| `zeabur-ai-hub` | Manage AI Hub account, keys, balance, and usage | AI Hub status, API keys, add balance, usage, auto-recharge |
 | `zeabur-email` | Manage Zeabur Email (ZSend) service | Email domains, API keys, webhooks, ZSend |
 | `zeabur-domain-register` | Search, purchase, renew, and manage registered domains | Buying domains, checking availability, renewal |
 | `zeabur-domain-dns` | Manage DNS records for registered domains | Adding/updating/deleting DNS records |
@@ -64,6 +63,10 @@ codex --plugin-dir /path/to/agent-skills
 | `zeabur-domain-registrant` | Manage registrant profiles for domain registration | Creating/updating contact info for domains |
 
 ## Changelog
+
+### 1.22.0
+
+- Removed `zeabur-ai-hub` — Zeabur AI Hub was shut down in 2026-09; the skill pointed agents at retired `*.aihub.zeabur.ai` endpoints
 
 ### 1.21.3
 
